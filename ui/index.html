@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>UI</title>
+        
+        <script src="../node_modules/vue/dist/vue.min.js"></script>
+        <script>
+            const app = require("../javascript/app.js");
+        </script>
+    </head>
+    <body>
+        <div id="vue-wrapper">
+            <header>
+                <div>
+                    <img src="#" alt="SCRCAD icon">
+                    <p>SCRCAD</p>
+                </div>
+                <ul>
+                    <li>
+                        <p>File</p>
+                        <ul>
+                            <li>New Project</li>
+                            <li>Save As</li>
+                            <li>Exit</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Edit</p>
+                        <ul>
+                            <li>Undo</li>
+                            <li>Redo</li>
+                            <li>Settings</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div>
+                    <button>
+                        <img src="" alt="Minimize">
+                    </button>
+                    <button>
+                        <img src="" alt="Maximize / Restore">
+                    </button>
+                    <button>
+                        <img src="" alt="Close">
+                    </button>
+                </div>
+            </header>
+            <main>
+                <header>
+                    <ul>
+                        
+                    </ul>
+                </header>
+                <div>
+                    <div class="tab-container">
+                        <div>
+                            <button class="tab-selected">Editor</button>
+                        </div>
+                        <div>
+                            <canvas id="2d-editor-canvas"></canvas>
+                            <div id="editor-overlay">
+                                <ul id="tool-list">
+                                    <li>
+                                        <button><img src="" alt=""></button>
+                                    </li>
+                                </ul>
+                                <ul id="views-list">
+                                    <li>
+                                        <button><img src="" alt=""></button>
+                                    </li>
+                                </ul>
+                                <div id="selection-settings">
+                                    <p>Selection (2)</p>
+                                    <ul>
+                                        <li><a href="#">Deselect</a></li>
+                                        <li><a href="#">Invert</a></li>
+                                        <li><a href="#">Copy</a></li>
+                                        <li><a href="#">Remove</a></li>
+                                    </ul>
+                                </div>
+                                <div id="layer-settings">
+                                    <input type="text" placeholder="Layer name...">
+                                    <ul>
+                                        <li><a class="link-disabled" href="#">Paste</a></li>
+                                        <li><a href="#">✓ Multi-Layer Selection</a></li>
+                                        <li><a href="#">Duplicate</a></li>
+                                        <li><a href="#">Delete</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-container">
+                            <div>
+                                <button class="tab-selected">3D Preview</button>
+                            </div>
+                            <div>
+                                <canvas id="3d-preview-canvas"></canvas>
+                            </div>
+                        </div>
+                        <div class="tab-container">
+                            <div>
+                                <button class="tab-selected">Plugins (0 Loaded)</button>
+                            </div>
+                            <div>
+                                <ul>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="tab-container">
+                            <div>
+                                <button class="tab-selected">Layers</button>
+                            </div>
+                            <div>
+                                <ul>
+                                    
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <script>
+            app.init(Vue);
+        </script>
+    </body>
+</html>
