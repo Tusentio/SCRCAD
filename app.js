@@ -16,6 +16,6 @@ app.whenReady().then(() => {
     });
 
     //window.setMenu(null);
-    window.loadFile("./gui/index.html");
+    window.loadFile("./ui/index.html");
     window.webContents.on("did-finish-load", () => window.show());
 });
