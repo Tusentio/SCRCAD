@@ -1,0 +1,23 @@
+{
+  "name": "scrcad",
+  "version": "0.0.1",
+  "description": "Voxel Editor",
+  "main": "app.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tusentio/SCRCAD.git"
+  },
+  "author": "Sundqvist Norlén K., Söderlund E.",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/Tusentio/SCRCAD/issues"
+  },
+  "homepage": "https://github.com/Tusentio/SCRCAD#readme",
+  "dependencies": {
+    "electron": "^10.1.1",
+    "vue": "^2.6.12"
+  }
+}
