@@ -1,10 +1,21 @@
-module.exports = {
-    vueInstance: undefined,
-    init(Vue) {
-        this.vueInstance = new Vue({
-            el: "#vue-wrapper",
-            data: {},
-            methods: {}
-        });
-    }
-}
+const { app, BrowserWindow } = require("electron");
+app.allowRendererProcessReuse = true;
+
+app.whenReady().then(() => {
+    let window = new BrowserWindow({
+        show: false,
+        width: 800,
+        height: 600,
+        minWidth: 200,
+        minHeight: 150,
+        backgroundColor: "black",
+        autoHideMenuBar: true,
+        webPreferences: {
+            nodeIntegration: true,
+        }
+    });
+
+    //window.setMenu(null);
+    window.loadFile("./gui/index.html");
+    window.webContents.on("did-finish-load", () => window.show());
+});
