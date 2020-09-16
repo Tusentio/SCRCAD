@@ -1,9 +1,14 @@
 const THREE = require("three");
+const Model = require("./model.js");
 
 const app = {
     vue: {
         instance: null,
         options: null,
+    },
+    model: new Model(),
+    viewport2D: {
+        viewingPlane: "top"
     },
     viewport3D: {
         canvas: null,
@@ -65,6 +70,8 @@ app.viewport3D.setView = function (view) {
     this.camera.right += xOffset;
     this.camera.top += yOffset;
     this.camera.bottom += yOffset;
+
+    this.camera.updateProjectionMatrix();
 }
 
 module.exports = app;
