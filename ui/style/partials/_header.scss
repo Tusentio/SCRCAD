@@ -1,0 +1,16 @@
+@use "variables" as vars;
+
+header {
+    display: flex;
+
+    > * {
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* Menu */
+
+header ul {
+    flex: 1;
+}
