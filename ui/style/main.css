@@ -1,5 +1,6 @@
 header {
   display: flex;
+  -webkit-app-region: drag;
 }
 
 #window-title {
@@ -23,9 +24,9 @@ header {
 }
 
 header > ul {
+  -webkit-app-region: no-drag;
   display: flex;
   align-items: stretch;
-  flex: 1;
   list-style: none;
   display: flex;
 }
@@ -60,6 +61,7 @@ header > ul ul {
 }
 
 #window-buttons {
+  -webkit-app-region: no-drag;
   position: absolute;
   display: flex;
   top: 0;
@@ -71,11 +73,11 @@ header > ul ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 #window-buttons button img {
-  width: 1rem;
+  width: 0.9rem;
 }
 #window-buttons button:hover {
   background: blue;
