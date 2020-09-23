@@ -29,7 +29,7 @@ class NdArray extends Array {
     }
 
     static isNdArray(object) {
-        return object?.[ND_ARRAY] === object;
+        return object?.[ND_ARRAY] !== undefined;
     }
 }
 
