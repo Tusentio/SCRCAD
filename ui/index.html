@@ -62,6 +62,108 @@
                     <button><img src="circle.png" alt="Close"></button>
                 </div>
             </header>
+            <main>
+                <ul id="toolbar">
+                    <li>
+                        <p>General</p>
+                        <ul>
+                            <li>
+                                <img src="circle.png">
+                                <p>Undo</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>Redo</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>Save</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Layer</p>
+                        <ul>
+                            <li>
+                                <img src="circle.png">
+                                <p>Duplicate</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>Delete</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>Clear</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>✓ Multi-Layer Selection</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Selection</p>
+                        <ul>
+                            <li>
+                                <img src="circle.png">
+                                <p>Deselect</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>Invert</p>
+                            </li>
+                            <li>
+                                <img src="circle.png">
+                                <p>Clear</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div id="editor-view">
+                    <ul class="tool-list">
+                        <li>
+                            <ul>
+                                <li class="tool-list-selected">
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li class="tool-list-selected">
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <canvas id="editor-canvas"></canvas>
+                </div>
+                <div id="preview-view">
+
+                </div>
+                <div id="plugins">
+
+                </div>
+                <div id="layers">
+
+                </div>
+            </main>
         </div>
         <script>
             app.init(Vue);

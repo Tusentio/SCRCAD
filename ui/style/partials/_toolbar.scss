@@ -1,0 +1,61 @@
+@use "variables" as vars;
+
+#toolbar {
+    padding: .8rem 1rem;
+    display: flex;
+
+    > li {
+        margin-right: 2rem;
+
+        > p {
+            font-size: vars.$text-small;
+            margin-bottom: .5rem;
+            color: rgb(179, 179, 179);
+        }
+    }
+
+    li:nth-child(1) li {
+        border-left-color: vars.$theme-primary;
+    }
+    li:nth-child(2) li {
+        border-left-color: rgb(45, 223, 98);
+    }
+    li:nth-child(3) li {
+        border-left-color: rgb(250, 82, 40);
+    }
+}
+
+// Inner lists
+
+#toolbar ul {
+    display: flex;
+
+    li {
+        border: 1px solid transparent;
+        padding: .4rem 1.8rem .2rem .6rem;
+        color: vars.$text-gray;
+        transition: opacity .1s;
+        
+        p {
+            font-size: vars.$text-small;
+        }
+
+        &:hover {
+            border-color: #fff;
+            color: #fff;
+        }
+
+        &:active {
+            opacity: .75;
+        }
+
+    }
+
+    img {
+        width: 10px;
+        height: 10px;
+        display: block;
+        margin-bottom: .2rem;
+    }
+
+}

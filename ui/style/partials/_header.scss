@@ -36,7 +36,6 @@ header > ul {
     display: flex;
     align-items: stretch;
 
-    list-style: none;
     display: flex;
 
     > li {
@@ -68,9 +67,10 @@ header > ul {
     }
 
     ul {
-        list-style: none;
         display: none;
         position: absolute;
+        background: rgb(51, 51, 51);
+        z-index: 1000;
         flex-direction: column;
         width: 20rem;
         border: 1px solid rgba(255, 255, 255, 0.3);
