@@ -8,7 +8,7 @@ const app = {
     },
     model: new Model(),
     viewport2D: {
-        viewingPlane: "top"
+        viewingPlane: "top",
     },
     viewport3D: {
         canvas: null,
@@ -27,13 +27,13 @@ const app = {
 app.vue.options = {
     el: "#vue-wrapper",
     data: {},
-    methods: {}
+    methods: {},
 };
 
 app.init = function (Vue) {
     app.vue.instance = new Vue(app.vue.options);
     app.viewport3D.init();
-}
+};
 
 app.viewport3D.init = function () {
     this.canvas = document.getElementById("3d-preview-canvas");
@@ -41,23 +41,17 @@ app.viewport3D.init = function () {
 
     this.setView({
         width: this.canvas.clientWidth,
-        height: this.canvas.clientHeight
+        height: this.canvas.clientHeight,
     });
-}
+};
 
 app.viewport3D.setView = function (view) {
     Object.assign(this.view, view);
-    let {
-        width,
-        height,
-        zoom,
-        xOffset,
-        yOffset
-    } = this.view;
+    let { width, height, zoom, xOffset, yOffset } = this.view;
 
     let aspectRatio = this.view.width / this.view.height;
     if (width > height) {
-        this.camera.right = height * aspectRatio / 2 / zoom;
+        this.camera.right = (height * aspectRatio) / 2 / zoom;
         this.camera.top = height / 2 / zoom;
     } else {
         this.camera.right = width / 2 / zoom;
@@ -72,6 +66,6 @@ app.viewport3D.setView = function (view) {
     this.camera.bottom += yOffset;
 
     this.camera.updateProjectionMatrix();
-}
+};
 
 module.exports = app;
