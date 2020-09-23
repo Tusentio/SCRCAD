@@ -10,6 +10,7 @@ app.whenReady().then(() => {
         minHeight: 150,
         backgroundColor: "black",
         autoHideMenuBar: true,
+        frame: false,
         webPreferences: {
             nodeIntegration: true,
         }
