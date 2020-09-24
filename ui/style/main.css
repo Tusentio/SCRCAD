@@ -91,9 +91,11 @@ header > ul ul {
   box-sizing: border-box;
   font-size: 13px;
   cursor: default;
+  outline: none;
+  -webkit-user-drag: none;
 }
 
-p, a, img {
+p, a, img, li {
   user-select: none;
 }
 
@@ -186,11 +188,15 @@ main > div {
 #editor-view {
   grid-row: 2/4;
   grid-column: 1/3;
+  display: grid;
+  grid-template-columns: auto 1fr;
 }
 
 #preview-view {
   grid-row: 2/4;
   grid-column: 2/3;
+  display: grid;
+  grid-template-columns: auto 1fr;
 }
 
 #plugins {
@@ -201,6 +207,34 @@ main > div {
 #layers {
   grid-row: 3/4;
   grid-column: 3/4;
+}
+
+.tool-list {
+  display: flex;
+  flex-direction: column;
+}
+.tool-list > li {
+  margin-bottom: 0.25rem;
+}
+.tool-list ul {
+  display: flex;
+  flex-direction: column;
+}
+.tool-list ul li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  background: #0f94ec;
+}
+.tool-list ul li.tool-list-selected {
+  background: #000;
+  filter: invert(100%);
+}
+.tool-list img {
+  width: 18px;
+  height: 18px;
 }
 
 /*# sourceMappingURL=main.css.map */
