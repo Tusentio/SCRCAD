@@ -73,15 +73,15 @@ header > ul ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 40px;
+  height: 28px;
 }
 #window-buttons button img {
-  width: 0.9rem;
+  width: 12px;
 }
 #window-buttons button:hover {
-  background: #0f94ec;
-  color: #ffffff;
+  background: #000;
+  filter: invert(100%);
 }
 
 * {

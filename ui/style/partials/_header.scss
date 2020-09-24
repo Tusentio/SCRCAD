@@ -92,16 +92,16 @@ header > ul {
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 2.5rem;
-        height: 2.5rem;
+        width: 40px;
+        height: 28px;
 
         img {
-            width: .9rem;
+            width: 12px;
         }
 
         &:hover {
-            background: vars.$theme-primary;
-            color: #ffffff;
+            background: #000;
+            filter: invert(100%);
         }
     }
 
