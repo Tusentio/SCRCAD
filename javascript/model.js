@@ -183,10 +183,10 @@ class Plane {
             right(x, y, z) {
                 return [this.depth - z, y, x];
             },
-            top(x, y) {
+            top(x, y, z) {
                 return [this.height - 1 - y, this.depth - 1 - z, x];
             },
-            left(x, y) {
+            left(x, y, z) {
                 return [x, y, z];
             },
         }[plane];
