@@ -6,12 +6,12 @@ header {
 #window-title {
   display: flex;
   align-items: center;
-  background: #0f94ec;
+  background: #168386;
   padding: 0.4rem 1rem;
 }
 #window-title img {
-  width: 1rem;
-  height: 1rem;
+  width: 12px;
+  height: 12px;
   margin-right: 0.4rem;
 }
 #window-title p {
@@ -189,24 +189,66 @@ main > div {
   grid-row: 2/4;
   grid-column: 1/3;
   display: grid;
+  grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
+}
+#editor-view .panel-header {
+  grid-row: 1/2;
+  grid-column: 1/3;
+}
+#editor-view .tool-list {
+  grid-row: 2/3;
+  grid-column: 1/2;
+}
+#editor-view canvas {
+  grid-row: 2/3;
+  grid-column: 2/3;
 }
 
 #preview-view {
   grid-row: 2/4;
   grid-column: 2/3;
   display: grid;
+  grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
+}
+#preview-view .panel-header {
+  grid-row: 1/2;
+  grid-column: 1/3;
+}
+#preview-view .tool-list {
+  grid-row: 2/3;
+  grid-column: 1/2;
+}
+#preview-view canvas {
+  grid-row: 2/3;
+  grid-column: 2/3;
 }
 
 #plugins {
   grid-row: 2/3;
   grid-column: 3/4;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+#plugins .panel-header {
+  grid-row: 1/2;
+}
+#plugins ul {
+  grid-row: 2/3;
 }
 
 #layers {
   grid-row: 3/4;
   grid-column: 3/4;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+#layers .panel-header {
+  grid-row: 1/2;
+}
+#layers ul {
+  grid-row: 2/3;
 }
 
 .tool-list {
@@ -235,6 +277,24 @@ main > div {
 .tool-list img {
   width: 18px;
   height: 18px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: flex-start;
+}
+.panel-header img {
+  width: 8px;
+  height: 8px;
+  margin-right: 0.5rem;
+}
+.panel-header p {
+  padding: 0.4rem 0.8rem;
+  background: #168386;
+  color: #fff;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
 }
 
 /*# sourceMappingURL=main.css.map */
