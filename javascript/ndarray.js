@@ -28,6 +28,35 @@ class NdArray extends Array {
         }
     }
 
+    get(...indices) {
+        let index = indices.shift();
+
+        if (indices.length == 0 && typeof index == "number") {
+            return this[index];
+        } else {
+            return this[index]?.get(...indices);
+        }
+    }
+
+    set(value, ...indices) {
+        let index = indices.shift();
+
+        if (indices.length == 0 && typeof index == "number") {
+            this[index] = value;
+        } else {
+            this[index]?.set(value, ...indices);
+        }
+    }
+
+    static from(arrayLike, ...dims) {
+        let res = new NdArray(...dims);
+
+        let i = 0;
+        res.forEach((_, ...indices) => res.set(arrayLike[i++], ...indices));
+
+        return res;
+    }
+
     static isNdArray(object) {
         return object?.[ND_ARRAY] !== undefined;
     }
