@@ -1,12 +1,37 @@
+@use "variables" as vars;
+
+:root {
+    font-size: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
     font-family: "Open Sans";
     box-sizing: border-box;
-    font-size: 13px;
     cursor: default;
+    outline: none;
+    -webkit-user-drag: none;
 }
 
-body {
+p, a, img, li {
+    user-select: none;
+}
+
+ul {
+    list-style: none;
+}
+
+html, body, #vue-wrapper {
+    height: 100%;
+}
+
+#vue-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+body{
     background: rgb(20, 20, 20);
+    border-bottom: .5rem solid vars.$theme-primary;
 }

@@ -1,0 +1,22 @@
+@use "variables" as vars;
+
+.panel-header {
+    display: flex;
+    justify-content: flex-start;    
+
+    img {
+        width: 8px;
+        height: 8px;
+        margin-right: .5rem;
+    }
+
+    p {
+        padding: .4rem .8rem;
+        background: vars.$theme-secondary;
+        color: #fff;
+        font-size: vars.$text-small;
+
+        display: flex;
+        align-items: center;
+    }
+}

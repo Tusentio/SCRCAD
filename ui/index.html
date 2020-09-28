@@ -15,7 +15,7 @@
         <div id="vue-wrapper">
             <header>
                 <div id="window-title">
-                    <img src="circle.png" alt="SCRCAD Icon">
+                    <img src="media/SCRCAD-icon.svg" alt="SCRCAD Icon">
                     <p>SCRCAD <span>Dev</span></p>
                 </div>
                 <ul>
@@ -57,11 +57,154 @@
                     </li>
                 </ul>
                 <div id="window-buttons">
-                    <button><img src="circle.png" alt="Minimize"></button>
-                    <button><img src="circle.png" alt="Maximize / Restore"></button>
-                    <button><img src="circle.png" alt="Close"></button>
+                    <button><img src="media/window_minimize.svg" alt="Minimize"></button>
+                    <button><img src="media/window_maximize.svg" alt="Maximize / Restore"></button>
+                    <button><img src="media/window_close.svg" alt="Close"></button>
                 </div>
             </header>
+            <main>
+                <ul id="toolbar">
+                    <li>
+                        <p>General</p>
+                        <ul>
+                            <li>
+                                <img src="media/undo.svg">
+                                <p>Undo</p>
+                            </li>
+                            <li>
+                                <img src="media/redo.svg">
+                                <p>Redo</p>
+                            </li>
+                            <li>
+                                <img src="media/save.svg">
+                                <p>Save</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Layer</p>
+                        <ul>
+                            <li>
+                                <img src="media/layer.svg">
+                                <p>Duplicate</p>
+                            </li>
+                            <li>
+                                <img src="media/layer.svg">
+                                <p>Delete</p>
+                            </li>
+                            <li>
+                                <img src="media/layer.svg">
+                                <p>Clear</p>
+                            </li>
+                            <li>
+                                <img src="media/layer.svg">
+                                <p>✓ Multi-Layer Selection</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Selection</p>
+                        <ul>
+                            <li>
+                                <img src="media/selection.svg">
+                                <p>Deselect</p>
+                            </li>
+                            <li>
+                                <img src="media/selection.svg">
+                                <p>Invert</p>
+                            </li>
+                            <li>
+                                <img src="media/selection.svg">
+                                <p>Clear</p>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div id="editor-view">
+                    <div class="panel-header">
+                        <p><img src="media/layer-editor.svg">Layer Editor</p>
+                    </div>
+                    <ul class="tool-list">
+                        <li>
+                            <ul>
+                                <li class="tool-list-selected">
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li class="tool-list-selected">
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <canvas id="editor-canvas"></canvas>
+                </div>
+                <div id="preview-view">
+                    <div class="panel-header">
+                        <p><img src="media/3d-cube.svg">3D Preview</p>
+                    </div>
+                    <ul class="tool-list">
+                        <li>
+                            <ul>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                                <li>
+                                    <img src="circle.png">
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <ul>
+                                <li class="tool-list-selected">
+                                    <img src="circle.png">
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <canvas id="preview-canvas"></canvas>
+                </div>
+                <div id="plugins">
+                    <div class="panel-header">
+                        <p><img src="media/plugin.svg">Plugins</p>
+                    </div>
+                    <ul>
+
+                    </ul>
+                </div>
+                <div id="layers">
+                    <div class="panel-header">
+                        <p><img src="media/layer.svg">Layers</p>
+                    </div>
+                    <ul>
+
+                    </ul>
+                </div>
+            </main>
         </div>
         <script>
             app.init(Vue);

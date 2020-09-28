@@ -1,0 +1,40 @@
+@use "variables" as vars;
+
+.tool-list {
+    display: flex;
+    flex-direction: column;
+
+    > li {
+        margin-bottom: .25rem;
+    }
+    
+    ul {
+        display: flex;
+        flex-direction: column;
+    
+        li {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            background: vars.$theme-primary;
+            transition: opacity .2s;
+
+            &:not(.tool-list-selected):hover {
+                opacity: .8;
+            }
+
+            &.tool-list-selected {
+                background: #000;
+                filter: invert(100%);
+            }
+        }
+    }
+
+    img {
+        width: 18px;
+        height: 18px;
+    }
+}
+
