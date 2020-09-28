@@ -1,11 +1,14 @@
 @use "variables" as vars;
 
+:root {
+    font-size: 12px;
+}
+
 * {
     margin: 0;
     padding: 0;
     font-family: "Open Sans";
     box-sizing: border-box;
-    font-size: 13px;
     cursor: default;
     outline: none;
     -webkit-user-drag: none;

@@ -55,7 +55,7 @@ header > ul {
         }
 
         p:hover {
-            background: vars.$theme-primary;
+            background: vars.$theme-secondary;
             color: #ffffff;
         }
 
@@ -96,7 +96,7 @@ header > ul {
         height: 28px;
 
         img {
-            width: 12px;
+            width: 10px;
         }
 
         &:hover {

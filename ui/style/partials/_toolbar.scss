@@ -5,7 +5,7 @@
     display: flex;
 
     > li {
-        margin-right: 2rem;
+        margin-right: 1.8rem;
 
         > p {
             font-size: vars.$text-small;
@@ -18,10 +18,10 @@
         border-left-color: vars.$theme-primary;
     }
     li:nth-child(2) li {
-        border-left-color: rgb(45, 223, 98);
+        border-left-color: rgb(35, 190, 81);
     }
     li:nth-child(3) li {
-        border-left-color: rgb(250, 82, 40);
+        border-left-color: rgb(206, 67, 33);
     }
 }
 
@@ -32,10 +32,11 @@
 
     li {
         border: 1px solid transparent;
-        padding: .4rem 1.8rem .2rem .6rem;
+        padding: .6rem 1.8rem .4rem .6rem;
         color: vars.$text-gray;
         transition: opacity .1s;
-        
+        border-radius: .5rem;
+
         p {
             font-size: vars.$text-small;
         }
@@ -43,6 +44,7 @@
         &:hover {
             border-color: #fff;
             color: #fff;
+            border-radius: 0;
         }
 
         &:active {
