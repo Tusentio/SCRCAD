@@ -18,6 +18,8 @@
   "homepage": "https://github.com/Tusentio/SCRCAD#readme",
   "dependencies": {
     "electron": "^10.1.1",
+    "msgpack5": "^4.2.1",
+    "ndarray": "^1.0.19",
     "three": "^0.120.1",
     "vue": "^2.6.12"
   }
