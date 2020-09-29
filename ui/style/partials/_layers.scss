@@ -1,0 +1,43 @@
+@use "variables" as vars;
+
+#layers {
+
+}
+
+#layers ul {
+    display: flex;
+    flex-direction: column;
+}
+
+#layers ul div {
+    display: flex;
+}
+
+#layers li {
+    border-left: .3rem solid #fff;
+    padding: .5rem;
+}
+
+#layers p {
+    display: flex;
+    color: #fff;
+
+    img {
+        width: 16px;
+        margin-right: .5rem;
+    }
+}
+
+#layers button {
+    border: none;
+    background: none;
+    color: #fff;
+
+    img {
+        width: 12px;
+    }
+}
+
+#layers li.layer-selected {
+    border-color: vars.$theme-primary;
+}

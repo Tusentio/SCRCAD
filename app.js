@@ -4,10 +4,8 @@ app.allowRendererProcessReuse = true;
 app.whenReady().then(() => {
     let window = new BrowserWindow({
         show: false,
-        width: 800,
-        height: 600,
-        minWidth: 200,
-        minHeight: 150,
+        minWidth: 1000,
+        minHeight: 500,
         backgroundColor: "black",
         autoHideMenuBar: true,
         frame: false,
