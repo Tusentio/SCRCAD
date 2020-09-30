@@ -12,8 +12,9 @@ const app = {
     },
     viewport3D: {
         canvas: null,
-        scene: new THREE.Scene(),
-        camera: new THREE.OrthographicCamera(0, 0, 0, 0, 0),
+        renderer: null,
+        scene: null,
+        camera: null,
         view: {
             width: 1,
             height: 1,
@@ -35,21 +36,36 @@ app.init = function (Vue) {
     app.viewport3D.init();
 };
 
-app.viewport3D.init = function () {
-    this.canvas = document.getElementById("3d-preview-canvas");
-    this.scene.add(this.camera);
+app.invalidateViewports = function () {
+    this.viewport3D.render();
+};
 
+app.viewport3D.init = function () {
+    this.canvas = document.getElementById("preview-canvas");
+    this.scene = new THREE.Scene();
+    this.camera = new THREE.OrthographicCamera(0, 0, 0, 0, 0);
+    this.renderer = new THREE.WebGLRenderer({
+        canvas: this.canvas,
+    });
+
+    this.scene.add(this.camera);
     this.setView({
         width: this.canvas.clientWidth,
         height: this.canvas.clientHeight,
     });
+
+    this.render();
+};
+
+app.viewport3D.render = function () {
+    this.renderer.render(this.scene, this.camera);
 };
 
 app.viewport3D.setView = function (view) {
     Object.assign(this.view, view);
     let { width, height, zoom, xOffset, yOffset } = this.view;
 
-    let aspectRatio = this.view.width / this.view.height;
+    let aspectRatio = width / height;
     if (width > height) {
         this.camera.right = (height * aspectRatio) / 2 / zoom;
         this.camera.top = height / 2 / zoom;
@@ -66,6 +82,7 @@ app.viewport3D.setView = function (view) {
     this.camera.bottom += yOffset;
 
     this.camera.updateProjectionMatrix();
+    this.renderer.setViewport(0, 0, width, height);
 };
 
 module.exports = app;
