@@ -6,7 +6,7 @@ header {
 #window-title {
   display: flex;
   align-items: center;
-  background: #777777;
+  background: #7a8488;
   padding: 0.4rem 1rem;
 }
 #window-title img {
@@ -44,7 +44,7 @@ header > ul > li li p {
   padding: 0.3rem 0.8rem;
 }
 header > ul > li p:hover {
-  background: #777777;
+  background: #7a8488;
   color: #ffffff;
 }
 header > ul > li:hover ul {
@@ -299,7 +299,7 @@ main > div {
 }
 .panel-header p {
   padding: 0.4rem 0.8rem;
-  background: #777777;
+  background: #7a8488;
   color: #fff;
   font-size: 11px;
   display: flex;
@@ -310,23 +310,24 @@ main > div {
   display: flex;
   flex-direction: column;
 }
-
 #layers ul div {
   display: flex;
 }
-
-#layers li {
-  border-left: 0.3rem solid #fff;
-  padding: 0.5rem;
-}
-
-#layers p {
+#layers ul p {
   display: flex;
   color: #fff;
+  padding: 0.6rem;
 }
-#layers p img {
-  width: 16px;
+#layers ul p:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+#layers ul p img {
+  width: 12px;
   margin-right: 0.5rem;
+}
+
+#layers li {
+  border-left: 2px solid #fff;
 }
 
 #layers button {
@@ -340,6 +341,46 @@ main > div {
 
 #layers li.layer-selected {
   border-color: #0866e0;
+}
+#layers li.layer-selected div {
+  display: flex;
+  align-items: center;
+}
+#layers li.layer-selected p {
+  background: #0866e0;
+}
+#layers li.layer-selected button:first-child {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  font-size: 11px;
+}
+#layers li.layer-selected button:first-child img {
+  margin-right: 1rem;
+}
+#layers li.layer-selected button:first-child:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+#layers li.layer-selected button:last-child {
+  background: #0866e0;
+  width: 2.4rem;
+  height: 2.4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.1s;
+}
+#layers li.layer-selected button:last-child:hover {
+  opacity: 0.75;
+}
+#layers li.layer-selected div:first-child button:last-child {
+  border-radius: 100% 100% 0 0%;
+  align-self: flex-end;
+}
+#layers li.layer-selected div:last-child button:last-child {
+  border-radius: 0% 0 100% 100%;
+  align-self: flex-start;
 }
 
 /*# sourceMappingURL=main.css.map */

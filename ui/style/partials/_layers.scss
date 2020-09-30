@@ -1,31 +1,31 @@
 @use "variables" as vars;
 
-#layers {
-
-}
-
 #layers ul {
     display: flex;
     flex-direction: column;
-}
 
-#layers ul div {
-    display: flex;
+    div {
+        display: flex;
+    }
+
+    p {
+        display: flex;
+        color: #fff;
+        padding: .6rem;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    
+        img {
+            width: 12px;
+            margin-right: .5rem;
+        }
+    }
 }
 
 #layers li {
-    border-left: .3rem solid #fff;
-    padding: .5rem;
-}
-
-#layers p {
-    display: flex;
-    color: #fff;
-
-    img {
-        width: 16px;
-        margin-right: .5rem;
-    }
+    border-left: 2px solid #fff;
 }
 
 #layers button {
@@ -40,4 +40,53 @@
 
 #layers li.layer-selected {
     border-color: vars.$theme-primary;
+
+    div {
+        display: flex;
+        align-items: center;
+    }
+
+    p {
+        background: vars.$theme-primary;
+    }
+
+    button:first-child {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        padding: .6rem .8rem;
+        font-size: vars.$text-small;
+
+        img {
+            margin-right: 1rem;
+        }
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    }
+
+    button:last-child {
+        background: vars.$theme-primary;
+        width: 2.4rem;
+        height: 2.4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity .1s;
+
+        &:hover {
+            opacity: .75;
+        }
+    }
+
+    div:first-child button:last-child {
+        border-radius: 100% 100% 0 0%;
+        align-self: flex-end;
+    }
+
+    div:last-child button:last-child {
+        border-radius: 0% 0 100% 100%;
+        align-self: flex-start;
+    }
 }
