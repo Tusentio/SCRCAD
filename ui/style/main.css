@@ -192,7 +192,7 @@ main > div {
 
 #editor-view {
   grid-row: 2/4;
-  grid-column: 1/3;
+  grid-column: 1/2;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
@@ -205,9 +205,13 @@ main > div {
   grid-row: 2/3;
   grid-column: 1/2;
 }
+#editor-view .canvas-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #editor-view canvas {
-  grid-row: 2/3;
-  grid-column: 2/3;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 #preview-view {
@@ -225,9 +229,13 @@ main > div {
   grid-row: 2/3;
   grid-column: 1/2;
 }
-#preview-view canvas {
+#preview-view .canvas-wrapper {
   grid-row: 2/3;
   grid-column: 2/3;
+}
+#preview-view canvas {
+  width: 100%;
+  height: 100%;
 }
 
 #plugins {
@@ -254,6 +262,13 @@ main > div {
 }
 #layers ul {
   grid-row: 2/3;
+}
+
+.canvas-wrapper {
+  grid-row: 2/3;
+  grid-column: 2/3;
+  overflow: hidden;
+  background: linear-gradient(-45deg, #012717, #04043f);
 }
 
 .tool-list {
