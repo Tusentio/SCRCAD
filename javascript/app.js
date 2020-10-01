@@ -37,7 +37,7 @@ app.init = function (Vue) {
 };
 
 app.invalidateViewports = function () {
-    this.viewport3D.render();
+    this.viewport3D.invalidate();
 };
 
 app.viewport3D.init = function () {
@@ -53,7 +53,9 @@ app.viewport3D.init = function () {
         width: this.canvas.clientWidth,
         height: this.canvas.clientHeight,
     });
+};
 
+app.viewport3D.invalidate = function () {
     this.render();
 };
 
@@ -83,6 +85,8 @@ app.viewport3D.setView = function (view) {
 
     this.camera.updateProjectionMatrix();
     this.renderer.setViewport(0, 0, width, height);
+
+    this.invalidate();
 };
 
 module.exports = app;
