@@ -232,10 +232,10 @@ main > div {
 #preview-view .canvas-wrapper {
   grid-row: 2/3;
   grid-column: 2/3;
+  position: relative;
 }
 #preview-view canvas {
-  width: 100%;
-  height: 100%;
+  position: absolute;
 }
 
 #plugins {
@@ -299,6 +299,7 @@ main > div {
 }
 .tool-list ul li::after {
   content: attr(data-tooltip);
+  /* background-image: ("../../media/top-view.svg"); */
   white-space: nowrap;
   background: #ffffff;
   padding: 0 1rem;
