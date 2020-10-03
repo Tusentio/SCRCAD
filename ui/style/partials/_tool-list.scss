@@ -18,6 +18,9 @@
     display: flex;
     flex-direction: column;
 
+    position: relative;
+    z-index: 1;
+
     li {
         display: flex;
         justify-content: center;
@@ -40,15 +43,17 @@
             align-items: center;
         }
 
-        &.tool-list-selected, &:not(.tool-list-selected):hover{
+        &:hover::after {
+            display: flex;
+            filter: invert(100%);
+        }
+
+        &.tool-list-selected, &:hover {
             background: #000;
             filter: invert(100%);
-
-            &::after {
-                display: flex;
-                filter: invert(100%);
-            }
         }
+
+        
     }
     
 }
