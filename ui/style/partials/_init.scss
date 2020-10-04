@@ -33,5 +33,22 @@ html, body, #vue-wrapper {
 
 body{
     background: rgb(20, 20, 20);
-    border-bottom: .5rem solid vars.$theme-primary;
+    border-bottom: .4rem solid vars.$theme-primary;
+}
+
+::-webkit-scrollbar {
+    width: .5rem;
+    height: .5rem;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(60, 60, 60); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(80, 80, 80); 
 }

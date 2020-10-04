@@ -1,27 +1,55 @@
 @use "variables" as vars;
 
 #toolbar {
-    padding: .8rem 1rem;
+    margin: .8rem 1rem 1rem 1rem;
+    padding-bottom: .5rem;
     display: flex;
+    overflow: auto;
 
     > li {
-        margin-right: 1.8rem;
+        margin-right: 1.5rem;
+        flex-shrink: 0;
 
         > p {
             font-size: vars.$text-small;
             margin-bottom: .5rem;
-            color: rgb(179, 179, 179);
+            color: rgb(150, 150, 150);
         }
     }
 
+    /* General */
     li:nth-child(1) li {
-        border-left-color: vars.$theme-primary;
+        border-bottom-color: vars.$theme-primary;
     }
+
+    /* Editor */
     li:nth-child(2) li {
-        border-left-color: rgb(35, 190, 81);
+        border-bottom-color: rgb(81, 97, 148);
     }
+
+    /* Preview */
     li:nth-child(3) li {
-        border-left-color: rgb(206, 67, 33);
+        border-bottom-color: rgb(81, 118, 148);
+    }
+
+    /* Layer */
+    li:nth-child(4) li {
+        border-bottom-color: rgb(81, 148, 101);
+    }
+
+    /* Selection */
+    li:nth-child(5) li {
+        border-bottom-color: rgb(161, 96, 80);
+    }
+
+    /* Plugins */
+    li:nth-child(6) li {
+        border-bottom-color: rgb(160, 161, 80);
+    }
+
+    /* Help */
+    li:nth-child(7) li {
+        border-bottom-color: rgb(118, 80, 161);
     }
 }
 
@@ -32,10 +60,10 @@
 
     li {
         border: 1px solid transparent;
-        padding: .6rem 1.8rem .4rem .6rem;
+        padding: .6rem 1.8rem .4rem .7rem;
         color: vars.$text-gray;
         transition: opacity .1s;
-        border-radius: .5rem;
+        margin-right: -.15rem;
 
         p {
             font-size: vars.$text-small;
