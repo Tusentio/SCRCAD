@@ -6,7 +6,7 @@ header {
 #window-title {
   display: flex;
   align-items: center;
-  background: #088d65;
+  background: #595f64;
   padding: 0.4rem 1rem;
 }
 #window-title img {
@@ -44,7 +44,7 @@ header > ul > li li p {
   padding: 0.3rem 0.8rem;
 }
 header > ul > li p:hover {
-  background: #088d65;
+  background: #595f64;
   color: #ffffff;
 }
 header > ul > li:hover ul {
@@ -369,7 +369,7 @@ main > div {
 }
 .panel-header p {
   padding: 0.4rem 0.8rem;
-  background: #088d65;
+  background: #595f64;
   color: #fff;
   font-size: 11px;
   display: flex;
