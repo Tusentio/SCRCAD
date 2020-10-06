@@ -84,6 +84,18 @@ header > ul ul {
   filter: invert(100%);
 }
 
+@font-face {
+  font-family: "Open Sans";
+  src: url("../media/OpenSans-Regular.ttf");
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../media/OpenSans-Bold.ttf");
+  font-weight: 700;
+  font-style: normal;
+}
 :root {
   font-size: 12px;
 }
