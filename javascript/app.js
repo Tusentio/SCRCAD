@@ -1,3 +1,4 @@
+const electron = require("electron");
 const THREE = require("three");
 const Model = require("./model.js");
 
@@ -28,12 +29,33 @@ const app = {
 app.vue.options = {
     el: "#vue-wrapper",
     data: {},
-    methods: {},
+    methods: {
+        onResize(e) {
+            app.invalidateViewports();
+        },
+        close() {
+            electron.remote.BrowserWindow.getFocusedWindow().close();
+        },
+        minimize() {
+            electron.remote.BrowserWindow.getFocusedWindow().minimize();
+        },
+        toggleMaximized() {
+            let browserWindow = electron.remote.BrowserWindow.getFocusedWindow();
+            if (browserWindow.isMaximized()) {
+                browserWindow.unmaximize();
+            } else {
+                browserWindow.maximize();
+            }
+        },
+    },
+    created() {
+        window.addEventListener("resize", this.onResize);
+    },
 };
 
 app.init = function (Vue) {
-    app.vue.instance = new Vue(app.vue.options);
-    app.viewport3D.init();
+    this.vue.instance = new Vue(app.vue.options);
+    this.viewport3D.init();
 };
 
 app.invalidateViewports = function () {
@@ -68,22 +90,15 @@ app.viewport3D.init = function () {
     }
 
     this.scene.add(this.camera);
-
-    update();
+    this.invalidate();
 };
 
-function update() {
-    requestAnimationFrame(() => update());
-
-    app.viewport3D.setView({
-        width: app.viewport3D.canvas.parentElement.clientWidth,
-        height: app.viewport3D.canvas.parentElement.clientHeight,
+app.viewport3D.invalidate = function () {
+    this.setView({
+        width: this.canvas.parentElement.clientWidth,
+        height: this.canvas.parentElement.clientHeight,
     });
 
-    app.viewport3D.render();
-}
-
-app.viewport3D.invalidate = function () {
     this.render();
 };
 
