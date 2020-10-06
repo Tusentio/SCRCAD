@@ -47,7 +47,8 @@ html, body, #vue-wrapper {
 
 body{
     background: rgb(20, 20, 20);
-    border-bottom: .4rem solid vars.$theme-primary;
+    border-bottom: 4px solid vars.$theme-primary;
+    border-top: 2px solid vars.$theme-secondary;
 }
 
 ::-webkit-scrollbar {
