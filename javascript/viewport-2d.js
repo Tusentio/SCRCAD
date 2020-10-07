@@ -1,9 +1,9 @@
+const mouseWheel = require("mouse-wheel");
+
 module.exports = (app) => ({
     canvas: null,
-    /**
-     * @type {CanvasRenderingContext2D}
-     */
     context: null,
+    zoomScrollFactor: 1.2,
     modelPlane: null,
     view: {
         zoom: 100,
@@ -12,6 +12,12 @@ module.exports = (app) => ({
     init() {
         this.canvas = document.getElementById("editor-canvas");
         this.context = this.canvas.getContext("2d");
+
+        mouseWheel(this.canvas.parentNode, (dx, dy) => {
+            this.view.zoom *= dy < 0 ? this.zoomScrollFactor : 1 / this.zoomScrollFactor;
+            this.view.zoom = Math.max(this.view.zoom, 5);
+            this.invalidate();
+        });
 
         this.invalidate();
     },
