@@ -16,7 +16,7 @@
             <header>
                 <div id="window-title">
                     <img src="media/SCRCAD-icon.svg" alt="SCRCAD Icon">
-                    <p>SCRCAD <span>Dev</span></p>
+                    <p>SCRCAD <span>Luna</span></p>
                 </div>
                 <ul>
                     <li>
@@ -38,6 +38,9 @@
                     <li>
                         <p>View</p>
                         <ul>
+                            <li><p>Editor Zoom In</p></li>
+                            <li><p>Editor Zoom Out</p></li>
+                            <li><p>Show / Hide Editor</p></li>
                             <li><p>Show / Hide 3D Preview</p></li>
                         </ul>
                     </li>
@@ -57,9 +60,9 @@
                     </li>
                 </ul>
                 <div id="window-buttons">
-                    <button><img src="media/window_minimize.svg" alt="Minimize"></button>
-                    <button><img src="media/window_maximize.svg" alt="Maximize / Restore"></button>
-                    <button><img src="media/window_close.svg" alt="Close"></button>
+                    <button @click="minimize"><img src="media/window_minimize.svg" alt="Minimize"></button>
+                    <button @click="toggleMaximized"><img src="media/window_maximize.svg" alt="Maximize / Restore"></button>
+                    <button @click="close"><img src="media/window_close.svg" alt="Close"></button>
                 </div>
             </header>
             <main>
@@ -78,6 +81,36 @@
                             <li>
                                 <img src="media/save.svg">
                                 <p>Save</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Editor</p>
+                        <ul>
+                            <li>
+                                <img src="media/layer-editor.svg">
+                                <p>Zoom In</p>
+                            </li>
+                            <li>
+                                <img src="media/layer-editor.svg">
+                                <p>Zoom Out</p>
+                            </li>
+                            <li>
+                                <img src="media/layer-editor.svg">
+                                <p>Hide / Show Grid</p>
+                            </li>
+                            <li>
+                                <img src="media/layer-editor.svg">
+                                <p>Hide / Show Editor</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Preview</p>
+                        <ul>
+                            <li>
+                                <img src="media/3d-cube.svg">
+                                <p>Hide / Show Preview</p>
                             </li>
                         </ul>
                     </li>
@@ -116,6 +149,32 @@
                             <li>
                                 <img src="media/selection.svg">
                                 <p>Clear</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Plugins</p>
+                        <ul>
+                            <li>
+                                <img src="media/plugin.svg">
+                                <p>Reload</p>
+                            </li>
+                            <li>
+                                <img src="media/plugin.svg">
+                                <p>Directory</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Help</p>
+                        <ul>
+                            <li>
+                                <img src="media/SCRCAD-icon.svg">
+                                <p>Guides</p>
+                            </li>
+                            <li>
+                                <img src="media/SCRCAD-icon.svg">
+                                <p>About</p>
                             </li>
                         </ul>
                     </li>

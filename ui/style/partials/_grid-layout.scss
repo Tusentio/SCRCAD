@@ -1,3 +1,5 @@
+@use "variables" as vars;
+
 main {
     display: grid;
     grid-template-rows: auto 1fr 1fr;
@@ -6,7 +8,7 @@ main {
 }
 
 main > div {
-    border: 1px solid rgb(60, 60, 60);
+    border: 1px solid rgb(16,16,16);
 }
 
 #layers, #plugins {
@@ -113,5 +115,5 @@ main > div {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
     overflow: hidden;
-    background: linear-gradient(-45deg, rgb(1, 39, 23), rgb(4, 4, 63));
+    background: linear-gradient(-45deg, rgb(5, 5, 5), rgb(20, 20, 20));
 }
