@@ -4,7 +4,7 @@
   "description": "Voxel Editor",
   "main": "app.js",
   "scripts": {
-    "test": "electron .",
+    "start": "electron .",
     "style": "sass ui/style/main.scss ui/style/main.css --watch"
   },
   "repository": {
