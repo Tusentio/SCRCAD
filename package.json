@@ -4,7 +4,8 @@
   "description": "Voxel Editor",
   "main": "app.js",
   "scripts": {
-    "test": "electron ."
+    "test": "electron .",
+    "style": "sass ui/style/main.scss ui/style/main.css --watch"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
     "ndarray": "^1.0.19",
     "three": "^0.120.1",
     "vue": "^2.6.12"
+  },
+  "devDependencies": {
+    "sass": "^1.27.0"
   }
 }
