@@ -13,17 +13,22 @@ module.exports = (app) => ({
         this.canvas = document.getElementById("editor-canvas");
         this.context = this.canvas.getContext("2d");
 
-        mouseWheel(this.canvas.parentNode, (dx, dy) => {
-            this.view.zoom *= dy < 0 ? this.zoomScrollFactor : 1 / this.zoomScrollFactor;
-            this.view.zoom = Math.max(this.view.zoom, 5);
+        mouseWheel(this.canvas.parentNode, (_, dy) => {
+            this.setView({
+                zoom: Math.max(this.view.zoom * (dy < 0 ? this.zoomScrollFactor : 1 / this.zoomScrollFactor), 5),
+            });
             this.invalidate();
         });
 
         this.invalidate();
     },
     invalidate() {
-        this.setView({});
-        this.render();
+        this._anim =
+            this._anim ||
+            requestAnimationFrame(() => {
+                this._anim = undefined;
+                this.render();
+            });
     },
     render() {
         let gridWidth = this.modelPlane.width + 2;
@@ -45,7 +50,7 @@ module.exports = (app) => ({
         this.modelPlane = app.model.getPlane(plane);
         this.canvas.width = (this.modelPlane.width + 2) * zoom;
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
-        
+
         this.context = this.canvas.getContext("2d");
     },
 });

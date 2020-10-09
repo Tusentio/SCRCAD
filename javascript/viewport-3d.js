@@ -43,12 +43,12 @@ module.exports = (app) => ({
         this.invalidate();
     },
     invalidate() {
-        this.setView({
-            width: this.canvas.parentElement.clientWidth,
-            height: this.canvas.parentElement.clientHeight,
-        });
-
-        this.render();
+        this._anim =
+            this._anim ||
+            requestAnimationFrame(() => {
+                this._anim = undefined;
+                this.render();
+            });
     },
     render() {
         this.renderer.render(this.scene, this.camera);

@@ -7,6 +7,11 @@ module.exports = (app) => ({
         data: {},
         methods: {
             onResize(e) {
+                app.viewport3D.setView({
+                    width: app.viewport3D.canvas.parentElement.clientWidth,
+                    height: app.viewport3D.canvas.parentElement.clientHeight,
+                });
+
                 app.invalidateViewports();
             },
             close() {
