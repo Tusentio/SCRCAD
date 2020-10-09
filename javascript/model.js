@@ -30,14 +30,7 @@ class Model {
     }
 
     _bounded(x, y, z) {
-        return (
-            x >= 0 &&
-            x < this.width &&
-            y >= 0 &&
-            y < this.height &&
-            z >= 0 &&
-            z < this.depth
-        );
+        return x >= 0 && x < this.width && y >= 0 && y < this.height && z >= 0 && z < this.depth;
     }
 
     getVoxelAt(x, y, z) {
@@ -49,10 +42,7 @@ class Model {
             Object.assign(this.getVoxelAt(x, y, z), properties);
         } else if ("color" in properties) {
             this.expandToInclude(x, y, z);
-            this.setVoxelAt(
-                ...this.constrainPositionToBounds(x, y, z),
-                properties
-            );
+            this.setVoxelAt(...this.constrainPositionToBounds(x, y, z), properties);
         }
     }
 
@@ -137,19 +127,15 @@ class Model {
 
         let voxelData = this._voxels.data.map((voxel) => {
             let color = voxel.color;
-            let colorIndex =
-                palette[color] || (palette[color] = ++lastColorIndex);
+            let colorIndex = palette[color] || (palette[color] = ++lastColorIndex);
             return colorIndex;
         });
 
-        let paletteData = Object.keys(palette).sort(
-            (a, b) => palette[a] - palette[b]
-        );
+        let paletteData = Object.keys(palette).sort((a, b) => palette[a] - palette[b]);
         let paletteBuffer = bufferize(new Uint32Array(paletteData));
 
         let paletteSize = Object.keys(palette).length;
-        let bytesPerColorIndex =
-            Math.ceil(Math.log2(paletteSize) / Math.log2(0x100)) || 1;
+        let bytesPerColorIndex = Math.ceil(Math.log2(paletteSize) / Math.log2(0x100)) || 1;
 
         let voxelBuffer = bufferize(voxelData, bytesPerColorIndex);
 
@@ -176,8 +162,7 @@ class Model {
         let palette = debufferize(paletteBuffer, 4);
 
         let paletteSize = palette.length;
-        let bytesPerColorIndex =
-            Math.ceil(Math.log2(paletteSize) / Math.log2(0x100)) || 1;
+        let bytesPerColorIndex = Math.ceil(Math.log2(paletteSize) / Math.log2(0x100)) || 1;
 
         let voxelBuffer = modelFileObject["VOX"];
         let voxelData = debufferize(voxelBuffer, bytesPerColorIndex);
@@ -251,19 +236,11 @@ class Plane {
 }
 
 function bufferize(arrayLike, bytesPerElement) {
-    const BYTES_PER_ELEMENT =
-        bytesPerElement || arrayLike.BYTES_PER_ELEMENT || 1;
+    const BYTES_PER_ELEMENT = bytesPerElement || arrayLike.BYTES_PER_ELEMENT || 1;
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let buffer = Buffer.allocUnsafe(arrayLike.length * BYTES_PER_ELEMENT);
-    let writeFn =
-        buffer.__proto__[
-            `write${
-                ["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][
-                    BYTE_SIZE_ORDER
-                ]
-            }`
-        ];
+    let writeFn = buffer.__proto__[`write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
 
     for (let i = 0; i < arrayLike.length; i++) {
         writeFn.call(buffer, arrayLike[i], i * BYTES_PER_ELEMENT);
@@ -277,14 +254,7 @@ function debufferize(bufferLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let array = new Array(Math.floor(bufferLike.length / BYTES_PER_ELEMENT));
-    let readFn =
-        bufferLike.__proto__[
-            `read${
-                ["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][
-                    BYTE_SIZE_ORDER
-                ]
-            }`
-        ];
+    let readFn = bufferLike.__proto__[`read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
 
     for (let i = 0; i < array.length; i++) {
         array[i] = readFn.call(bufferLike, i * BYTES_PER_ELEMENT);
