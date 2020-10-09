@@ -46,7 +46,6 @@ module.exports = (app) => ({
             height: this.canvas.parentElement.clientHeight,
             zoom: 1,
         });
-        this.invalidate();
     },
     invalidate() {
         this._anim =
@@ -84,5 +83,7 @@ module.exports = (app) => ({
 
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
+
+        this.invalidate();
     },
 });

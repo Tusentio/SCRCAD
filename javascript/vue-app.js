@@ -11,8 +11,6 @@ module.exports = (app) => ({
                     width: app.viewport3D.canvas.parentElement.clientWidth,
                     height: app.viewport3D.canvas.parentElement.clientHeight,
                 });
-
-                app.invalidateViewports();
             },
             close() {
                 electron.remote.BrowserWindow.getFocusedWindow().close();

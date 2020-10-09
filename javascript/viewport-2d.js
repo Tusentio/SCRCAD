@@ -17,14 +17,12 @@ module.exports = (app) => ({
             this.setView({
                 zoom: Math.max(this.view.zoom * (dy < 0 ? this.zoomScrollFactor : 1 / this.zoomScrollFactor), 5),
             });
-            this.invalidate();
         });
 
         this.setView({
             zoom: 100,
             plane: "top",
         });
-        this.invalidate();
     },
     invalidate() {
         this._anim =
@@ -56,5 +54,7 @@ module.exports = (app) => ({
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
 
         this.context = this.canvas.getContext("2d");
+
+        this.invalidate();
     },
 });
