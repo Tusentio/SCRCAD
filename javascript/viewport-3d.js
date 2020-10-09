@@ -6,9 +6,9 @@ module.exports = (app) => ({
     scene: null,
     camera: null,
     view: {
-        width: 1,
-        height: 1,
-        zoom: 1,
+        width: 0,
+        height: 0,
+        zoom: 0,
         xOffset: 0,
         yOffset: 0,
     },
@@ -40,6 +40,12 @@ module.exports = (app) => ({
         }
 
         this.scene.add(this.camera);
+
+        this.setView({
+            width: this.canvas.parentElement.clientWidth,
+            height: this.canvas.parentElement.clientHeight,
+            zoom: 1,
+        });
         this.invalidate();
     },
     invalidate() {

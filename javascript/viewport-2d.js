@@ -6,8 +6,8 @@ module.exports = (app) => ({
     zoomScrollFactor: 1.2,
     modelPlane: null,
     view: {
-        zoom: 100,
-        plane: "top",
+        zoom: 0,
+        plane: null,
     },
     init() {
         this.canvas = document.getElementById("editor-canvas");
@@ -20,6 +20,10 @@ module.exports = (app) => ({
             this.invalidate();
         });
 
+        this.setView({
+            zoom: 100,
+            plane: "top",
+        });
         this.invalidate();
     },
     invalidate() {
