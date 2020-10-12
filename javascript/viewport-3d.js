@@ -15,7 +15,9 @@ module.exports = (app) => ({
     init() {
         this.canvas = document.getElementById("preview-canvas");
         this.scene = new THREE.Scene();
+
         this.camera = new THREE.OrthographicCamera(0, 0, 0, 0, 0);
+        this.scene.add(this.camera);
 
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
@@ -24,6 +26,7 @@ module.exports = (app) => ({
         });
         this.renderer.setClearColor(0, 0);
 
+        // Test scene
         let geometry = new THREE.BoxGeometry(25, 25, 25);
         let material = new THREE.MeshNormalMaterial();
         for (let i = 0; i < 300; i++) {
@@ -39,8 +42,6 @@ module.exports = (app) => ({
             this.scene.add(cube);
         }
 
-        this.scene.add(this.camera);
-
         this.setView({
             width: this.canvas.parentElement.clientWidth,
             height: this.canvas.parentElement.clientHeight,
@@ -48,6 +49,7 @@ module.exports = (app) => ({
         });
     },
     invalidate() {
+        // Don't allow more than one uncompleted animation frame request at once
         this._anim =
             this._anim ||
             requestAnimationFrame(() => {
@@ -62,6 +64,7 @@ module.exports = (app) => ({
         Object.assign(this.view, view);
         let { width, height, zoom, xOffset, yOffset } = this.view;
 
+        // Calculate camera viewing planes based on zoom and aspect ratio
         let aspectRatio = width / height;
         if (width > height) {
             this.camera.right = (height * aspectRatio) / 2 / zoom;
@@ -79,7 +82,8 @@ module.exports = (app) => ({
         this.camera.top += yOffset;
         this.camera.bottom += yOffset;
 
-        this.camera.position.z = 1000;
+        // Have (z: 0) always be in the center of the cameras viewing box
+        this.camera.position.z = this.camera.far / 2;
 
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(width, height);
