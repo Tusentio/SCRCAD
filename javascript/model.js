@@ -216,16 +216,18 @@ class Plane {
     }
 
     forEachInZLayer(z, callbackfn) {
+        const _model = this._model;
+
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 let [mx, my, mz] = this.planeToModelSpace(x, y, z);
 
                 let voxelContainer = {
                     get value() {
-                        return this._model.getVoxelAt(mx, my, mz);
+                        return _model.getVoxelAt(mx, my, mz);
                     },
                     set value(value) {
-                        this.setVoxelAt(mx, my, mz, value);
+                        _model.setVoxelAt(mx, my, mz, value);
                     },
                 };
 
