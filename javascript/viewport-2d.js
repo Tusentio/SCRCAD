@@ -4,6 +4,7 @@ module.exports = (app) => ({
     canvas: null,
     context: null,
     zoomScrollFactor: 1.2,
+    minZoom: 5,
     modelPlane: null,
     view: {
         zoom: 0,
@@ -14,9 +15,7 @@ module.exports = (app) => ({
         this.context = this.canvas.getContext("2d");
 
         mouseWheel(this.canvas.parentNode, (_, dy) => {
-            this.setView({
-                zoom: Math.max(this.view.zoom * (dy < 0 ? this.zoomScrollFactor : 1 / this.zoomScrollFactor), 5),
-            });
+            this.zoom(dy < 0 ? 1 : -1);
         });
 
         this.setView({
@@ -25,6 +24,7 @@ module.exports = (app) => ({
         });
     },
     invalidate() {
+        // Don't allow more than one uncompleted animation frame request at once
         this._anim =
             this._anim ||
             requestAnimationFrame(() => {
@@ -56,5 +56,13 @@ module.exports = (app) => ({
         this.context = this.canvas.getContext("2d");
 
         this.invalidate();
+    },
+    zoom(amount) {
+        this.setView({
+            zoom: Math.max(
+                this.minZoom - 1 + (this.view.zoom - this.minZoom + 1) * this.zoomScrollFactor ** amount,
+                this.minZoom
+            ),
+        });
     },
 });
