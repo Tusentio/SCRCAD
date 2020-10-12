@@ -69,7 +69,7 @@ class Model {
                         px,
                         py,
                         pz,
-                        oldVoxels?.[ox]?.[oy]?.[oz] || {
+                        oldVoxels.get(ox, oy, oz) || {
                             color: 0x00000000,
                             selected: false,
                         }
