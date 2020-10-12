@@ -47,33 +47,40 @@ class Model {
     }
 
     expandToInclude(x, y, z) {
+        // Calculate offset
         let xOffs = -Math.min(0, x);
         let yOffs = -Math.min(0, y);
         let zOffs = -Math.min(0, z);
 
-        let nw = Math.max(x - this.width + 1, xOffs) + this.width;
-        let nh = Math.max(y - this.height + 1, yOffs) + this.height;
-        let nd = Math.max(z - this.depth + 1, zOffs) + this.depth;
+        // Get old width, height, depth, and voxels
+        let ow = this.width;
+        let oh = this.height;
+        let od = this.depth;
+        let oVoxels = this._voxels;
 
-        let oldVoxels = this._voxels;
+        // Calculate and set new width, height, depth, and voxels
+        let nw = Math.max(ow, ow + xOffs, x + 1);
+        let nh = Math.max(oh, oh + yOffs, y + 1);
+        let nd = Math.max(od, od + zOffs, z + 1);
         this._voxels = ndarray(new Array(), [nw, nh, nd]);
 
-        for (let px = 0; px < this.width; px++) {
-            for (let py = 0; py < this.height; py++) {
-                for (let pz = 0; pz < this.depth; pz++) {
-                    let ox = px - xOffs;
-                    let oy = px - yOffs;
-                    let oz = pz - zOffs;
+        // Assign new voxels to the new voxel array
+        for (let px = 0; px < nw; px++) {
+            for (let py = 0; py < nh; py++) {
+                for (let pz = 0; pz < nd; pz++) {
+                    this._voxels.set(px, py, pz, {
+                        color: 0x00000000,
+                        selected: false,
+                    });
+                }
+            }
+        }
 
-                    this._voxels.set(
-                        px,
-                        py,
-                        pz,
-                        oldVoxels.get(ox, oy, oz) || {
-                            color: 0x00000000,
-                            selected: false,
-                        }
-                    );
+        // Reassign old voxels with origin at the offset position
+        for (let px = 0; px < ow; px++) {
+            for (let py = 0; py < oh; py++) {
+                for (let pz = 0; pz < od; pz++) {
+                    this._voxels.set(px + xOffs, py + yOffs, pz + zOffs, oVoxels.get(px, py, pz));
                 }
             }
         }
