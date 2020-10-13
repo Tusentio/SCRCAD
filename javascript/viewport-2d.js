@@ -55,19 +55,13 @@ module.exports = (app) => ({
 
         this.context.lineWidth = 6;
 
-        let gradient = this.context.createLinearGradient(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-        );
+        let gradient = this.context.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
         gradient.addColorStop("0", "blue");
         gradient.addColorStop("1.0", "red");
 
         this.context.strokeStyle = gradient;
 
         this.modelPlane.forEachInZLayer(0, (voxel, x, y) => {
-            
             let voxelTransform = [
                 (x + 1) * this.view.zoom + this.context.lineWidth / 2,
                 (y + 1) * this.view.zoom + this.context.lineWidth / 2,
@@ -75,10 +69,10 @@ module.exports = (app) => ({
                 this.view.zoom - this.context.lineWidth,
             ];
 
-            let buffergrejimoj = Buffer.alloc(4);
-            buffergrejimoj.writeUInt32BE(voxel.value.color);
-            this.context.fillStyle = `#${buffergrejimoj.toString("hex")}`;
-            
+            let tempColorBuffer = Buffer.alloc(4);
+            tempColorBuffer.writeUInt32BE(voxel.value.color);
+            this.context.fillStyle = `#${tempColorBuffer.toString("hex")}`;
+
             let _strokeStyle = this.context.strokeStyle;
             this.context.strokeStyle = this.context.fillStyle;
 
@@ -87,8 +81,7 @@ module.exports = (app) => ({
 
             this.context.strokeStyle = _strokeStyle;
 
-            if (voxel.value.selected)
-                this.context.strokeRect(...voxelTransform);
+            if (voxel.value.selected) this.context.strokeRect(...voxelTransform);
         });
 
         this.context.lineWidth = 1;
@@ -96,12 +89,7 @@ module.exports = (app) => ({
 
         for (let x = 0; x < gridWidth; x++) {
             for (let y = 0; y < gridHeight; y++) {
-                this.context.strokeRect(
-                    x * this.view.zoom,
-                    y * this.view.zoom,
-                    this.view.zoom,
-                    this.view.zoom
-                );
+                this.context.strokeRect(x * this.view.zoom, y * this.view.zoom, this.view.zoom, this.view.zoom);
             }
         }
     },
@@ -120,10 +108,7 @@ module.exports = (app) => ({
     zoom(amount) {
         this.setView({
             zoom: Math.max(
-                this.minZoom -
-                    1 +
-                    (this.view.zoom - this.minZoom + 1) *
-                        this.zoomScrollFactor ** amount,
+                this.minZoom - 1 + (this.view.zoom - this.minZoom + 1) * this.zoomScrollFactor ** amount,
                 this.minZoom
             ),
         });
