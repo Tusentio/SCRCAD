@@ -88,9 +88,11 @@ module.exports = (app) => ({
         this.context.strokeStyle = "rgba(80, 80, 80, 1)";
 
         for (let x = 0; x < gridWidth; x++) {
-            for (let y = 0; y < gridHeight; y++) {
-                this.context.strokeRect(x * this.view.zoom, y * this.view.zoom, this.view.zoom, this.view.zoom);
-            }
+            this.context.strokeRect(x * this.view.zoom, 0, this.view.zoom, this.canvas.height);
+        }
+
+        for (let y = 0; y < gridHeight; y++) {
+            this.context.strokeRect(0, y * this.view.zoom, this.canvas.width, this.view.zoom);
         }
     },
     setView(view) {
