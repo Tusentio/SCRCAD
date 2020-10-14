@@ -13,8 +13,10 @@ const app = {
         this.viewport3D = require("./viewport-3d.js")(this);
 
         this.vue.init(Vue);
-        this.viewport3D.init();
         this.viewport2D.init();
+        this.viewport3D.init();
+
+        this.vue.initialized = true;
     },
     invalidateViewports() {
         this.viewport3D.invalidate();
