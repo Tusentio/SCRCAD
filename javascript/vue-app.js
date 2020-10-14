@@ -5,6 +5,11 @@ module.exports = (app) => ({
     options: {
         el: "#vue-wrapper",
         data: {},
+        computed: {
+            app() {
+                return app;
+            },
+        },
         methods: {
             onResize(e) {
                 app.viewport3D.setView({
