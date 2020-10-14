@@ -55,7 +55,12 @@ module.exports = (app) => ({
 
         this.context.lineWidth = 6;
 
-        let gradient = this.context.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        let gradient = this.context.createLinearGradient(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
         gradient.addColorStop("0", "blue");
         gradient.addColorStop("1.0", "red");
 
@@ -109,10 +114,7 @@ module.exports = (app) => ({
     },
     zoom(amount) {
         this.setView({
-            zoom: Math.max(
-                this.minZoom - 1 + (this.view.zoom - this.minZoom + 1) * this.zoomScrollFactor ** amount,
-                this.minZoom
-            ),
+            zoom: Math.max(this.view.zoom * this.zoomScrollFactor ** amount, this.minZoom),
         });
     },
 });
