@@ -87,11 +87,11 @@
                     <li>
                         <p>Editor</p>
                         <ul>
-                            <li>
+                            <li @click="viewport2D.zoom(1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom In</p>
                             </li>
-                            <li>
+                            <li @click="viewport2D.zoom(-1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom Out</p>
                             </li>
@@ -186,13 +186,13 @@
                     <ul class="tool-list">
                         <li>
                             <ul>
-                                <li class="tool-list-selected" data-tooltip="Top View">
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'top'}" @click="viewport2D.setView({plane: 'top'})" data-tooltip="Top View">
                                     <img src="media/top-view.svg">
                                 </li>
-                                <li data-tooltip="Left View">
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'left'}" @click="viewport2D.setView({plane: 'left'})" data-tooltip="Left View">
                                     <img src="media/left-view.svg">
                                 </li>
-                                <li data-tooltip="Right View">
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'right'}" @click="viewport2D.setView({plane: 'right'})" data-tooltip="Right View">
                                     <img src="media/right-view.svg">
                                 </li>
                             </ul>
@@ -261,13 +261,13 @@
                         <p><img src="media/layer.svg">Layers</p>
                     </div>
                     <ul>
-                        <li>
+                        <li v-for="layer in viewport2D.layerCount">
                             <p>
                                 <img src="media/layer.svg">
-                                Layer #1
+                                Layer #{{layer}}
                             </p>
                         </li>
-                        <li class="layer-selected">
+                        <!--<li class="layer-selected">
                             <div>
                                 <button>
                                     <img src="media/plus.svg">
@@ -290,13 +290,7 @@
                                     <img src="media/down.svg">
                                 </button>
                             </div>
-                        </li>
-                        <li>
-                            <p>
-                                <img src="media/layer.svg">
-                                Layer #3
-                            </p>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </main>

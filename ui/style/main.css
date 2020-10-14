@@ -294,6 +294,7 @@ main > div {
 #plugins {
   grid-row: 2/3;
   grid-column: 3/4;
+  overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
 }
@@ -302,11 +303,13 @@ main > div {
 }
 #plugins ul {
   grid-row: 2/3;
+  overflow: auto;
 }
 
 #layers {
   grid-row: 3/4;
   grid-column: 3/4;
+  overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
 }
@@ -315,6 +318,7 @@ main > div {
 }
 #layers ul {
   grid-row: 2/3;
+  overflow: auto;
 }
 
 .canvas-wrapper {
