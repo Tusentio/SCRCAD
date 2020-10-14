@@ -18,6 +18,53 @@ module.exports = (app) => ({
             this.zoom(dy < 0 ? 1 : -1);
         });
 
+        let drag = null;
+
+        this.canvas.parentNode.addEventListener("mousedown", (e) => {
+            if (e.button != 2) return;
+
+            drag = {
+                x: e.clientX - this.canvas.offsetLeft,
+                y: e.clientY - this.canvas.offsetTop
+            };
+
+            this.canvas.style.left = (this.canvas.offsetLeft - this.canvas.parentNode.offsetLeft) + "px";
+            this.canvas.style.top = (this.canvas.offsetTop - this.canvas.parentNode.offsetTop) + "px";
+
+            console.log({
+                dragX: drag.x,
+                dragY: drag.y,
+                mouseX: e.clientX,
+                mouseY: e.clientY,
+                dX: e.clientX - drag.x - this.canvas.parentNode.offsetLeft,
+                dY: e.clientY - drag.y - this.canvas.parentNode.offsetTop,
+                offsetLeft: this.canvas.offsetLeft - this.canvas.parentNode.offsetLeft,
+                offsetTop: this.canvas.offsetTop - this.canvas.parentNode.offsetTop,
+            });
+        });
+
+        this.canvas.parentNode.addEventListener("mouseup", (e) => {
+            if (e.button != 2) return;
+
+            drag = null;
+        });
+
+        this.canvas.parentNode.addEventListener("mousemove", (e) => {
+            if (!drag) return;
+
+            console.log({
+                dragX: drag.x,
+                dragY: drag.y,
+                mouseX: e.clientX,
+                mouseY: e.clientY,
+                dX: e.clientX - drag.x - this.canvas.parentNode.offsetLeft,
+                dY: e.clientY - drag.y - this.canvas.parentNode.offsetTop
+            });
+
+            this.canvas.style.left = (e.clientX - drag.x - this.canvas.parentNode.offsetLeft) + "px";
+            this.canvas.style.top = (e.clientY - drag.y - this.canvas.parentNode.offsetTop) + "px";
+        });
+
         this.canvas.addEventListener("click", (e) => {
             let posX = e.clientX - e.target.offsetLeft;
             let posY = e.clientY - e.target.offsetTop;
@@ -30,7 +77,7 @@ module.exports = (app) => ({
                 color: 0xffffffff,
             });
 
-            this.invalidate();
+            this.setView({});
         });
 
         this.setView({
@@ -53,7 +100,7 @@ module.exports = (app) => ({
         let gridWidth = this.modelPlane.width + 2;
         let gridHeight = this.modelPlane.height + 2;
 
-        this.context.lineWidth = 6;
+        this.context.lineWidth = 0.16 * this.view.zoom;
 
         let gradient = this.context.createLinearGradient(
             0,
@@ -61,8 +108,8 @@ module.exports = (app) => ({
             this.canvas.width,
             this.canvas.height
         );
-        gradient.addColorStop("0", "blue");
-        gradient.addColorStop("1.0", "red");
+        gradient.addColorStop("0", "#00F5AA");
+        gradient.addColorStop("1.0", "#F90FD6");
 
         this.context.strokeStyle = gradient;
 
