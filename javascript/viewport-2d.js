@@ -39,13 +39,12 @@ module.exports = (app) => ({
             };
         });
 
-        this.canvas.parentNode.addEventListener("mouseup", (e) => {
+        window.addEventListener("mouseup", (e) => {
             if (e.button != 2) return;
-
             drag = null;
         });
 
-        this.canvas.parentNode.addEventListener("mousemove", (e) => {
+        window.addEventListener("mousemove", (e) => {
             if (!drag) return;
 
             this.canvas.style.left = e.clientX + drag.x + "px";
@@ -144,6 +143,7 @@ module.exports = (app) => ({
 
         this.context = this.canvas.getContext("2d");
 
+        app.vue.notify();
         this.invalidate();
     },
     zoom(amount) {

@@ -6,6 +6,7 @@ module.exports = (app) => ({
         el: "#vue-wrapper",
         data: {
             ready: false,
+            update: 0,
         },
         computed: {
             app() {
@@ -40,5 +41,8 @@ module.exports = (app) => ({
     },
     init(Vue) {
         this.instance = new Vue(this.options);
+    },
+    notify() {
+        if (this.instance.ready) this.instance.update++;
     },
 });
