@@ -15,6 +15,7 @@ class Model {
         }
 
         this._voxels = ndarray(voxels, [width, height, depth]);
+        this._changedChunks = new Set();
     }
 
     get width() {
@@ -119,15 +120,6 @@ class Model {
         return new Plane(this, plane);
     }
 
-    getShapeOfPlane(plane) {
-        let shape = this._voxels.shape;
-        return {
-            right: [shape[2], shape[1], shape[0]],
-            top: [shape[2], shape[0], shape[1]],
-            left: [shape[0], shape[1], shape[2]],
-        }[plane];
-    }
-
     async save(path) {
         let lastColorIndex = -1;
         let palette = {};
@@ -181,25 +173,33 @@ class Model {
 
         return new Model(width, height, depth, voxels);
     }
+
+    static calculateChunkID(x, y, z) {
+        return [x, y, z].join(";");
+    }
 }
 
 class Plane {
     constructor(model, plane) {
-        this._shape = model.getShapeOfPlane(plane);
+        this._model = model;
+
+        this._shape = {
+            right: [model.depth, model.height, model.width],
+            top: [model.width, model.depth, model.height],
+            left: [model.width, model.height, model.depth],
+        }[plane];
 
         this.planeToModelSpace = {
             right(x, y, z) {
-                return [this.depth - z, y, x];
+                return [model.width - 1 - z, model.height - 1 - y, x];
             },
             top(x, y, z) {
-                return [this.height - 1 - y, this.depth - 1 - z, x];
+                return [x, model.height - 1 - z, model.depth - 1 - y];
             },
             left(x, y, z) {
-                return [x, y, z];
+                return [x, model.height - 1 - y, z];
             },
         }[plane];
-
-        this._model = model;
     }
 
     get width() {
@@ -249,7 +249,10 @@ function bufferize(arrayLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let buffer = Buffer.allocUnsafe(arrayLike.length * BYTES_PER_ELEMENT);
-    let writeFn = buffer.__proto__[`write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
+    let writeFn =
+        buffer.__proto__[
+            `write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`
+        ];
 
     for (let i = 0; i < arrayLike.length; i++) {
         writeFn.call(buffer, arrayLike[i], i * BYTES_PER_ELEMENT);
@@ -263,7 +266,10 @@ function debufferize(bufferLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let array = new Array(Math.floor(bufferLike.length / BYTES_PER_ELEMENT));
-    let readFn = bufferLike.__proto__[`read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
+    let readFn =
+        bufferLike.__proto__[
+            `read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`
+        ];
 
     for (let i = 0; i < array.length; i++) {
         array[i] = readFn.call(bufferLike, i * BYTES_PER_ELEMENT);
