@@ -45,10 +45,10 @@ html, body, #vue-wrapper {
     flex-direction: column;
 }
 
-body{
+body {
     background: rgb(20, 20, 20);
     border-bottom: 4px solid vars.$theme-primary;
-    border-top: 2px solid vars.$theme-secondary;
+    border-top: 2px solid transparent;
 }
 
 ::-webkit-scrollbar {
