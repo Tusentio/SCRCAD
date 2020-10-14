@@ -6,6 +6,7 @@ module.exports = (app) => ({
     zoomScrollFactor: 1.2,
     minZoom: 5,
     modelPlane: null,
+    layerCount: 0,
     view: {
         zoom: 0,
         plane: null,
@@ -140,10 +141,10 @@ module.exports = (app) => ({
         this.modelPlane = app.model.getPlane(plane);
         this.canvas.width = (this.modelPlane.width + 2) * zoom;
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
+        this.layerCount = this.modelPlane.depth;
 
-        this.context = this.canvas.getContext("2d");
+        //this.context = this.canvas.getContext("2d");
 
-        app.vue.notify();
         this.invalidate();
     },
     zoom(amount) {

@@ -4,22 +4,9 @@ module.exports = (app) => ({
     instance: null,
     options: {
         el: "#vue-wrapper",
-        data: {
-            ready: false,
-            update: 0,
-        },
-        computed: {
-            app() {
-                return app;
-            },
-        },
+        data: app,
+        computed: {},
         methods: {
-            onResize(e) {
-                app.viewport3D.setView({
-                    width: app.viewport3D.canvas.parentElement.clientWidth,
-                    height: app.viewport3D.canvas.parentElement.clientHeight,
-                });
-            },
             close() {
                 electron.remote.BrowserWindow.getFocusedWindow().close();
             },
@@ -35,14 +22,8 @@ module.exports = (app) => ({
                 }
             },
         },
-        created() {
-            window.addEventListener("resize", this.onResize);
-        },
     },
     init(Vue) {
         this.instance = new Vue(this.options);
-    },
-    notify() {
-        if (this.instance.ready) this.instance.update++;
     },
 });

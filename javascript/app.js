@@ -15,8 +15,6 @@ const app = {
         this.vue.init(Vue);
         this.viewport2D.init();
         this.viewport3D.init();
-
-        this.vue.instance.ready = true;
     },
     invalidateViewports() {
         this.viewport3D.invalidate();
