@@ -24,23 +24,19 @@ module.exports = (app) => ({
             if (e.button != 2) return;
 
             drag = {
-                x: e.clientX - this.canvas.offsetLeft,
-                y: e.clientY - this.canvas.offsetTop
+                x:
+                    this.canvas.offsetLeft +
+                    this.canvas.width / 2 -
+                    this.canvas.parentNode.offsetLeft -
+                    this.canvas.parentNode.clientWidth / 2 -
+                    e.clientX,
+                y:
+                    this.canvas.offsetTop +
+                    this.canvas.height / 2 -
+                    this.canvas.parentNode.offsetTop -
+                    this.canvas.parentNode.clientHeight / 2 -
+                    e.clientY,
             };
-
-            this.canvas.style.left = (this.canvas.offsetLeft - this.canvas.parentNode.offsetLeft) + "px";
-            this.canvas.style.top = (this.canvas.offsetTop - this.canvas.parentNode.offsetTop) + "px";
-
-            console.log({
-                dragX: drag.x,
-                dragY: drag.y,
-                mouseX: e.clientX,
-                mouseY: e.clientY,
-                dX: e.clientX - drag.x - this.canvas.parentNode.offsetLeft,
-                dY: e.clientY - drag.y - this.canvas.parentNode.offsetTop,
-                offsetLeft: this.canvas.offsetLeft - this.canvas.parentNode.offsetLeft,
-                offsetTop: this.canvas.offsetTop - this.canvas.parentNode.offsetTop,
-            });
         });
 
         this.canvas.parentNode.addEventListener("mouseup", (e) => {
@@ -52,17 +48,8 @@ module.exports = (app) => ({
         this.canvas.parentNode.addEventListener("mousemove", (e) => {
             if (!drag) return;
 
-            console.log({
-                dragX: drag.x,
-                dragY: drag.y,
-                mouseX: e.clientX,
-                mouseY: e.clientY,
-                dX: e.clientX - drag.x - this.canvas.parentNode.offsetLeft,
-                dY: e.clientY - drag.y - this.canvas.parentNode.offsetTop
-            });
-
-            this.canvas.style.left = (e.clientX - drag.x - this.canvas.parentNode.offsetLeft) + "px";
-            this.canvas.style.top = (e.clientY - drag.y - this.canvas.parentNode.offsetTop) + "px";
+            this.canvas.style.left = e.clientX + drag.x + "px";
+            this.canvas.style.top = e.clientY + drag.y + "px";
         });
 
         this.canvas.addEventListener("click", (e) => {
