@@ -12,10 +12,9 @@ header {
 #window-title img {
   width: 12px;
   height: 12px;
-  margin-right: 0.4rem;
+  margin-right: 0.5rem;
 }
 #window-title p {
-  font-family: "Montserrat";
   font-weight: 700;
   color: #ffffff;
 }
