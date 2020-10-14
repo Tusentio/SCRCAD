@@ -47,6 +47,13 @@ module.exports = (app) => ({
             height: this.canvas.parentElement.clientHeight,
             zoom: 1,
         });
+
+        window.addEventListener("resize", () => {
+            this.setView({
+                width: this.canvas.parentElement.clientWidth,
+                height: this.canvas.parentElement.clientHeight,
+            });
+        });
     },
     invalidate() {
         // Don't allow more than one uncompleted animation frame request at once
@@ -82,7 +89,7 @@ module.exports = (app) => ({
         this.camera.top += yOffset;
         this.camera.bottom += yOffset;
 
-        // Have (z: 0) always be in the center of the cameras viewing box
+        // Have (z: 0) always be in the center of the camera's viewing box
         this.camera.position.z = this.camera.far / 2;
 
         this.camera.updateProjectionMatrix();
