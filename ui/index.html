@@ -186,14 +186,14 @@
                     <ul class="tool-list">
                         <li>
                             <ul>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'top'}" @click="viewport2D.setView({plane: 'top'})" data-tooltip="Top View">
-                                    <img src="media/top-view.svg">
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'top'}" @click="viewport2D.setView({plane: 'top'})" data-tooltip="Front Plane">
+                                    <img src="media/front-view.svg">
                                 </li>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'left'}" @click="viewport2D.setView({plane: 'left'})" data-tooltip="Left View">
-                                    <img src="media/left-view.svg">
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'left'}" @click="viewport2D.setView({plane: 'left'})" data-tooltip="Bottom Plane">
+                                    <img src="media/bottom-view.svg">
                                 </li>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'right'}" @click="viewport2D.setView({plane: 'right'})" data-tooltip="Right View">
-                                    <img src="media/right-view.svg">
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'right'}" @click="viewport2D.setView({plane: 'right'})" data-tooltip="Side Plane">
+                                    <img src="media/side-view.svg">
                                 </li>
                             </ul>
                         </li>
@@ -222,7 +222,7 @@
                     <ul class="tool-list">
                         <li>
                             <ul>
-                                <li data-tooltip="Reset View">
+                                <li data-tooltip="Home View">
                                     <img src="media/home-view.svg">
                                 </li>
                                 <li data-tooltip="Top View">
