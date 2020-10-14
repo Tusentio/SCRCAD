@@ -5,7 +5,7 @@ module.exports = (app) => ({
     options: {
         el: "#vue-wrapper",
         data: {
-            initialized: false,
+            ready: false,
         },
         computed: {
             app() {
