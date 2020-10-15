@@ -47,8 +47,15 @@ main > div {
     }
 
     canvas {
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        border: .3rem solid rgba(255, 255, 255, 0.1);
+
         position: relative;
+        transition: border-color .3s;
+        border-radius: 3%;
+
+        &.canvas-moving {
+            border-color: vars.$theme-primary;
+        }
     }
     
 }

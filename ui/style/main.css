@@ -272,8 +272,13 @@ main > div {
   align-items: center;
 }
 #editor-view canvas {
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 0.3rem solid rgba(255, 255, 255, 0.1);
   position: relative;
+  transition: border-color 0.3s;
+  border-radius: 3%;
+}
+#editor-view canvas.canvas-moving {
+  border-color: #0b68e2;
 }
 
 #preview-view {

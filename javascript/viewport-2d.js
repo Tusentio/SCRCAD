@@ -24,6 +24,8 @@ module.exports = (app) => ({
         this.canvas.parentNode.addEventListener("mousedown", (e) => {
             if (e.button != 2) return;
 
+            this.canvas.classList.add("canvas-moving");
+
             drag = {
                 x:
                     this.canvas.offsetLeft +
@@ -43,6 +45,7 @@ module.exports = (app) => ({
         window.addEventListener("mouseup", (e) => {
             if (e.button != 2) return;
             drag = null;
+            this.canvas.classList.remove("canvas-moving");
         });
 
         window.addEventListener("mousemove", (e) => {
