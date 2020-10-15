@@ -181,25 +181,30 @@ class Model {
 
 class Plane {
     constructor(model, plane) {
+        const { shape, planeToModelSpace } = {
+            right: {
+                shape: [model.depth, model.height, model.width],
+                planeToModelSpace(x, y, z) {
+                    return [model.width - 1 - z, model.height - 1 - y, model.depth - 1 - x];
+                },
+            },
+            top: {
+                shape: [model.width, model.depth, model.height],
+                planeToModelSpace(x, y, z) {
+                    return [x, model.height - 1 - z, y];
+                },
+            },
+            front: {
+                shape: [model.width, model.height, model.depth],
+                planeToModelSpace(x, y, z) {
+                    return [x, model.height - 1 - y, z];
+                },
+            },
+        }[plane];
+
         this._model = model;
-
-        this._shape = {
-            right: [model.depth, model.height, model.width],
-            top: [model.width, model.depth, model.height],
-            left: [model.width, model.height, model.depth],
-        }[plane];
-
-        this.planeToModelSpace = {
-            right(x, y, z) {
-                return [model.width - 1 - z, model.height - 1 - y, x];
-            },
-            top(x, y, z) {
-                return [x, model.height - 1 - z, model.depth - 1 - y];
-            },
-            left(x, y, z) {
-                return [x, model.height - 1 - y, z];
-            },
-        }[plane];
+        this._shape = shape;
+        this.planeToModelSpace = planeToModelSpace;
     }
 
     get width() {
