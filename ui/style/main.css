@@ -1,3 +1,4 @@
+@charset "UTF-8";
 header {
   display: flex;
   -webkit-app-region: drag;
@@ -47,7 +48,7 @@ header > ul > li li p:active {
   opacity: 0.75;
 }
 header > ul > li p:hover {
-  background: #595f64;
+  background: #4c5358;
   color: #ffffff;
 }
 header > ul > li:hover ul {
@@ -57,13 +58,14 @@ header > ul > li:hover ul {
 }
 header > ul ul {
   position: absolute;
-  background: #232323;
+  background: #2d2d2d;
   z-index: 1000;
   flex-direction: column;
   width: 20rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.2rem;
+  overflow: hidden;
   opacity: 0;
-  transition: opacity 0.15s, transform 0.15s ease;
+  transition: opacity 0.2s, transform 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
   transform: translateY(-0.5rem);
   pointer-events: none;
 }
@@ -183,23 +185,44 @@ body {
 #toolbar li:nth-child(1) li {
   border-bottom-color: #0b68e2;
 }
+#toolbar li:nth-child(1) li:hover {
+  background: #0b68e2;
+}
 #toolbar li:nth-child(2) li {
-  border-bottom-color: #516194;
+  border-bottom-color: #4e5c8d;
+}
+#toolbar li:nth-child(2) li:hover {
+  background: #4e5c8d;
 }
 #toolbar li:nth-child(3) li {
-  border-bottom-color: #517694;
+  border-bottom-color: #4a6e8b;
+}
+#toolbar li:nth-child(3) li:hover {
+  background: #4a6e8b;
 }
 #toolbar li:nth-child(4) li {
-  border-bottom-color: #519465;
+  border-bottom-color: #448858;
+}
+#toolbar li:nth-child(4) li:hover {
+  background: #448858;
 }
 #toolbar li:nth-child(5) li {
-  border-bottom-color: #a16050;
+  border-bottom-color: #925242;
+}
+#toolbar li:nth-child(5) li:hover {
+  background: #925242;
 }
 #toolbar li:nth-child(6) li {
-  border-bottom-color: #a0a150;
+  border-bottom-color: #888230;
+}
+#toolbar li:nth-child(6) li:hover {
+  background: #888230;
 }
 #toolbar li:nth-child(7) li {
-  border-bottom-color: #7650a1;
+  border-bottom-color: #714b9c;
+}
+#toolbar li:nth-child(7) li:hover {
+  background: #714b9c;
 }
 
 #toolbar ul {
@@ -216,9 +239,9 @@ body {
   font-size: 11px;
 }
 #toolbar ul li:hover {
-  border-color: #fff;
   color: #fff;
-  border-radius: 0;
+  border-radius: 0.2rem;
+  box-shadow: 0 0.2rem 0.5rem #0000008f;
 }
 #toolbar ul li:active {
   opacity: 0.75;
@@ -254,6 +277,7 @@ main > div {
 #editor-view {
   grid-row: 2/4;
   grid-column: 1/2;
+  z-index: 2;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
@@ -283,6 +307,7 @@ main > div {
 #preview-view {
   grid-row: 2/4;
   grid-column: 2/3;
+  z-index: 1;
   display: grid;
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
@@ -344,9 +369,11 @@ main > div {
 .tool-list {
   display: flex;
   flex-direction: column;
+  margin-top: 0.5rem;
+  background: #0c0c0c;
 }
 .tool-list > li {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 .tool-list img {
   width: 18px;
@@ -366,27 +393,56 @@ main > div {
   width: 36px;
   height: 36px;
   background: #0b68e2;
-  transition: opacity 0.2s;
+  transition: opacity 0.15s, transform 0.4s cubic-bezier(0.075, 0.82, 0.165, 1);
   position: relative;
+}
+.tool-list ul li:first-child {
+  border-radius: 0.2rem 0.2rem 0 0;
+}
+.tool-list ul li:last-child {
+  border-radius: 0 0 0.2rem 0.2rem;
+}
+.tool-list ul li:only-child {
+  border-radius: 0.2rem;
 }
 .tool-list ul li::after {
   content: attr(data-tooltip);
   white-space: nowrap;
-  background: #ffffff;
+  background: #0b68e2;
+  color: #ffffff;
   padding: 0 1rem;
   position: absolute;
   left: 100%;
   height: 36px;
-  display: none;
+  display: flex;
   align-items: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+  transform: translateX(-1rem);
+  z-index: -1;
 }
 .tool-list ul li:hover::after {
-  display: flex;
+  opacity: 1;
+  transform: translateX(0);
+  border-radius: 0 0.2rem 0.2rem 0;
+}
+.tool-list ul li.tool-list-selected {
+  background: white;
+}
+.tool-list ul li.tool-list-selected::after {
+  content: "✔ " attr(data-tooltip);
+  background: white;
+  color: black;
+}
+.tool-list ul li.tool-list-selected img {
   filter: invert(100%);
 }
-.tool-list ul li.tool-list-selected, .tool-list ul li:hover {
-  background: #000;
-  filter: invert(100%);
+.tool-list ul li:hover {
+  border-radius: 0;
+}
+.tool-list ul li:active {
+  opacity: 0.6;
 }
 
 .panel-header {
@@ -400,9 +456,10 @@ main > div {
 }
 .panel-header p {
   padding: 0.4rem 0.8rem;
-  background: #595f64;
+  background: #4c5358;
   color: #fff;
   font-size: 11px;
+  border-radius: 0.2rem 0.2rem 0 0;
   display: flex;
   align-items: center;
 }

@@ -25,6 +25,7 @@ main > div {
 #editor-view {
     grid-row: 2 / 4;
     grid-column: 1 / 2;
+    z-index: 2;
 
     display: grid;
     grid-template-rows: auto 1fr;
@@ -62,7 +63,7 @@ main > div {
 #preview-view {
     grid-row: 2 / 4;
     grid-column: 2 / 3;
-
+    z-index: 1;
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: auto 1fr;
