@@ -60,8 +60,8 @@ module.exports = (app) => ({
             let posX = e.clientX - e.target.offsetLeft;
             let posY = e.clientY - e.target.offsetTop;
 
-            let tileX = Math.floor(posX / this.view.zoom) - 1;
-            let tileY = Math.floor(posY / this.view.zoom) - 1;
+            let tileX = Math.floor(posX / (this.view.zoom + 1)) - 1;
+            let tileY = Math.floor(posY / (this.view.zoom + 1)) - 1;
 
             this.modelPlane.setVoxelAt(tileX, tileY, 0, {
                 selected: true,
