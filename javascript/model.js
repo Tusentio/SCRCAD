@@ -197,7 +197,7 @@ class Plane {
             front: {
                 shape: [model.width, model.height, model.depth],
                 planeToModelSpace(x, y, z) {
-                    return [x, model.height - 1 - y, z];
+                    return [x, model.height - 1 - y, model.depth - 1 - z];
                 },
             },
         }[plane];

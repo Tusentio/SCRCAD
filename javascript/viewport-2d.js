@@ -23,7 +23,7 @@ module.exports = (app) => ({
 
         this.canvas.parentNode.addEventListener("mousedown", (e) => {
             if (e.button != 2) return;
-            
+
             this.canvas.classList.add("canvas-moving");
 
             let canvasStyle = getComputedStyle(this.canvas);
@@ -59,11 +59,22 @@ module.exports = (app) => ({
         });
 
         this.canvas.addEventListener("click", (e) => {
-            let posX = e.clientX - e.target.offsetLeft;
-            let posY = e.clientY - e.target.offsetTop;
+            let canvasStyle = getComputedStyle(this.canvas);
+            let posX =
+                e.clientX -
+                this.canvas.offsetLeft -
+                parseInt(canvasStyle.getPropertyValue("border-left-width"));
+            let posY =
+                e.clientY -
+                this.canvas.offsetTop -
+                parseInt(canvasStyle.getPropertyValue("border-top-width"));
 
-            let tileX = Math.floor(posX / (this.view.zoom + 1)) - 1;
-            let tileY = Math.floor(posY / (this.view.zoom + 1)) - 1;
+            if (posX < 0 || posY < 0 || posX >= this.canvas.width || posY >= this.canvas.height) {
+                return;
+            }
+
+            let tileX = Math.floor(posX / this.view.zoom) - 1;
+            let tileY = Math.floor(posY / this.view.zoom) - 1;
 
             this.modelPlane.setVoxelAt(tileX, tileY, 0, {
                 selected: true,
