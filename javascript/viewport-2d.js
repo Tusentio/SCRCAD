@@ -24,16 +24,20 @@ module.exports = (app) => ({
         this.canvas.parentNode.addEventListener("mousedown", (e) => {
             if (e.button != 2) return;
 
+            let canvasStyle = getComputedStyle(this.canvas);
+
             drag = {
                 x:
                     this.canvas.offsetLeft +
-                    this.canvas.width / 2 -
+                    this.canvas.width / 2 +
+                    parseInt(canvasStyle.getPropertyValue("border-left-width")) -
                     this.canvas.parentNode.offsetLeft -
                     this.canvas.parentNode.clientWidth / 2 -
                     e.clientX,
                 y:
                     this.canvas.offsetTop +
-                    this.canvas.height / 2 -
+                    this.canvas.height / 2 +
+                    parseInt(canvasStyle.getPropertyValue("border-top-width")) -
                     this.canvas.parentNode.offsetTop -
                     this.canvas.parentNode.clientHeight / 2 -
                     e.clientY,
@@ -69,7 +73,7 @@ module.exports = (app) => ({
 
         this.setView({
             zoom: 100,
-            plane: "top",
+            plane: "front",
         });
     },
     invalidate() {
