@@ -105,11 +105,11 @@
                     <li>
                         <p>Editor</p>
                         <ul>
-                            <li @click="viewport2D.zoom(1)">
+                            <li @click="app.viewport2D.zoom(1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom In</p>
                             </li>
-                            <li @click="viewport2D.zoom(-1)">
+                            <li @click="app.viewport2D.zoom(-1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom Out</p>
                             </li>
@@ -204,13 +204,13 @@
                     <ul class="tool-list">
                         <li>
                             <ul>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'top'}" @click="viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
+                                <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'top'}" @click="app.viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
                                     <img src="media/top-plane.svg">
                                 </li>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'front'}" @click="viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
+                                <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'front'}" @click="app.viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
                                     <img src="media/front-plane.svg">
                                 </li>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'right'}" @click="viewport2D.setView({plane: 'right'})" data-tooltip="Right Plane">
+                                <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'right'}" @click="app.viewport2D.setView({plane: 'right'})" data-tooltip="Right Plane">
                                     <img src="media/right-plane.svg">
                                 </li>
                             </ul>
@@ -279,7 +279,7 @@
                         <p><img src="media/layer.svg">Layers</p>
                     </div>
                     <ul>
-                        <li v-for="layer in viewport2D.layerCount">
+                        <li v-for="layer in app.viewport2D.layerCount">
                             <p>
                                 <img src="media/layer.svg">
                                 Layer #{{layer}}
