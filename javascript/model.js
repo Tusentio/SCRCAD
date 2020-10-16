@@ -1,6 +1,7 @@
-const fs = require("fs");
 const msgpack = require("msgpack5")();
 const ndarray = require("ndarray");
+const util = require("util");
+const fs = require("fs");
 
 class Model {
     constructor(width = 1, height = 1, depth = 1, voxels = null) {
@@ -148,11 +149,11 @@ class Model {
         };
 
         let modelFileBuffer = msgpack.encode(modelFileObject);
-        await fs.promises.writeFile(path, modelFileBuffer);
+        await util.promisify(fs.writeFile)(path, modelFileBuffer);
     }
 
     static async load(path) {
-        let modelFileBuffer = await fs.promises.readFile(path);
+        let modelFileBuffer = await util.promisify(fs.readFile)(path);
         let modelFileObject = msgpack.decode(modelFileBuffer);
 
         let { X: width, Y: height, Z: depth } = modelFileObject;
