@@ -484,15 +484,19 @@ main > div {
   padding: 0.6rem;
 }
 #layers ul p:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+#layers ul p:active {
   background: rgba(255, 255, 255, 0.2);
 }
 #layers ul p img {
   width: 12px;
-  margin-right: 0.5rem;
+  margin-right: 1rem;
 }
 
 #layers li {
-  border-left: 2px solid #fff;
+  border-left: 2px solid transparent;
+  opacity: 0.75;
 }
 
 #layers button {
@@ -501,11 +505,12 @@ main > div {
   color: #fff;
 }
 #layers button img {
-  width: 12px;
+  width: 10px;
 }
 
 #layers li.layer-selected {
   border-color: #0b68e2;
+  opacity: 1;
 }
 #layers li.layer-selected div {
   display: flex;
@@ -525,6 +530,9 @@ main > div {
   margin-right: 1rem;
 }
 #layers li.layer-selected button:first-child:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+#layers li.layer-selected button:first-child:active {
   background: rgba(255, 255, 255, 0.2);
 }
 #layers li.layer-selected button:last-child {
@@ -539,12 +547,15 @@ main > div {
 #layers li.layer-selected button:last-child:hover {
   opacity: 0.75;
 }
+#layers li.layer-selected button:last-child:active {
+  opacity: 0.5;
+}
 #layers li.layer-selected div:first-child button:last-child {
-  border-radius: 100% 100% 0 0%;
+  border-radius: 0.2rem 0.2rem 0 0%;
   align-self: flex-end;
 }
 #layers li.layer-selected div:last-child button:last-child {
-  border-radius: 0% 0 100% 100%;
+  border-radius: 0% 0 0.2rem 0.2rem;
   align-self: flex-start;
 }
 
