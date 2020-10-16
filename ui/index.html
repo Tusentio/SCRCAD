@@ -293,7 +293,7 @@
                             <p><img src="media/plugin.svg">Plugins</p>
                         </div>
                         <ul>
-    
+
                         </ul>
                     </div>
                     <div v-show="panels.layers" id="layers">
@@ -307,7 +307,7 @@
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
-                                    <button>
+                                    <button @click="app.viewport2D.swapLayers(layer - 2, layer - 1)">
                                         <img src="media/up.svg">
                                     </button>
                                 </div>
@@ -320,7 +320,7 @@
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
-                                    <button>
+                                    <button @click="app.viewport2D.swapLayers(layer - 1, layer)">
                                         <img src="media/down.svg">
                                     </button>
                                 </div>

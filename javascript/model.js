@@ -304,6 +304,19 @@ class Plane {
             }
         }
     }
+
+    swapLayers(i, j) {
+        let tempLayer = ndarray(new Array(this.width * this.height), [this.width, this.height]);
+
+        this.forEachInZLayer(i, (vc, x, y) => {
+            tempLayer.set(x, y, { ...vc.value });
+            vc.value = this.getVoxelAt(x, y, j);
+        });
+
+        this.forEachInZLayer(j, (vc, x, y) => {
+            vc.value = tempLayer.get(x, y);
+        });
+    }
 }
 
 function bufferize(arrayLike, bytesPerElement) {

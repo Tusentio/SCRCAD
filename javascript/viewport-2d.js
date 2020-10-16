@@ -146,7 +146,7 @@ module.exports = (app) => ({
             this.context.strokeRect(0, y * this.view.zoom, this.canvas.width, this.view.zoom);
         }
     },
-    setView(view, rr) {
+    setView(view) {
         Object.assign(this.view, view);
         let { zoom, plane } = this.view;
 
@@ -170,10 +170,26 @@ module.exports = (app) => ({
         index = Math.min(Math.max(index, 0), this.layerCount);
         this.modelPlane.insertLayer(index);
 
-        this.setView({}, true);
+        this.setView({});
 
         if (index <= this.activeLayer) {
             this.selectLayer(this.activeLayer + 1);
+        }
+    },
+    swapLayers(i, j) {
+        i = Math.min(Math.max(i, 0), this.layerCount - 1);
+        j = Math.min(Math.max(j, 0), this.layerCount - 1);
+        if (i === j) return;
+
+        this.modelPlane.swapLayers(i, j);
+
+        switch (this.activeLayer) {
+            case i:
+                this.selectLayer(j);
+                break;
+            case j:
+                this.selectLayer(i);
+                break;
         }
     },
     zoom(amount) {
