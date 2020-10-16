@@ -76,7 +76,7 @@ module.exports = (app) => ({
             let tileX = Math.floor(posX / this.view.zoom) - 1;
             let tileY = Math.floor(posY / this.view.zoom) - 1;
 
-            this.modelPlane.setVoxelAt(tileX, tileY, 0, {
+            this.modelPlane.setVoxelAt(tileX, tileY, this.activeLayer, {
                 selected: true,
                 color: 0xffffffff,
             });
