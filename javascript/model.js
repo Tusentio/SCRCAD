@@ -317,6 +317,14 @@ class Plane {
             vc.value = tempLayer.get(x, y);
         });
     }
+
+    duplicateLayer(z) {
+        this.insertLayer(z + 1);
+
+        this.forEachInZLayer(z + 1, (vc, x, y) => {
+            vc.value = this.getVoxelAt(x, y, z);
+        });
+    }
 }
 
 function bufferize(arrayLike, bytesPerElement) {
