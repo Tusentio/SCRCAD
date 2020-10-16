@@ -185,43 +185,43 @@ body {
 #toolbar li:nth-child(1) li {
   border-bottom-color: #0b68e2;
 }
-#toolbar li:nth-child(1) li:hover {
+#toolbar li:nth-child(1) li:hover, #toolbar li:nth-child(1) li.active {
   background: #0b68e2;
 }
 #toolbar li:nth-child(2) li {
   border-bottom-color: #4e5c8d;
 }
-#toolbar li:nth-child(2) li:hover {
+#toolbar li:nth-child(2) li:hover, #toolbar li:nth-child(2) li.active {
   background: #4e5c8d;
 }
 #toolbar li:nth-child(3) li {
   border-bottom-color: #4a6e8b;
 }
-#toolbar li:nth-child(3) li:hover {
+#toolbar li:nth-child(3) li:hover, #toolbar li:nth-child(3) li.active {
   background: #4a6e8b;
 }
 #toolbar li:nth-child(4) li {
   border-bottom-color: #448858;
 }
-#toolbar li:nth-child(4) li:hover {
+#toolbar li:nth-child(4) li:hover, #toolbar li:nth-child(4) li.active {
   background: #448858;
 }
 #toolbar li:nth-child(5) li {
   border-bottom-color: #925242;
 }
-#toolbar li:nth-child(5) li:hover {
+#toolbar li:nth-child(5) li:hover, #toolbar li:nth-child(5) li.active {
   background: #925242;
 }
 #toolbar li:nth-child(6) li {
   border-bottom-color: #888230;
 }
-#toolbar li:nth-child(6) li:hover {
+#toolbar li:nth-child(6) li:hover, #toolbar li:nth-child(6) li.active {
   background: #888230;
 }
 #toolbar li:nth-child(7) li {
   border-bottom-color: #714b9c;
 }
-#toolbar li:nth-child(7) li:hover {
+#toolbar li:nth-child(7) li:hover, #toolbar li:nth-child(7) li.active {
   background: #714b9c;
 }
 

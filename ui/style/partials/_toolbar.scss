@@ -6,11 +6,11 @@
     display: flex;
     overflow: auto;
 
-    > li {
+    & > li {
         margin-right: 1.5rem;
         flex-shrink: 0;
 
-        > p {
+        & > p {
             font-size: vars.$text-small;
             margin-bottom: .5rem;
             color: rgb(150, 150, 150);
@@ -21,49 +21,49 @@
     li:nth-child(1) li {
         $color: vars.$theme-primary;
         border-bottom-color: $color;
-        &:hover {background: $color;}
+        &:hover, &.active {background: $color;}
     }
 
     /* Editor */
     li:nth-child(2) li {
         $color: rgb(78, 92, 141);
         border-bottom-color: $color;
-        &:hover {background: $color;}
+        &:hover, &.active {background: $color;}
     }
 
     /* Preview */
     li:nth-child(3) li {
         $color: rgb(74, 110, 139);
         border-bottom-color: $color;
-        &:hover {background: $color;}
+        &:hover, &.active {background: $color;}
     }
 
     /* Layer */
     li:nth-child(4) li {
         $color: rgb(68, 136, 88);
         border-bottom-color: $color;
-        &:hover {background:$color;}
+        &:hover, &.active {background:$color;}
     }
 
     /* Selection */
     li:nth-child(5) li {
         $color: rgb(146, 82, 66);
         border-bottom-color: $color;
-        &:hover {background: $color;}
+        &:hover, &.active {background: $color;}
     }
 
     /* Plugins */
     li:nth-child(6) li {
         $color: rgb(136, 130, 48);
         border-bottom-color: $color;
-        &:hover {background: $color;}
+        &:hover, &.active {background: $color;}
     }
 
     /* Help */
     li:nth-child(7) li {
         $color: rgb(113, 75, 156);
         border-bottom-color: $color;
-        &:hover {background: $color;}
+        &:hover, &.active {background: $color;}
     }
 }
 
