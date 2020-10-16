@@ -1,13 +1,13 @@
 @use "variables" as vars;
 
 #toolbar {
-    margin: .8rem 1rem 1rem 1rem;
-    padding-bottom: .5rem;
+    margin: 1.2rem 1rem 1rem 1rem;
+    height: 6.5rem;
     display: flex;
     overflow: auto;
 
     & > li {
-        margin-right: 1.5rem;
+        margin-right: 1rem;
         flex-shrink: 0;
 
         & > p {
@@ -74,19 +74,21 @@
 
     li {
         border: 1px solid transparent;
-        padding: .6rem 1.8rem .4rem .7rem;
+        padding: .7rem 1.9rem .5rem .8rem;
         color: vars.$text-gray;
         transition: opacity .1s;
-        margin-right: -.15rem;
+        
 
         p {
             font-size: vars.$text-small;
         }
 
+        &.active, &:hover {
+            border-radius: vars.$panel-border-radius;
+        }
+
         &:hover {
             color: #fff;
-            border-radius: vars.$panel-border-radius;
-            box-shadow: 0 .2rem .5rem #0000008f;
         }
 
         &:active {
@@ -99,7 +101,7 @@
         width: 10px;
         height: 10px;
         display: block;
-        margin-bottom: .2rem;
+        margin-bottom: .35rem;
     }
 
 }
