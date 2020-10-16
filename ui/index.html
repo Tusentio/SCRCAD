@@ -24,7 +24,7 @@
                         <ul>
                             <li><p>New</p></li>
                             <li><p>Open</p></li>
-                            <li><p>Exit</p></li>
+                            <li @click="close"><p>Exit</p></li>
                         </ul>
                     </li>
                     <li>
@@ -38,10 +38,10 @@
                     <li>
                         <p>View</p>
                         <ul>
-                            <li><p>Editor Zoom In</p></li>
-                            <li><p>Editor Zoom Out</p></li>
-                            <li><p>Show / Hide Editor</p></li>
-                            <li><p>Show / Hide 3D Preview</p></li>
+                            <li @click="app.viewport2D.zoom(1)"><p>Editor Zoom In</p></li>
+                            <li @click="app.viewport2D.zoom(-1)"><p>Editor Zoom Out</p></li>
+                            <li @click="panels.editor = !panels.editor"><p>Editor <span v-if="panels.editor">✓</span></p></li>
+                            <li @click="panels.preview = !panels.preview"><p>Preview <span v-if="panels.preview">✓</span></p></li>
                         </ul>
                     </li>
                     <li>
@@ -59,7 +59,7 @@
                             <li><p>Deselect</p></li>
                             <li><p>Invert</p></li>
                             <li><p>Clear</p></li>
-                            <li><p>Multi-Layer Selection ✓</p></li>
+                            <li><p>Multi-Layer</p></li>
                         </ul>
                     </li>
                     <li>
@@ -105,6 +105,14 @@
                     <li>
                         <p>Editor</p>
                         <ul>
+                            <li :class="{active: panels.editor}" @click="panels.editor = !panels.editor">
+                                <img src="media/layer-editor.svg">
+                                <p>Visible</p>
+                            </li>
+                            <li>
+                                <img src="media/layer-editor.svg">
+                                <p>Show Grid</p>
+                            </li>
                             <li @click="app.viewport2D.zoom(1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom In</p>
@@ -113,22 +121,14 @@
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom Out</p>
                             </li>
-                            <li>
-                                <img src="media/layer-editor.svg">
-                                <p>Hide / Show Grid</p>
-                            </li>
-                            <li>
-                                <img src="media/layer-editor.svg">
-                                <p>Hide / Show Editor</p>
-                            </li>
                         </ul>
                     </li>
                     <li>
                         <p>Preview</p>
                         <ul>
-                            <li>
+                            <li :class="{active: panels.preview}" @click="panels.preview = !panels.preview">
                                 <img src="media/3d-cube.svg">
-                                <p>Hide / Show Preview</p>
+                                <p>Visible</p>
                             </li>
                         </ul>
                     </li>
@@ -164,9 +164,9 @@
                                 <img src="media/selection.svg">
                                 <p>Clear</p>
                             </li>
-                            <li class="active">
+                            <li>
                                 <img src="media/selection.svg">
-                                <p>Multi-Layer ✓</p>
+                                <p>Multi-Layer</p>
                             </li>
                         </ul>
                     </li>
@@ -197,73 +197,75 @@
                         </ul>
                     </li>
                 </ul>
-                <div id="editor-view">
-                    <div class="panel-header">
-                        <p><img src="media/layer-editor.svg">Layer Editor</p>
+                <div id="viewports">
+                    <div v-show="panels.editor" id="editor-view">
+                        <div class="panel-header">
+                            <p><img src="media/layer-editor.svg">Layer Editor</p>
+                        </div>
+                        <ul class="tool-list">
+                            <li>
+                                <ul>
+                                    <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'top'}" @click="app.viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
+                                        <img src="media/top-plane.svg">
+                                    </li>
+                                    <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'front'}" @click="app.viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
+                                        <img src="media/front-plane.svg">
+                                    </li>
+                                    <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'right'}" @click="app.viewport2D.setView({plane: 'right'})" data-tooltip="Right Plane">
+                                        <img src="media/right-plane.svg">
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li data-tooltip="Selection Tool Placeholder">
+                                        <img src="media/selection.svg">
+                                    </li>
+                                    <li class="tool-list-selected" data-tooltip="Selection Tool Placeholder">
+                                        <img src="media/selection.svg">
+                                    </li>
+                                    <li data-tooltip="Selection Tool Placeholder">
+                                        <img src="media/selection.svg">
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="canvas-wrapper">
+                            <canvas id="editor-canvas" width=500 height=500></canvas>
+                        </div>
                     </div>
-                    <ul class="tool-list">
-                        <li>
-                            <ul>
-                                <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'top'}" @click="app.viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
-                                    <img src="media/top-plane.svg">
-                                </li>
-                                <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'front'}" @click="app.viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
-                                    <img src="media/front-plane.svg">
-                                </li>
-                                <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'right'}" @click="app.viewport2D.setView({plane: 'right'})" data-tooltip="Right Plane">
-                                    <img src="media/right-plane.svg">
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <ul>
-                                <li data-tooltip="Selection Tool Placeholder">
-                                    <img src="media/selection.svg">
-                                </li>
-                                <li class="tool-list-selected" data-tooltip="Selection Tool Placeholder">
-                                    <img src="media/selection.svg">
-                                </li>
-                                <li data-tooltip="Selection Tool Placeholder">
-                                    <img src="media/selection.svg">
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div class="canvas-wrapper">
-                        <canvas id="editor-canvas" width=500 height=500></canvas>
-                    </div>
-                </div>
-                <div id="preview-view">
-                    <div class="panel-header">
-                        <p><img src="media/3d-cube.svg">3D Preview</p>
-                    </div>
-                    <ul class="tool-list">
-                        <li>
-                            <ul>
-                                <li data-tooltip="Home View">
-                                    <img src="media/home-view.svg">
-                                </li>
-                                <li data-tooltip="Top View">
-                                    <img src="media/top-view.svg">
-                                </li>
-                                <li data-tooltip="Left View">
-                                    <img src="media/left-view.svg">
-                                </li>
-                                <li data-tooltip="Right View">
-                                    <img src="media/right-view.svg">
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <ul>
-                                <li class="tool-list-selected" data-tooltip="Only Render Current Layer">
-                                    <img src="media/layer.svg">
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <div class="canvas-wrapper">
-                        <canvas id="preview-canvas"></canvas>
+                    <div v-show="panels.preview" id="preview-view">
+                        <div class="panel-header">
+                            <p><img src="media/3d-cube.svg">3D Preview</p>
+                        </div>
+                        <ul class="tool-list">
+                            <li>
+                                <ul>
+                                    <li data-tooltip="Home View">
+                                        <img src="media/home-view.svg">
+                                    </li>
+                                    <li data-tooltip="Top View">
+                                        <img src="media/top-view.svg">
+                                    </li>
+                                    <li data-tooltip="Left View">
+                                        <img src="media/left-view.svg">
+                                    </li>
+                                    <li data-tooltip="Right View">
+                                        <img src="media/right-view.svg">
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li class="tool-list-selected" data-tooltip="Only Render Current Layer">
+                                        <img src="media/layer.svg">
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="canvas-wrapper">
+                            <canvas id="preview-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
                 <div id="plugins">

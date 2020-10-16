@@ -4,7 +4,13 @@ module.exports = (app) => ({
     instance: null,
     options: {
         el: "#vue-wrapper",
-        data: { app },
+        data: { 
+            app,
+            panels: {
+                editor: true,
+                preview: true
+            }
+        },
         computed: {},
         methods: {
             close() {
