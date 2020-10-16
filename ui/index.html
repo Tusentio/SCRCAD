@@ -204,11 +204,11 @@
                     <ul class="tool-list">
                         <li>
                             <ul>
-                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'front'}" @click="viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
-                                    <img src="media/front-plane.svg">
-                                </li>
                                 <li :class="{'tool-list-selected': viewport2D.view.plane == 'top'}" @click="viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
                                     <img src="media/top-plane.svg">
+                                </li>
+                                <li :class="{'tool-list-selected': viewport2D.view.plane == 'front'}" @click="viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
+                                    <img src="media/front-plane.svg">
                                 </li>
                                 <li :class="{'tool-list-selected': viewport2D.view.plane == 'right'}" @click="viewport2D.setView({plane: 'right'})" data-tooltip="Right Plane">
                                     <img src="media/right-plane.svg">
