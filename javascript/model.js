@@ -183,19 +183,19 @@ class Plane {
     constructor(model, plane) {
         const { shape, planeToModelSpace } = {
             right: {
-                shape: [model.depth, model.height, model.width],
+                shape: () => [model.depth, model.height, model.width],
                 planeToModelSpace(x, y, z) {
                     return [model.width - 1 - z, model.height - 1 - y, model.depth - 1 - x];
                 },
             },
             top: {
-                shape: [model.width, model.depth, model.height],
+                shape: () => [model.width, model.depth, model.height],
                 planeToModelSpace(x, y, z) {
                     return [x, model.height - 1 - z, y];
                 },
             },
             front: {
-                shape: [model.width, model.height, model.depth],
+                shape: () => [model.width, model.height, model.depth],
                 planeToModelSpace(x, y, z) {
                     return [x, model.height - 1 - y, model.depth - 1 - z];
                 },
@@ -208,15 +208,15 @@ class Plane {
     }
 
     get width() {
-        return this._shape[0];
+        return this._shape()[0];
     }
 
     get height() {
-        return this._shape[1];
+        return this._shape()[1];
     }
 
     get depth() {
-        return this._shape[2];
+        return this._shape()[2];
     }
 
     getVoxelAt(x, y, z) {
@@ -247,6 +247,63 @@ class Plane {
             }
         }
     }
+
+    insertLayer(z) {
+        const model = this._model;
+
+        // Get old width, height, depth, and voxels
+        let oVoxels = model._voxels;
+
+        let dSize;
+        {
+            let a = this.planeToModelSpace(0, 0, 0);
+            let b = this.planeToModelSpace(0, 0, 1);
+            dSize = [Math.abs(a[0] - b[0]), Math.abs(a[1] - b[1]), Math.abs(a[2] - b[2])];
+        }
+
+        // Calculate and set new width, height, depth, and voxels
+        let nw = model.width + dSize[0];
+        let nh = model.height + dSize[1];
+        let nd = model.depth + dSize[2];
+        model._voxels = ndarray(new Array(), [nw, nh, nd]);
+
+        // Copy/transfer and insert
+        for (let pz = 0; pz < this.depth; pz++) {
+            switch (Math.sign(pz - z)) {
+                case 1:
+                    for (let px = 0; px < this.width; px++) {
+                        for (let py = 0; py < this.height; py++) {
+                            let [mx, my, mz] = this.planeToModelSpace(px, py, pz);
+
+                            model._voxels.set(mx, my, mz, oVoxels.get(mx, my, mz));
+                        }
+                    }
+                    break;
+                case 0:
+                    for (let px = 0; px < this.width; px++) {
+                        for (let py = 0; py < this.height; py++) {
+                            let [mx, my, mz] = this.planeToModelSpace(px, py, pz);
+
+                            model._voxels.set(mx, my, mz, {
+                                color: 0x00000000,
+                                selected: false,
+                            });
+                        }
+                    }
+                    break;
+                case -1:
+                    for (let px = 0; px < this.width; px++) {
+                        for (let py = 0; py < this.height; py++) {
+                            let [mx, my, mz] = this.planeToModelSpace(px, py, pz);
+                            let [ox, oy, oz] = this.planeToModelSpace(px, py, pz + 1);
+
+                            model._voxels.set(mx, my, mz, oVoxels.get(ox, oy, oz));
+                        }
+                    }
+                    break;
+            }
+        }
+    }
 }
 
 function bufferize(arrayLike, bytesPerElement) {
@@ -254,10 +311,7 @@ function bufferize(arrayLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let buffer = Buffer.allocUnsafe(arrayLike.length * BYTES_PER_ELEMENT);
-    let writeFn =
-        buffer.__proto__[
-            `write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`
-        ];
+    let writeFn = buffer.__proto__[`write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
 
     for (let i = 0; i < arrayLike.length; i++) {
         writeFn.call(buffer, arrayLike[i], i * BYTES_PER_ELEMENT);
@@ -271,10 +325,7 @@ function debufferize(bufferLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let array = new Array(Math.floor(bufferLike.length / BYTES_PER_ELEMENT));
-    let readFn =
-        bufferLike.__proto__[
-            `read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`
-        ];
+    let readFn = bufferLike.__proto__[`read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
 
     for (let i = 0; i < array.length; i++) {
         array[i] = readFn.call(bufferLike, i * BYTES_PER_ELEMENT);

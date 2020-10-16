@@ -303,7 +303,7 @@
                         <ul>
                             <li v-for="layer in app.viewport2D.layerCount" :class="{ 'layer-selected': app.viewport2D.activeLayer == layer - 1 }">
                                 <div v-if="app.viewport2D.activeLayer == layer - 1">
-                                    <button>
+                                    <button @click="app.viewport2D.insertLayer(layer - 1)">
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
@@ -316,7 +316,7 @@
                                     Layer #{{layer}}
                                 </p>
                                 <div v-if="app.viewport2D.activeLayer == layer - 1">
-                                    <button>
+                                    <button @click="app.viewport2D.insertLayer(layer)">
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
