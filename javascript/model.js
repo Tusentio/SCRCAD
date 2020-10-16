@@ -325,6 +325,14 @@ class Plane {
             vc.value = this.getVoxelAt(x, y, z);
         });
     }
+
+    clearLayer(z) {
+        this.forEachInZLayer(z, (vc) => {
+            vc.value = {
+                color: 0x00000000,
+            };
+        });
+    }
 }
 
 function bufferize(arrayLike, bytesPerElement) {

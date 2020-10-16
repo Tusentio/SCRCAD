@@ -167,7 +167,7 @@ module.exports = (app) => ({
         this.invalidate();
     },
     duplicateLayer(index) {
-        index = Math.min(Math.max(index, 0), this.layerCount);
+        index = Math.min(Math.max(index, 0), this.layerCount - 1);
         this.modelPlane.duplicateLayer(index);
 
         this.setView({});
@@ -201,6 +201,11 @@ module.exports = (app) => ({
                 this.selectLayer(i);
                 break;
         }
+    },
+    clearLayer(index) {
+        index = Math.min(Math.max(index, 0), this.layerCount - 1);
+        this.modelPlane.clearLayer(index);
+        this.invalidate();
     },
     zoom(amount) {
         this.setView({
