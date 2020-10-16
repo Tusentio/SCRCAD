@@ -42,6 +42,8 @@
                             <li @click="app.viewport2D.zoom(-1)"><p>Editor Zoom Out</p></li>
                             <li @click="panels.editor = !panels.editor"><p>Editor <span v-if="panels.editor">✓</span></p></li>
                             <li @click="panels.preview = !panels.preview"><p>Preview <span v-if="panels.preview">✓</span></p></li>
+                            <li @click="panels.plugins = !panels.plugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
+                            <li @click="panels.layers = !panels.layers"><p>Layers <span v-if="panels.layers">✓</span></p></li>
                         </ul>
                     </li>
                     <li>
@@ -103,12 +105,29 @@
                         </ul>
                     </li>
                     <li>
-                        <p>Editor</p>
+                        <p>View</p>
                         <ul>
                             <li :class="{active: panels.editor}" @click="panels.editor = !panels.editor">
                                 <img src="media/layer-editor.svg">
-                                <p>Visible</p>
+                                <p>Editor</p>
                             </li>
+                            <li :class="{active: panels.preview}" @click="panels.preview = !panels.preview">
+                                <img src="media/3d-cube.svg">
+                                <p>3D Preview</p>
+                            </li>
+                            <li :class="{active: panels.plugins}" @click="panels.plugins = !panels.plugins">
+                                <img src="media/plugin.svg">
+                                <p>Plugins</p>
+                            </li>
+                            <li :class="{active: panels.layers}" @click="panels.layers = !panels.layers">
+                                <img src="media/layer.svg">
+                                <p>Layers</p>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Editor</p>
+                        <ul>
                             <li>
                                 <img src="media/layer-editor.svg">
                                 <p>Show Grid</p>
@@ -126,9 +145,9 @@
                     <li>
                         <p>Preview</p>
                         <ul>
-                            <li :class="{active: panels.preview}" @click="panels.preview = !panels.preview">
+                            <li>
                                 <img src="media/3d-cube.svg">
-                                <p>Visible</p>
+                                <p>Render</p>
                             </li>
                         </ul>
                     </li>
@@ -268,45 +287,47 @@
                         </div>
                     </div>
                 </div>
-                <div id="plugins">
-                    <div class="panel-header">
-                        <p><img src="media/plugin.svg">Plugins</p>
+                <aside>
+                    <div v-show="panels.plugins" id="plugins">
+                        <div class="panel-header">
+                            <p><img src="media/plugin.svg">Plugins</p>
+                        </div>
+                        <ul>
+    
+                        </ul>
                     </div>
-                    <ul>
-
-                    </ul>
-                </div>
-                <div id="layers">
-                    <div class="panel-header">
-                        <p><img src="media/layer.svg">Layers</p>
+                    <div v-show="panels.layers" id="layers">
+                        <div class="panel-header">
+                            <p><img src="media/layer.svg">Layers</p>
+                        </div>
+                        <ul>
+                            <li v-for="layer in app.viewport2D.layerCount" :class="{ 'layer-selected': app.viewport2D.activeLayer == layer - 1 }">
+                                <div v-if="app.viewport2D.activeLayer == layer - 1">
+                                    <button>
+                                        <img src="media/plus.svg">
+                                        Insert new layer
+                                    </button>
+                                    <button>
+                                        <img src="media/up.svg">
+                                    </button>
+                                </div>
+                                <p @click="app.viewport2D.selectLayer(layer - 1)">
+                                    <img src="media/layer.svg">
+                                    Layer #{{layer}}
+                                </p>
+                                <div v-if="app.viewport2D.activeLayer == layer - 1">
+                                    <button>
+                                        <img src="media/plus.svg">
+                                        Insert new layer
+                                    </button>
+                                    <button>
+                                        <img src="media/down.svg">
+                                    </button>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <ul>
-                        <li v-for="layer in app.viewport2D.layerCount" :class="{ 'layer-selected': app.viewport2D.activeLayer == layer - 1 }">
-                            <div v-if="app.viewport2D.activeLayer == layer - 1">
-                                <button>
-                                    <img src="media/plus.svg">
-                                    Insert new layer
-                                </button>
-                                <button>
-                                    <img src="media/up.svg">
-                                </button>
-                            </div>
-                            <p @click="app.viewport2D.selectLayer(layer - 1)">
-                                <img src="media/layer.svg">
-                                Layer #{{layer}}
-                            </p>
-                            <div v-if="app.viewport2D.activeLayer == layer - 1">
-                                <button>
-                                    <img src="media/plus.svg">
-                                    Insert new layer
-                                </button>
-                                <button>
-                                    <img src="media/down.svg">
-                                </button>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                </aside>
             </main>
         </div>
         <script>
