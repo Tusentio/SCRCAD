@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style/main.css">
         <title>UI</title>
-        
+
         <script src="../node_modules/vue/dist/vue.min.js"></script>
         <script>
             const app = require("../javascript/app.js");
@@ -279,14 +279,8 @@
                         <p><img src="media/layer.svg">Layers</p>
                     </div>
                     <ul>
-                        <li v-for="layer in app.viewport2D.layerCount">
-                            <p>
-                                <img src="media/layer.svg">
-                                Layer #{{layer}}
-                            </p>
-                        </li>
-                        <!--<li class="layer-selected">
-                            <div>
+                        <li v-for="layer in app.viewport2D.layerCount" :class="{ 'layer-selected': app.viewport2D.activeLayer == layer - 1 }">
+                            <div v-if="app.viewport2D.activeLayer == layer - 1">
                                 <button>
                                     <img src="media/plus.svg">
                                     Insert new layer
@@ -295,11 +289,11 @@
                                     <img src="media/up.svg">
                                 </button>
                             </div>
-                            <p>
+                            <p @click="app.viewport2D.selectLayer(layer - 1)">
                                 <img src="media/layer.svg">
-                                Layer #2
+                                Layer #{{layer}}
                             </p>
-                            <div>
+                            <div v-if="app.viewport2D.activeLayer == layer - 1">
                                 <button>
                                     <img src="media/plus.svg">
                                     Insert new layer
@@ -308,7 +302,7 @@
                                     <img src="media/down.svg">
                                 </button>
                             </div>
-                        </li>-->
+                        </li>
                     </ul>
                 </div>
             </main>

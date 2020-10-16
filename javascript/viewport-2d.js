@@ -7,9 +7,15 @@ module.exports = (app) => ({
     minZoom: 5,
     modelPlane: null,
     layerCount: 0,
+    activeLayer: 0,
     view: {
         zoom: 0,
         plane: null,
+        layer: {
+            top: 0,
+            right: 0,
+            front: 0,
+        },
     },
     init() {
         this.canvas = document.getElementById("editor-canvas");
@@ -60,14 +66,8 @@ module.exports = (app) => ({
 
         this.canvas.addEventListener("click", (e) => {
             let canvasStyle = getComputedStyle(this.canvas);
-            let posX =
-                e.clientX -
-                this.canvas.offsetLeft -
-                parseInt(canvasStyle.getPropertyValue("border-left-width"));
-            let posY =
-                e.clientY -
-                this.canvas.offsetTop -
-                parseInt(canvasStyle.getPropertyValue("border-top-width"));
+            let posX = e.clientX - this.canvas.offsetLeft - parseInt(canvasStyle.getPropertyValue("border-left-width"));
+            let posY = e.clientY - this.canvas.offsetTop - parseInt(canvasStyle.getPropertyValue("border-top-width"));
 
             if (posX < 0 || posY < 0 || posX >= this.canvas.width || posY >= this.canvas.height) {
                 return;
@@ -106,18 +106,13 @@ module.exports = (app) => ({
 
         this.context.lineWidth = 0.16 * this.view.zoom;
 
-        let gradient = this.context.createLinearGradient(
-            0,
-            0,
-            this.canvas.width,
-            this.canvas.height
-        );
+        let gradient = this.context.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
         gradient.addColorStop("0", "#00F5AA");
         gradient.addColorStop("1.0", "#F90FD6");
 
         this.context.strokeStyle = gradient;
 
-        this.modelPlane.forEachInZLayer(0, (voxel, x, y) => {
+        this.modelPlane.forEachInZLayer(this.activeLayer, (voxel, x, y) => {
             let voxelTransform = [
                 (x + 1) * this.view.zoom + this.context.lineWidth / 2,
                 (y + 1) * this.view.zoom + this.context.lineWidth / 2,
@@ -159,8 +154,14 @@ module.exports = (app) => ({
         this.canvas.width = (this.modelPlane.width + 2) * zoom;
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
         this.layerCount = this.modelPlane.depth;
+        this.activeLayer = this.view.layer[plane];
 
-        //this.context = this.canvas.getContext("2d");
+        this.invalidate();
+    },
+    selectLayer(index) {
+        console.log(index);
+        index = Math.min(Math.max(index, 0), this.layerCount - 1);
+        this.activeLayer = this.view.layer[this.view.plane] = index;
 
         this.invalidate();
     },
