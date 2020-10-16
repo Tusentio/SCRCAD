@@ -297,6 +297,7 @@ main > div {
 }
 #editor-view canvas {
   border: 0.3rem solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.2rem;
   position: relative;
   transition: border-color 0.3s;
 }
@@ -417,6 +418,7 @@ main > div {
   display: flex;
   align-items: center;
   pointer-events: none;
+  border-radius: 0 0.2rem 0.2rem 0;
   opacity: 0;
   transition: opacity 0.25s ease, transform 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
   transform: translateX(-1rem);
@@ -425,7 +427,6 @@ main > div {
 .tool-list ul li:hover::after {
   opacity: 1;
   transform: translateX(0);
-  border-radius: 0 0.2rem 0.2rem 0;
 }
 .tool-list ul li.tool-list-selected {
   background: white;

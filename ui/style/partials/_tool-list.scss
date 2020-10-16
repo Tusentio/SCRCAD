@@ -57,6 +57,7 @@
             display: flex;
             align-items: center;
             pointer-events: none;
+            border-radius: 0 vars.$panel-border-radius vars.$panel-border-radius 0;
             opacity: 0;
             transition: opacity .25s ease, transform .2s cubic-bezier(0.075, 0.82, 0.165, 1);
             transform: translateX(-1rem);
@@ -66,7 +67,6 @@
         &:hover::after {
             opacity: 1;
             transform: translateX(0);
-            border-radius: 0 vars.$panel-border-radius vars.$panel-border-radius 0;
         }
 
         &.tool-list-selected {
