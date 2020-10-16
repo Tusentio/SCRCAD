@@ -241,11 +241,17 @@ body {
   color: #e2e2e2;
   transition: opacity 0.1s;
 }
+#toolbar ul li:first-child {
+  border-radius: 0.2rem 0 0 0.2rem;
+}
+#toolbar ul li:last-child {
+  border-radius: 0 0.2rem 0.2rem 0;
+}
+#toolbar ul li:only-child {
+  border-radius: 0.2rem;
+}
 #toolbar ul li p {
   font-size: 11px;
-}
-#toolbar ul li.active, #toolbar ul li:hover {
-  border-radius: 0.2rem;
 }
 #toolbar ul li:hover {
   color: #fff;

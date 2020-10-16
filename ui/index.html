@@ -40,10 +40,10 @@
                         <ul>
                             <li @click="app.viewport2D.zoom(1)"><p>Editor Zoom In</p></li>
                             <li @click="app.viewport2D.zoom(-1)"><p>Editor Zoom Out</p></li>
-                            <li @click="panels.editor = !panels.editor"><p>Editor <span v-if="panels.editor">✓</span></p></li>
-                            <li @click="panels.preview = !panels.preview"><p>Preview <span v-if="panels.preview">✓</span></p></li>
-                            <li @click="panels.plugins = !panels.plugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
-                            <li @click="panels.layers = !panels.layers"><p>Layers <span v-if="panels.layers">✓</span></p></li>
+                            <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor">✓</span></p></li>
+                            <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview">✓</span></p></li>
+                            <li @click="togglePnlPlugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
+                            <li @click="togglePnlLayers"><p>Layers <span v-if="panels.layers">✓</span></p></li>
                         </ul>
                     </li>
                     <li>
@@ -107,19 +107,19 @@
                     <li>
                         <p>View</p>
                         <ul>
-                            <li :class="{active: panels.editor}" @click="panels.editor = !panels.editor">
+                            <li :class="{active: panels.editor}" @click="togglePnlEditor">
                                 <img src="media/layer-editor.svg">
                                 <p>Editor</p>
                             </li>
-                            <li :class="{active: panels.preview}" @click="panels.preview = !panels.preview">
+                            <li :class="{active: panels.preview}" @click="togglePnlPreview">
                                 <img src="media/3d-cube.svg">
                                 <p>3D Preview</p>
                             </li>
-                            <li :class="{active: panels.plugins}" @click="panels.plugins = !panels.plugins">
+                            <li :class="{active: panels.plugins}" @click="togglePnlPlugins">
                                 <img src="media/plugin.svg">
                                 <p>Plugins</p>
                             </li>
-                            <li :class="{active: panels.layers}" @click="panels.layers = !panels.layers">
+                            <li :class="{active: panels.layers}" @click="togglePnlLayers">
                                 <img src="media/layer.svg">
                                 <p>Layers</p>
                             </li>

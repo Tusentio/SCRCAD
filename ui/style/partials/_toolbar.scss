@@ -85,13 +85,20 @@
         color: vars.$text-gray;
         transition: opacity .1s;
         
+        &:first-child {
+            border-radius: vars.$panel-border-radius 0 0 vars.$panel-border-radius;
+        }
+
+        &:last-child {
+            border-radius: 0 vars.$panel-border-radius vars.$panel-border-radius 0;
+        }
+
+        &:only-child {
+            border-radius: vars.$panel-border-radius;
+        }
 
         p {
             font-size: vars.$text-small;
-        }
-
-        &.active, &:hover {
-            border-radius: vars.$panel-border-radius;
         }
 
         &:hover {

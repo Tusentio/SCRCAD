@@ -20,6 +20,9 @@ const app = {
         this.viewport3D.invalidate();
         this.viewport2D.invalidate();
     },
+    dispatchResize() {
+        requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
+    }
 };
 
 module.exports = app;

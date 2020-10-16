@@ -29,6 +29,22 @@ module.exports = (app) => ({
                     browserWindow.maximize();
                 }
             },
+            togglePnlEditor() {
+                this.panels.editor = !this.panels.editor;
+                app.dispatchResize();
+            },
+            togglePnlPreview() {
+                this.panels.preview = !this.panels.preview;
+                app.dispatchResize();
+            },
+            togglePnlPlugins() {
+                this.panels.plugins = !this.panels.plugins;
+                app.dispatchResize();
+            },
+            togglePnlLayers() {
+                this.panels.layers = !this.panels.layers;
+                app.dispatchResize();
+            }
         },
     },
     init(Vue) {
