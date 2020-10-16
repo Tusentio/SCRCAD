@@ -322,7 +322,7 @@ class Plane {
         this.insertLayer(z + 1);
 
         this.forEachInZLayer(z + 1, (vc, x, y) => {
-            vc.value = this.getVoxelAt(x, y, z);
+            vc.value.color = this.getVoxelAt(x, y, z).color;
         });
     }
 
