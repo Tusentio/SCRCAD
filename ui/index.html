@@ -224,6 +224,13 @@
                         <ul class="tool-list">
                             <li>
                                 <ul>
+                                    <li @click="app.viewport2D.resetPosition()" data-tooltip="Home View">
+                                        <img src="media/home-view.svg">
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
                                     <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'top'}" @click="app.viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
                                         <img src="media/top-plane.svg">
                                     </li>

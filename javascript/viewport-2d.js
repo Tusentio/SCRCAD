@@ -89,6 +89,11 @@ module.exports = (app) => ({
             plane: "front",
         });
     },
+    resetPosition() {
+        this.canvas.style.left = "0px";
+        this.canvas.style.top = "0px";
+        this.setView({zoom: 100});
+    },
     invalidate() {
         // Don't allow more than one uncompleted animation frame request at once
         this._anim =
