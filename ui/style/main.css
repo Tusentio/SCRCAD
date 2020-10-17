@@ -290,6 +290,7 @@ main > div {
 #viewports {
   grid-row: 2/3;
   grid-column: 1/2;
+  overflow: hidden;
   display: flex;
   background: linear-gradient(0deg, #050505, #141414);
 }
@@ -352,6 +353,7 @@ main > div {
 main > aside {
   grid-row: 2/3;
   grid-column: 2/3;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
