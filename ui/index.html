@@ -154,7 +154,7 @@
                     <li>
                         <p>Layer</p>
                         <ul>
-                            <li>
+                            <li @click="app.viewport2D.duplicateLayer(app.viewport2D.activeLayer)">
                                 <img src="media/layer.svg">
                                 <p>Duplicate</p>
                             </li>
@@ -162,7 +162,7 @@
                                 <img src="media/layer.svg">
                                 <p>Delete</p>
                             </li>
-                            <li>
+                            <li @click="app.viewport2D.clearLayer(app.viewport2D.activeLayer)">
                                 <img src="media/layer.svg">
                                 <p>Clear</p>
                             </li>

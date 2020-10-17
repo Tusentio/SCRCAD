@@ -171,6 +171,16 @@ module.exports = (app) => ({
 
         this.invalidate();
     },
+    duplicateLayer(index) {
+        index = Math.min(Math.max(index, 0), this.layerCount - 1);
+        this.modelPlane.duplicateLayer(index);
+
+        this.setView({});
+
+        if (index < this.activeLayer) {
+            this.selectLayer(this.activeLayer + 1);
+        }
+    },
     insertLayer(index) {
         index = Math.min(Math.max(index, 0), this.layerCount);
         this.modelPlane.insertLayer(index);
@@ -196,6 +206,11 @@ module.exports = (app) => ({
                 this.selectLayer(i);
                 break;
         }
+    },
+    clearLayer(index) {
+        index = Math.min(Math.max(index, 0), this.layerCount - 1);
+        this.modelPlane.clearLayer(index);
+        this.invalidate();
     },
     zoom(amount) {
         this.setView({
