@@ -8,6 +8,7 @@ module.exports = (app) => ({
     modelPlane: null,
     layerCount: 0,
     activeLayer: 0,
+    grid: true,
     view: {
         zoom: 0,
         plane: null,
@@ -109,12 +110,12 @@ module.exports = (app) => ({
         let gridWidth = this.modelPlane.width + 2;
         let gridHeight = this.modelPlane.height + 2;
 
-        this.context.lineWidth = 0.16 * this.view.zoom;
+        this.context.lineWidth = 0.1 * this.view.zoom;
 
         let gradient = this.context.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-        gradient.addColorStop("0", "#00F5AA");
-        gradient.addColorStop("1.0", "#F90FD6");
-
+        gradient.addColorStop("0", "#0022ff");
+        gradient.addColorStop("1.0", "#00d9ff");
+        
         this.context.strokeStyle = gradient;
 
         this.modelPlane.forEachInZLayer(this.activeLayer, (voxel, x, y) => {
@@ -139,6 +140,8 @@ module.exports = (app) => ({
 
             if (voxel.value.selected) this.context.strokeRect(...voxelTransform);
         });
+
+        if (!this.grid) return;
 
         this.context.lineWidth = 1;
         this.context.strokeStyle = "rgba(80, 80, 80, 1)";
@@ -206,6 +209,10 @@ module.exports = (app) => ({
                 this.selectLayer(i);
                 break;
         }
+    },
+    toggleGrid() {
+        this.grid = !this.grid;
+        this.invalidate();
     },
     clearLayer(index) {
         index = Math.min(Math.max(index, 0), this.layerCount - 1);
