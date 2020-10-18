@@ -56,9 +56,12 @@ class Model extends EventEmitter {
 
     setVoxelAt(x, y, z, properties) {
         if (this._bounded(x, y, z)) {
+            let voxel = this._voxels.get(x, y, z);
+            let oldColor = voxel.color;
+
             Object.assign(this._voxels.get(x, y, z), properties);
 
-            if (this.emitChange) {
+            if (this.emitChange && oldColor !== properties.color) {
                 this.emit("change");
             }
         } else if ("color" in properties) {
