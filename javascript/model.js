@@ -1,10 +1,15 @@
 const msgpack = require("msgpack5")();
 const ndarray = require("ndarray");
+const THREE = require("three");
+const EventEmitter = require("events");
 const util = require("util");
 const fs = require("fs");
+const cube = require("./cube.js");
 
-class Model {
+class Model extends EventEmitter {
     constructor(width = 1, height = 1, depth = 1, voxels = null) {
+        super();
+
         if (voxels === null) {
             voxels = new Array(width * height * depth);
             for (let i = 0; i < voxels.length; i++) {
@@ -16,7 +21,7 @@ class Model {
         }
 
         this._voxels = ndarray(voxels, [width, height, depth]);
-        this._changedChunks = new Set();
+        this.emitChange = true;
     }
 
     get width() {
@@ -36,19 +41,33 @@ class Model {
     }
 
     getVoxelAt(x, y, z) {
-        return this._voxels.get(x, y, z);
+        if (!this._bounded(x, y, z)) return;
+
+        let model = this;
+        return {
+            get value() {
+                return { ...model._voxels.get(x, y, z) };
+            },
+            set value(properties) {
+                model.setVoxelAt(x, y, z, properties);
+            },
+        };
     }
 
     setVoxelAt(x, y, z, properties) {
         if (this._bounded(x, y, z)) {
-            Object.assign(this.getVoxelAt(x, y, z), properties);
+            Object.assign(this._voxels.get(x, y, z), properties);
+
+            if (this.emitChange) {
+                this.emit("change");
+            }
         } else if ("color" in properties) {
-            this.expandToInclude(x, y, z);
+            this._expandToInclude(x, y, z);
             this.setVoxelAt(...this.constrainPositionToBounds(x, y, z), properties);
         }
     }
 
-    expandToInclude(x, y, z) {
+    _expandToInclude(x, y, z) {
         // Calculate offset
         let xOffs = -Math.min(0, x);
         let yOffs = -Math.min(0, y);
@@ -97,21 +116,10 @@ class Model {
     }
 
     forEach(callbackfn) {
-        let model = this;
-
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 for (let z = 0; z < this.depth; z++) {
-                    let voxelContainer = {
-                        get value() {
-                            return model.getVoxelAt(x, y, z);
-                        },
-                        set value(value) {
-                            model.setVoxelAt(x, y, z, value);
-                        },
-                    };
-
-                    callbackfn(voxelContainer, x, y, z);
+                    callbackfn(this.getVoxelAt(x, y, z), x, y, z);
                 }
             }
         }
@@ -121,17 +129,110 @@ class Model {
         return new Plane(this, plane);
     }
 
-    async save(path) {
+    getColorData() {
         let lastColorIndex = -1;
-        let palette = {};
+        let colorIndexLookup = { 0x00000000: -1 };
 
-        let voxelData = this._voxels.data.map((voxel) => {
+        let voxels = this._voxels.data.map((voxel) => {
             let color = voxel.color;
-            let colorIndex = palette[color] || (palette[color] = ++lastColorIndex);
+
+            if (colorIndexLookup[color] === undefined) {
+                colorIndexLookup[color] = ++lastColorIndex;
+            }
+
+            let colorIndex = colorIndexLookup[color];
             return colorIndex;
         });
 
-        let paletteData = Object.keys(palette).sort((a, b) => palette[a] - palette[b]);
+        delete colorIndexLookup[0x00000000];
+        let palette = Object.keys(colorIndexLookup)
+            .sort((a, b) => colorIndexLookup[a] - colorIndexLookup[b])
+            .map((color) => parseInt(color));
+
+        return { voxels, palette };
+    }
+
+    meshify() {
+        let { voxels, palette } = this.getColorData();
+        voxels = voxels
+            .map((colorIndex, position) => ({
+                position,
+                colorIndex,
+            }))
+            .sort((a, b) => a.colorIndex - b.colorIndex)
+            .filter((voxel) => voxel.colorIndex !== -1);
+
+        let geometry = new THREE.BufferGeometry();
+        {
+            let verts = [];
+            let group = {};
+
+            voxels.forEach(({ position, colorIndex }) => {
+                let currentColor = palette[colorIndex];
+                let currentAlpha = currentColor & 0xff;
+                if (currentAlpha === 0) return;
+
+                if (group.materialIndex !== colorIndex) {
+                    geometry.addGroup(group.index, group.count, group.materialIndex);
+                    group = { index: verts.length, count: 0, materialIndex: colorIndex };
+                }
+
+                let [x, y, z] = [
+                    (position / this.depth / this.height) | 0,
+                    ((position / this.depth) | 0) % this.height,
+                    position % this.depth,
+                ];
+
+                let shapeIndex = 0;
+                for (let sideIndex in cube.neighbor_order) {
+                    let offs = cube.neighbor_order[sideIndex];
+                    let [nx, ny, nz] = [x + offs[0], y + offs[1], z + offs[2]];
+
+                    let neighborColor = this.getVoxelAt(nx, ny, nz)?.value.color || 0x00000000;
+                    let neighborAlpha = neighborColor & 0xff;
+                    let sideOccluded = neighborAlpha >= currentAlpha;
+
+                    shapeIndex |= (sideOccluded | 0) << sideIndex;
+                }
+
+                if (shapeIndex === 0b111111) return;
+
+                let shape = [...cube.shapes[shapeIndex]];
+
+                let shapePosition = [x, -y, -z];
+                shape.forEach((position, i) => {
+                    shape[i] = position + shapePosition[i % 3];
+                });
+
+                group.count += shape.length;
+                verts.push(...shape);
+            });
+
+            if (group.count > 0) {
+                geometry.addGroup(group.index, group.count, group.materialIndex);
+            }
+
+            verts = new Float32Array(verts);
+            geometry.setAttribute("position", new THREE.BufferAttribute(verts, 3));
+            geometry.computeVertexNormals();
+            geometry.center();
+        }
+
+        let materials = palette.map(
+            (color) =>
+                new THREE.MeshLambertMaterial({
+                    color: color >>> 8,
+                    opacity: (color & 0xff) / 0xff,
+                    side: THREE.BackSide,
+                })
+        );
+
+        let mesh = new THREE.Mesh(geometry, materials);
+        return mesh;
+    }
+
+    async save(path) {
+        let { voxels: voxelData, palette: paletteData } = this.getColorData();
         let paletteBuffer = bufferize(new Uint32Array(paletteData));
 
         let paletteSize = Object.keys(palette).length;
@@ -173,10 +274,6 @@ class Model {
         }));
 
         return new Model(width, height, depth, voxels);
-    }
-
-    static calculateChunkID(x, y, z) {
-        return [x, y, z].join(";");
     }
 }
 
@@ -234,17 +331,7 @@ class Plane {
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
                 let [mx, my, mz] = this.planeToModelSpace(x, y, z);
-
-                let voxelContainer = {
-                    get value() {
-                        return _model.getVoxelAt(mx, my, mz);
-                    },
-                    set value(value) {
-                        _model.setVoxelAt(mx, my, mz, value);
-                    },
-                };
-
-                callbackfn(voxelContainer, x, y, z);
+                callbackfn(this._model.getVoxelAt(mx, my, mz), x, y, z);
             }
         }
     }
@@ -304,6 +391,8 @@ class Plane {
                     break;
             }
         }
+
+        this._model.emit("change");
     }
 
     swapLayers(i, j) {
@@ -311,7 +400,7 @@ class Plane {
 
         this.forEachInZLayer(i, (vc, x, y) => {
             tempLayer.set(x, y, { ...vc.value });
-            vc.value = this.getVoxelAt(x, y, j);
+            vc.value = this.getVoxelAt(x, y, j).value;
         });
 
         this.forEachInZLayer(j, (vc, x, y) => {
@@ -323,7 +412,9 @@ class Plane {
         this.insertLayer(z + 1);
 
         this.forEachInZLayer(z + 1, (vc, x, y) => {
-            vc.value.color = this.getVoxelAt(x, y, z).color;
+            vc.value = {
+                color: this.getVoxelAt(x, y, z).value.color,
+            };
         });
     }
 
@@ -341,7 +432,10 @@ function bufferize(arrayLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let buffer = Buffer.allocUnsafe(arrayLike.length * BYTES_PER_ELEMENT);
-    let writeFn = buffer.__proto__[`write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
+    let writeFn =
+        buffer.__proto__[
+            `write${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`
+        ];
 
     for (let i = 0; i < arrayLike.length; i++) {
         writeFn.call(buffer, arrayLike[i], i * BYTES_PER_ELEMENT);
@@ -355,7 +449,10 @@ function debufferize(bufferLike, bytesPerElement) {
     const BYTE_SIZE_ORDER = Math.ceil(Math.log2(BYTES_PER_ELEMENT));
 
     let array = new Array(Math.floor(bufferLike.length / BYTES_PER_ELEMENT));
-    let readFn = bufferLike.__proto__[`read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`];
+    let readFn =
+        bufferLike.__proto__[
+            `read${["UInt8", "UInt16BE", "UInt32BE", "BigUInt64BE"][BYTE_SIZE_ORDER]}`
+        ];
 
     for (let i = 0; i < array.length; i++) {
         array[i] = readFn.call(bufferLike, i * BYTES_PER_ELEMENT);

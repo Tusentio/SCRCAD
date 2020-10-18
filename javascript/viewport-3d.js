@@ -1,16 +1,23 @@
 const THREE = require("three");
+const mouseWheel = require("mouse-wheel");
 
 module.exports = (app) => ({
     canvas: null,
     renderer: null,
     scene: null,
     camera: null,
+    modelMesh: null,
+    zoomScrollFactor: 1.2,
+    minZoom: 5,
+    rotationSpeed: 1,
     view: {
         width: 0,
         height: 0,
         zoom: 0,
         xOffset: 0,
         yOffset: 0,
+        rotationX: 0,
+        rotationY: 0,
     },
     init() {
         this.canvas = document.getElementById("preview-canvas");
@@ -19,33 +26,25 @@ module.exports = (app) => ({
         this.camera = new THREE.OrthographicCamera(0, 0, 0, 0, 0);
         this.scene.add(this.camera);
 
+        let ambient = new THREE.AmbientLight(0xffffff, 0.5);
+        this.scene.add(ambient);
+
+        let light = new THREE.DirectionalLight(0xffffff, 0.5);
+        light.position.set(-10, 10, 10);
+        light.target.position.set(0, 0, 0);
+        this.scene.add(light);
+        this.scene.add(light.target);
+
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
-            antialias: true,
             alpha: true,
         });
         this.renderer.setClearColor(0, 0);
 
-        // Test scene
-        let geometry = new THREE.BoxGeometry(25, 25, 25);
-        let material = new THREE.MeshNormalMaterial();
-        for (let i = 0; i < 300; i++) {
-            let cube = new THREE.Mesh(geometry, material);
-            cube.rotateX(Math.random() * 180);
-            cube.rotateY(Math.random() * 180);
-            cube.rotateZ(Math.random() * 180);
-            cube.position.x = Math.random() - 0.5;
-            cube.position.y = Math.random() - 0.5;
-            cube.position.z = Math.random() - 0.5;
-            cube.position.normalize();
-            cube.position.multiplyScalar(Math.random() * 200);
-            this.scene.add(cube);
-        }
-
         this.setView({
             width: this.canvas.parentElement.clientWidth,
             height: this.canvas.parentElement.clientHeight,
-            zoom: 1,
+            zoom: 100,
         });
 
         window.addEventListener("resize", () => {
@@ -54,22 +53,84 @@ module.exports = (app) => ({
                 height: this.canvas.parentElement.clientHeight,
             });
         });
+
+        app.model.on("change", () => {
+            this._refreshMesh = true;
+            this.setView({});
+        });
+
+        mouseWheel(this.canvas, (_, dy) => {
+            this.zoom(dy < 0 ? 1 : -1);
+        });
+
+        {
+            let drag = null;
+
+            this.canvas.addEventListener("mousedown", (e) => {
+                drag = {
+                    button: e.button,
+                    x: e.clientX,
+                    y: e.clientY,
+                };
+            });
+
+            window.addEventListener("mouseup", (e) => {
+                if (e.button !== drag?.button) return;
+                drag = null;
+            });
+
+            window.addEventListener("mousemove", (e) => {
+                if (!drag) return;
+
+                let dx = e.clientX - drag.x;
+                let dy = e.clientY - drag.y;
+                drag.x = e.clientX;
+                drag.y = e.clientY;
+
+                switch (drag.button) {
+                    case 1:
+                        this.setRotation(
+                            this.view.rotationX + (dy / 360) * this.rotationSpeed * Math.PI * 2,
+                            this.view.rotationY + (dx / 360) * this.rotationSpeed * Math.PI * 2
+                        );
+                        break;
+                    case 2:
+                        this.setView({
+                            xOffset: this.view.xOffset - dx / this.view.zoom,
+                            yOffset: this.view.yOffset + dy / this.view.zoom,
+                        });
+                        break;
+                }
+            });
+        }
     },
     invalidate() {
+        if (!app.vue.instance.panels.preview) return;
+
         // Don't allow more than one uncompleted animation frame request at once
         this._anim =
             this._anim ||
             requestAnimationFrame(() => {
-                this._anim = undefined;
                 this.render();
+                this._anim = undefined;
             });
     },
     render() {
+        if (this._refreshMesh) {
+            if (this.modelMesh) this.scene.remove(this.modelMesh);
+
+            this.modelMesh = app.model.meshify();
+            this.setRotation();
+
+            this.scene.add(this.modelMesh);
+            this._refreshMesh = false;
+        }
+
         this.renderer.render(this.scene, this.camera);
     },
     setView(view) {
         Object.assign(this.view, view);
-        let { width, height, zoom, xOffset, yOffset } = this.view;
+        let { width, height, zoom, xOffset, yOffset, rotationX, rotationY } = this.view;
 
         // Calculate camera viewing planes based on zoom and aspect ratio
         let aspectRatio = width / height;
@@ -93,8 +154,22 @@ module.exports = (app) => ({
         this.camera.position.z = this.camera.far / 2;
 
         this.camera.updateProjectionMatrix();
-        this.renderer.setSize(width, height);
+        this.renderer.setSize(width, height, false);
 
         this.invalidate();
+    },
+    setRotation(x = this.view.rotationX, y = this.view.rotationY) {
+        this.view.rotationX = x;
+        this.view.rotationY = y;
+
+        if (this.modelMesh) {
+            this.modelMesh.setRotationFromEuler(new THREE.Euler(x, y, 0, "ZXY"));
+            this.invalidate();
+        }
+    },
+    zoom(amount) {
+        this.setView({
+            zoom: Math.max(this.view.zoom * this.zoomScrollFactor ** amount, this.minZoom),
+        });
     },
 });
