@@ -67,8 +67,14 @@ module.exports = (app) => ({
 
         this.canvas.addEventListener("click", (e) => {
             let canvasStyle = getComputedStyle(this.canvas);
-            let posX = e.clientX - this.canvas.offsetLeft - parseInt(canvasStyle.getPropertyValue("border-left-width"));
-            let posY = e.clientY - this.canvas.offsetTop - parseInt(canvasStyle.getPropertyValue("border-top-width"));
+            let posX =
+                e.clientX -
+                this.canvas.offsetLeft -
+                parseInt(canvasStyle.getPropertyValue("border-left-width"));
+            let posY =
+                e.clientY -
+                this.canvas.offsetTop -
+                parseInt(canvasStyle.getPropertyValue("border-top-width"));
 
             if (posX < 0 || posY < 0 || posX >= this.canvas.width || posY >= this.canvas.height) {
                 return;
@@ -93,7 +99,7 @@ module.exports = (app) => ({
     resetPosition() {
         this.canvas.style.left = "0px";
         this.canvas.style.top = "0px";
-        this.setView({zoom: 100});
+        this.setView({ zoom: 100 });
     },
     invalidate() {
         // Don't allow more than one uncompleted animation frame request at once
@@ -112,10 +118,15 @@ module.exports = (app) => ({
 
         this.context.lineWidth = 0.1 * this.view.zoom;
 
-        let gradient = this.context.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        let gradient = this.context.createLinearGradient(
+            0,
+            0,
+            this.canvas.width,
+            this.canvas.height
+        );
         gradient.addColorStop("0", "#0022ff");
         gradient.addColorStop("1.0", "#00d9ff");
-        
+
         this.context.strokeStyle = gradient;
 
         this.modelPlane.forEachInZLayer(this.activeLayer, (voxel, x, y) => {
@@ -163,7 +174,10 @@ module.exports = (app) => ({
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
         this.layerCount = this.modelPlane.depth;
 
-        this.view.layer[plane] = Math.min(Math.max(this.view.layer[this.view.plane], 0), this.modelPlane.depth - 1);
+        this.view.layer[plane] = Math.min(
+            Math.max(this.view.layer[this.view.plane], 0),
+            this.modelPlane.depth - 1
+        );
         this.activeLayer = this.view.layer[plane];
 
         this.invalidate();
@@ -190,7 +204,7 @@ module.exports = (app) => ({
 
         this.setView({});
 
-        if (index <= this.activeLayer) {
+        if (index > this.activeLayer) {
             this.selectLayer(this.activeLayer + 1);
         }
     },
