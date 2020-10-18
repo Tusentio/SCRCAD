@@ -25,6 +25,7 @@ main > div {
 #viewports {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
+    overflow: hidden;
 
     display: flex;
     background: linear-gradient(0deg, rgb(5, 5, 5), rgb(20, 20, 20));
@@ -101,6 +102,7 @@ main > div {
 main > aside {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
+    overflow: hidden;
 
     display: flex;
     flex-direction: column;
@@ -147,5 +149,9 @@ main > aside {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
     overflow: hidden;
-    background: linear-gradient(-45deg, rgb(5, 5, 5), rgb(20, 20, 20));
+    
+    background-color: rgb(8,8,8);
+    background-image: url("../media/transparent_tile.png");
+    background-repeat: repeat;
+    
 }
