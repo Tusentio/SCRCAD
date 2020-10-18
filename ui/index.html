@@ -40,6 +40,7 @@
                         <ul>
                             <li @click="app.viewport2D.zoom(1)"><p>Editor Zoom In</p></li>
                             <li @click="app.viewport2D.zoom(-1)"><p>Editor Zoom Out</p></li>
+                            <li @click="app.viewport2D.toggleGrid()"><p>Editor Grid<span v-if="app.viewport2D.grid"> ✓</span></p></li>
                             <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor">✓</span></p></li>
                             <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview">✓</span></p></li>
                             <li @click="togglePnlPlugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
@@ -128,7 +129,7 @@
                     <li>
                         <p>Editor</p>
                         <ul>
-                            <li>
+                            <li :class="{active: app.viewport2D.grid}" @click="app.viewport2D.toggleGrid()">
                                 <img src="media/layer-editor.svg">
                                 <p>Show Grid</p>
                             </li>
