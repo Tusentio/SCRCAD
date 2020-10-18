@@ -374,16 +374,13 @@ main > aside > div {
   overflow: auto;
 }
 
-#layers {
+#layers, #plugins {
   overflow: hidden;
-  display: grid;
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
 }
-#layers .panel-header {
-  grid-row: 1/2;
-}
-#layers ul {
-  grid-row: 2/3;
+#layers > ul, #layers > div:nth-child(2), #plugins > ul, #plugins > div:nth-child(2) {
+  flex: 1;
   overflow: auto;
 }
 
@@ -580,6 +577,106 @@ main > aside > div {
 #layers li.layer-selected div:last-child button:last-child {
   border-radius: 0% 0 0.2rem 0.2rem;
   align-self: flex-start;
+}
+
+#plugins > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+
+#plugin-search-box {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+}
+#plugin-search-box img {
+  width: 12px;
+  height: 12px;
+  margin-right: 0.5rem;
+}
+#plugin-search-box input {
+  flex: 1;
+  border-radius: 0.2rem;
+  padding: 0.2rem 0.5rem;
+  border: none;
+  background: none;
+  color: #ffffff;
+  cursor: text;
+}
+#plugin-search-box input:hover, #plugin-search-box input:active {
+  background: #0b68e2;
+}
+#plugin-search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#plugins > div > ul {
+  flex: 1;
+}
+#plugins > div > ul > li {
+  background: #1a1a1a;
+  border-radius: 0.2rem;
+  width: 100%;
+  margin-bottom: 0.25rem;
+}
+#plugins > div > ul > li.plugin-collapsed .plugin-header > button img {
+  transform: rotate(0);
+}
+#plugins > div > ul > li.plugin-collapsed .plugin-params {
+  display: none;
+}
+
+.plugin-header {
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0.3rem;
+}
+.plugin-header > button {
+  border: none;
+  background: none;
+  width: 2rem;
+  height: 2rem;
+}
+.plugin-header > button:hover {
+  background: #0b68e2;
+  border-radius: 0.2rem;
+}
+.plugin-header > button:active {
+  opacity: 0.5;
+}
+.plugin-header > button img {
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+}
+.plugin-header > p {
+  display: flex;
+  align-items: center;
+  height: 2rem;
+  padding: 0 0.5rem;
+  flex: 1;
+  cursor: pointer;
+  color: #ffffff;
+}
+.plugin-header > p:hover {
+  background: #0b68e2;
+  border-radius: 0.2rem;
+}
+.plugin-header > p:active {
+  opacity: 0.5;
+}
+.plugin-header > p img {
+  width: 13px;
+  height: 13px;
+  margin-right: 0.5rem;
+}
+
+.plugin-params li {
+  padding: 0.5rem 1rem;
+}
+.plugin-params p {
+  color: #e2e2e2;
+  font-size: 11px;
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -129,18 +129,14 @@ main > aside {
     }
 }
 
-#layers {
+#layers, #plugins {
     overflow: hidden;
 
-    display: grid;
-    grid-template-rows: auto 1fr;
+    display: flex;
+    flex-direction: column;
 
-    .panel-header {
-        grid-row: 1 / 2;
-    }
-
-    ul {
-        grid-row: 2 / 3;
+    & > ul, & > div:nth-child(2) {
+        flex: 1;
         overflow: auto;
     }
 }
