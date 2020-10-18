@@ -26,44 +26,44 @@ module.exports = (app) => ({
             this.zoom(dy < 0 ? 1 : -1);
         });
 
-        let drag = null;
+        {
+            let drag = null;
 
-        this.canvas.parentNode.addEventListener("mousedown", (e) => {
-            if (e.button != 2) return;
+            this.canvas.parentNode.addEventListener("mousedown", (e) => {
+                drag = {
+                    button: e.button,
+                    x: e.clientX,
+                    y: e.clientY,
+                };
 
-            this.canvas.classList.add("canvas-moving");
+                if (e.button === 2) {
+                    this.canvas.classList.add("canvas-moving");
+                }
+            });
 
-            let canvasStyle = getComputedStyle(this.canvas);
-            drag = {
-                x:
-                    this.canvas.offsetLeft +
-                    this.canvas.width / 2 +
-                    parseInt(canvasStyle.getPropertyValue("border-left-width")) -
-                    this.canvas.parentNode.offsetLeft -
-                    this.canvas.parentNode.clientWidth / 2 -
-                    e.clientX,
-                y:
-                    this.canvas.offsetTop +
-                    this.canvas.height / 2 +
-                    parseInt(canvasStyle.getPropertyValue("border-top-width")) -
-                    this.canvas.parentNode.offsetTop -
-                    this.canvas.parentNode.clientHeight / 2 -
-                    e.clientY,
-            };
-        });
+            window.addEventListener("mouseup", (e) => {
+                if (e.button !== drag?.button) return;
+                drag = null;
 
-        window.addEventListener("mouseup", (e) => {
-            if (e.button != 2) return;
-            drag = null;
-            this.canvas.classList.remove("canvas-moving");
-        });
+                if (e.button === 2) {
+                    this.canvas.classList.remove("canvas-moving");
+                }
+            });
 
-        window.addEventListener("mousemove", (e) => {
-            if (!drag) return;
+            window.addEventListener("mousemove", (e) => {
+                if (!drag) return;
 
-            this.canvas.style.left = e.clientX + drag.x + "px";
-            this.canvas.style.top = e.clientY + drag.y + "px";
-        });
+                let dx = e.clientX - drag.x;
+                let dy = e.clientY - drag.y;
+                drag.x = e.clientX;
+                drag.y = e.clientY;
+
+                if (drag.button === 2) {
+                    this.canvas.style.left = parseInt(this.canvas.style.left || "0") + dx + "px";
+                    this.canvas.style.top = parseInt(this.canvas.style.top || "0") + dy + "px";
+                }
+            });
+        }
 
         this.canvas.addEventListener("click", (e) => {
             let canvasStyle = getComputedStyle(this.canvas);
