@@ -182,6 +182,7 @@ class Model extends EventEmitter {
                     ((position / this.depth) | 0) % this.height,
                     position % this.depth,
                 ];
+                let currentPosition = [x, y, z];
 
                 let shapeIndex = 0;
                 for (let sideIndex in cube.neighbor_order) {
@@ -198,10 +199,8 @@ class Model extends EventEmitter {
                 if (shapeIndex === 0b111111) return;
 
                 let shape = [...cube.shapes[shapeIndex]];
-
-                let shapePosition = [x, -y, -z];
                 shape.forEach((position, i) => {
-                    shape[i] = position + shapePosition[i % 3];
+                    shape[i] = position + currentPosition[i % 3];
                 });
 
                 group.count += shape.length;
