@@ -130,7 +130,7 @@ module.exports = (app) => ({
     },
     setView(view) {
         Object.assign(this.view, view);
-        let { width, height, zoom, xOffset, yOffset, rotationX, rotationY } = this.view;
+        let { width, height, zoom, xOffset, yOffset } = this.view;
 
         // Calculate camera viewing planes based on zoom and aspect ratio
         let aspectRatio = width / height;
@@ -157,6 +157,15 @@ module.exports = (app) => ({
         this.renderer.setSize(width, height, false);
 
         this.invalidate();
+    },
+    resetView() {
+        this.setRotation(0, 0);
+
+        this.setView({
+            xOffset: 0,
+            yOffset: 0,
+            zoom: 100,
+        });
     },
     setRotation(x = this.view.rotationX, y = this.view.rotationY) {
         this.view.rotationX = x;
