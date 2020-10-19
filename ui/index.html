@@ -163,10 +163,6 @@
                                 <img src="media/layer.svg">
                                 <p>Delete</p>
                             </li>
-                            <li @click="app.viewport2D.clearLayer(app.viewport2D.activeLayer)">
-                                <img src="media/layer.svg">
-                                <p>Clear</p>
-                            </li>
                         </ul>
                     </li>
                     <li>
@@ -335,11 +331,11 @@
                         <ul>
                             <li v-for="layer in app.viewport2D.layerCount" :class="{ 'layer-selected': app.viewport2D.activeLayer == layer - 1 }">
                                 <div v-if="app.viewport2D.activeLayer == layer - 1">
-                                    <button @click="app.viewport2D.insertLayer(layer - 1)">
+                                    <button @click="app.viewport2D.insertLayer(layer)">
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
-                                    <button @click="app.viewport2D.swapLayers(layer - 2, layer - 1)">
+                                    <button @click="app.viewport2D.swapLayers(layer - 1, layer)">
                                         <img src="media/up.svg">
                                     </button>
                                 </div>
@@ -348,11 +344,11 @@
                                     Layer #{{layer}}
                                 </p>
                                 <div v-if="app.viewport2D.activeLayer == layer - 1">
-                                    <button @click="app.viewport2D.insertLayer(layer)">
+                                    <button @click="app.viewport2D.insertLayer(layer - 1)">
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
-                                    <button @click="app.viewport2D.swapLayers(layer - 1, layer)">
+                                    <button @click="app.viewport2D.swapLayers(layer - 2, layer - 1)">
                                         <img src="media/down.svg">
                                     </button>
                                 </div>

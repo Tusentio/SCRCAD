@@ -493,7 +493,7 @@ main > aside > div {
 
 #layers ul {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
 }
 #layers ul div {
   display: flex;
