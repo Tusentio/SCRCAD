@@ -1,3 +1,5 @@
+const EventEmitter = require("events");
+
 const colorRegex = /^\s*#?([0-9A-F]{8}|[0-9A-F]{6}|[0-9A-F]{4}|[0-9A-]{3})\s*$/i;
 const colorRGBARegex = /^\s*#?([0-9A-F]{8}|[0-9A-F]{4})\s*$/i;
 const colorRGBRegex = /^\s*#?([0-9A-F]{6}|[0-9A-]{3})\s*$/i;
@@ -19,7 +21,7 @@ function parseColor(str) {
     return parseInt($1, 16);
 }
 
-class Input {
+class Input extends EventEmitter {
     #options = {};
     label;
     $ = {
@@ -28,6 +30,8 @@ class Input {
     };
 
     constructor(label, value = null, options = {}) {
+        super();
+
         this.label = label;
         this.$.value = value;
 
@@ -42,7 +46,7 @@ class Input {
                 set(value) {
                     let _value = this.#options[name];
                     if ((this.#options[name] = value) !== _value) {
-                        this.validate();
+                        this.notifyChange();
                     }
                 },
             });
@@ -58,7 +62,16 @@ class Input {
 
     set value(value) {
         this.$.value = value;
+        this.notifyChange();
+    }
+
+    get error() {
+        return this.$.error?.length > 0;
+    }
+
+    notifyChange() {
         this.validate();
+        this.emit("change", this.get(), this.error);
     }
 
     validate() {
@@ -71,43 +84,61 @@ class InputColor extends Input {
         super(label, value);
     }
 
-    get color() {
+    get() {
         return parseColor(this.value);
     }
 
     validate() {
-        if (!colorRegex.test(this.value)) {
-            this.$.error = "Invalid color value (try #4285F4)";
-        } else {
+        if (colorRegex.test(this.value)) {
             this.$.error = null;
+        } else {
+            this.$.error = "Invalid color value (try #4285F4)";
         }
     }
 }
 
 class InputColorRGBA extends InputColor {
-    constructor(name, value = "#00000000") {
-        super(name, value);
+    constructor(label, value = "#00000000") {
+        super(label, value);
     }
 
     validate() {
-        if (!colorRGBARegex.test(this.value)) {
-            this.$.error = "Invalid color RGBA value (must have alpha)";
-        } else {
+        if (colorRGBARegex.test(this.value)) {
             this.$.error = null;
+        } else {
+            this.$.error = "Invalid color RGBA value (must have alpha)";
         }
     }
 }
 
 class InputColorRGB extends InputColor {
-    constructor(name, value = "#000000") {
-        super(name, value);
+    constructor(label, value = "#000000") {
+        super(label, value);
     }
 
     validate() {
-        if (!colorRGBRegex.test(this.value)) {
-            this.$.error = "Invalid color RGB value (must not have alpha)";
-        } else {
+        if (colorRGBRegex.test(this.value)) {
             this.$.error = null;
+        } else {
+            this.$.error = "Invalid color RGB value (must not have alpha)";
+        }
+    }
+}
+
+class InputBoolean extends Input {
+    constructor(label, value = false) {
+        super(label, value);
+    }
+
+    get() {
+        return this.value === true;
+    }
+
+    validate() {
+        if (this.value === true || this.value === false) {
+            this.$.error = null;
+        } else {
+            this.$.error = "Invalid boolean value";
         }
     }
 }
