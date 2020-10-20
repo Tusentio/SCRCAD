@@ -138,7 +138,10 @@ class Model extends EventEmitter {
 
         let voxels = this._voxels.data.map((voxel) => {
             let color = voxel.color;
+            color = (((Math.random() * 0xfff) | 0) * 0x00100100) | (color & 0xff);
+            let alpha = color & 0xff;
 
+            if (alpha === 0x00) return colorIndexLookup[0x00000000];
             if (colorIndexLookup[color] === undefined) {
                 colorIndexLookup[color] = ++lastColorIndex;
             }
@@ -158,26 +161,25 @@ class Model extends EventEmitter {
     meshify() {
         let { voxels, palette } = this.getColorData();
         voxels = voxels
-            .map((colorIndex, position) => ({
-                position,
-                colorIndex,
-            }))
-            .sort((a, b) => a.colorIndex - b.colorIndex)
-            .filter((voxel) => voxel.colorIndex !== -1);
+            .map((colorIndex, position) => [position, colorIndex])
+            .sort(([, a], [, b]) => a - b)
+            .filter(([, colorIndex]) => colorIndex !== -1);
 
         let geometry = new THREE.BufferGeometry();
         {
             let verts = [];
             let group = {};
 
-            voxels.forEach(({ position, colorIndex }) => {
+            for (let [position, colorIndex] of voxels) {
                 let currentColor = palette[colorIndex];
                 let currentAlpha = currentColor & 0xff;
-                if (currentAlpha === 0) return;
+                if (currentAlpha === 0) continue;
 
                 if (group.materialIndex !== colorIndex) {
-                    geometry.addGroup(group.index, group.count, group.materialIndex);
-                    group = { index: verts.length, count: 0, materialIndex: colorIndex };
+                    if (group.count > 0)
+                        geometry.addGroup(group.index, group.count, group.materialIndex);
+
+                    group = { index: verts.length / 3, count: 0, materialIndex: colorIndex };
                 }
 
                 let [x, y, z] = [
@@ -199,16 +201,16 @@ class Model extends EventEmitter {
                     shapeIndex |= (sideOccluded | 0) << sideIndex;
                 }
 
-                if (shapeIndex === 0b111111) return;
+                if (shapeIndex === 0b111111) continue;
 
                 let shape = [...cube.shapes[shapeIndex]];
                 shape.forEach((position, i) => {
                     shape[i] = position + currentPosition[i % 3];
                 });
 
-                group.count += shape.length;
+                group.count += shape.length / 3;
                 verts.push(...shape);
-            });
+            }
 
             if (group.count > 0) {
                 geometry.addGroup(group.index, group.count, group.materialIndex);
