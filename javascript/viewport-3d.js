@@ -89,9 +89,15 @@ module.exports = (app) => ({
 
                 switch (drag.button) {
                     case 0:
+                        let dRotationX = (dy / 360) * this.rotationSpeed * Math.PI * 2;
+                        let dRotationY = (dx / 360) * this.rotationSpeed * Math.PI * 2;
+
+                        if (Math.abs((this.view.rotationX + Math.PI / 2) % (Math.PI * 2)) > Math.PI)
+                            dRotationY *= -1;
+
                         this.setRotation(
-                            this.view.rotationX + (dy / 360) * this.rotationSpeed * Math.PI * 2,
-                            this.view.rotationY + (dx / 360) * this.rotationSpeed * Math.PI * 2
+                            this.view.rotationX + dRotationX,
+                            this.view.rotationY + dRotationY
                         );
                         break;
                     case 2:
