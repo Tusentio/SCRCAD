@@ -138,7 +138,6 @@ class Model extends EventEmitter {
 
         let voxels = this._voxels.data.map((voxel) => {
             let color = voxel.color;
-            color = (((Math.random() * 0xfff) | 0) * 0x00100100) | (color & 0xff);
             let alpha = color & 0xff;
 
             if (alpha === 0x00) return colorIndexLookup[0x00000000];
