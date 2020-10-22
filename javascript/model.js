@@ -150,9 +150,11 @@ class Model extends EventEmitter {
         });
 
         delete colorIndexLookup[0x00000000];
-        let palette = Object.keys(colorIndexLookup)
-            .sort((a, b) => colorIndexLookup[a] - colorIndexLookup[b])
-            .map((color) => parseInt(color));
+        let palette = new Int32Array(
+            Object.keys(colorIndexLookup)
+                .sort((a, b) => colorIndexLookup[a] - colorIndexLookup[b])
+                .map((color) => parseInt(color))
+        );
 
         return { voxels, palette };
     }
@@ -221,7 +223,7 @@ class Model extends EventEmitter {
             geometry.center();
         }
 
-        let materials = palette.map(
+        let materials = [...palette].map(
             (color) =>
                 new THREE.MeshLambertMaterial({
                     color: color >>> 8,
