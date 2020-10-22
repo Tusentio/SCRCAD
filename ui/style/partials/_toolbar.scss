@@ -1,4 +1,5 @@
 @use "variables" as vars;
+@use "mixins" as mixins;
 
 #toolbar {
     margin: 1.2rem 1rem 1rem 1rem;
@@ -17,61 +18,22 @@
         }
     }
 
-    /* General */
-    li:nth-child(1) li {
-        $color: vars.$theme-primary;
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
+    $item-colors: 
+        vars.$theme-primary, /* General */
+        #1980a8, /* View */
+        #4e5c8d, /* Editor */
+        #4a6e8b, /* Preview */
+        #448858, /* Layer */
+        #925242, /* Selection */
+        #888230, /* Plugins */
+        #714b9c; /* Help */
+
+    @for $i from 1 through length($item-colors) {
+        li:nth-child(#{$i}) li {
+            @include mixins.toolbar-item(nth($item-colors, $i));
+        }
     }
 
-    /* View */
-    li:nth-child(2) li {
-        $color: rgb(25, 128, 168);
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
-    }
-
-    /* Editor */
-    li:nth-child(3) li {
-        $color: rgb(78, 92, 141);
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
-    }
-
-    /* Preview */
-    li:nth-child(4) li {
-        $color: rgb(74, 110, 139);
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
-    }
-
-    /* Layer */
-    li:nth-child(5) li {
-        $color: rgb(68, 136, 88);
-        border-bottom-color: $color;
-        &:hover, &.active {background:$color;}
-    }
-
-    /* Selection */
-    li:nth-child(6) li {
-        $color: rgb(146, 82, 66);
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
-    }
-
-    /* Plugins */
-    li:nth-child(7) li {
-        $color: rgb(136, 130, 48);
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
-    }
-
-    /* Help */
-    li:nth-child(8) li {
-        $color: rgb(113, 75, 156);
-        border-bottom-color: $color;
-        &:hover, &.active {background: $color;}
-    }
 }
 
 // Inner lists

@@ -1,0 +1,12 @@
+@mixin toolbar-item ($color) {
+    border-bottom-color: $color;
+
+    &:hover {
+        background: transparentize($color, 0.3);
+    }
+
+    &.active {
+        background: $color;
+    }
+
+}
