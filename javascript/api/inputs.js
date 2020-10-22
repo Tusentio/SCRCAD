@@ -22,8 +22,12 @@ function parseColor(str) {
 }
 
 class Input extends EventEmitter {
+    #label;
+    #id = Buffer.from(new Array(12).fill().map((_) => (Math.random() * 0x100) | 0)).toString(
+        "base64"
+    );
     #options = {};
-    label;
+
     $ = {
         value: null,
         error: null,
@@ -32,7 +36,7 @@ class Input extends EventEmitter {
     constructor(label, value = null, options = {}) {
         super();
 
-        this.label = label;
+        this.#label = label;
         this.$.value = value;
 
         for (let name in options) {
@@ -69,13 +73,29 @@ class Input extends EventEmitter {
         return this.$.error?.length > 0;
     }
 
+    get() {
+        return this.$.value;
+    }
+
     notifyChange() {
         this.validate();
         this.emit("change", this.get(), this.error);
     }
 
     validate() {
-        this.$.error = "Raw input";
+        this.$.error = null;
+    }
+
+    renderElement(pluginInputLocation) {
+        let input = new HTMLInputElement();
+        input.setAttribute("v-model", `${pluginInputLocation}.$.value`);
+        input.id = this.#id;
+
+        let label = new HTMLLabelElement();
+        label.setAttribute("for", this.id);
+        label.textContent = this.#label;
+
+        return [label, input];
     }
 }
 
@@ -143,8 +163,16 @@ class InputBoolean extends Input {
     }
 }
 
+class InputButton extends Input {
+    constructor(label) {
+        super(label, null);
+    }
+}
+
 module.exports = {
     InputColor,
     InputColorRGB,
     InputColorRGBA,
+    InputBoolean,
+    InputButton,
 };
