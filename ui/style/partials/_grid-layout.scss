@@ -50,12 +50,42 @@ main > div {
     .tool-list {
         grid-row: 2 / 3;
         grid-column: 1 / 2;
+        z-index: 3;
     }
 
     .canvas-wrapper {
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
+
+        div {
+            pointer-events: none;
+            z-index: 2;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            opacity: .75;
+            padding: 1.25rem;
+            background: #00000070;
+            
+            p {
+                color: #ffffff;
+                text-transform: capitalize;
+                display: flex;
+
+                &:not(:last-child) {
+                    margin-right: 2rem;
+                }
+            }
+
+            img {
+                width: 12px;
+                margin-right: 1rem;
+            }
+            
+        }
     }
 
     canvas {

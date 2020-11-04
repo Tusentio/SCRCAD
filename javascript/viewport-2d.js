@@ -70,10 +70,12 @@ module.exports = (app) => ({
             let posX =
                 e.clientX -
                 this.canvas.offsetLeft -
+                this.canvas.parentNode.offsetLeft -
                 parseInt(canvasStyle.getPropertyValue("border-left-width"));
             let posY =
                 e.clientY -
                 this.canvas.offsetTop -
+                this.canvas.parentNode.offsetTop -
                 parseInt(canvasStyle.getPropertyValue("border-top-width"));
 
             if (posX < 0 || posY < 0 || posX >= this.canvas.width || posY >= this.canvas.height) {

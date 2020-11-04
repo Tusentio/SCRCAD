@@ -328,11 +328,36 @@ main > div {
 #editor-view .tool-list {
   grid-row: 2/3;
   grid-column: 1/2;
+  z-index: 3;
 }
 #editor-view .canvas-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+#editor-view .canvas-wrapper div {
+  pointer-events: none;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  opacity: 0.75;
+  padding: 1.25rem;
+  background: #00000070;
+}
+#editor-view .canvas-wrapper div p {
+  color: #ffffff;
+  text-transform: capitalize;
+  display: flex;
+}
+#editor-view .canvas-wrapper div p:not(:last-child) {
+  margin-right: 2rem;
+}
+#editor-view .canvas-wrapper div img {
+  width: 12px;
+  margin-right: 1rem;
 }
 #editor-view canvas {
   border: 0.3rem solid rgba(255, 255, 255, 0.1);
