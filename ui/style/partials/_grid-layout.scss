@@ -58,34 +58,6 @@ main > div {
         justify-content: center;
         align-items: center;
         position: relative;
-
-        div {
-            pointer-events: none;
-            z-index: 2;
-            position: absolute;
-            top: 0;
-            left: 0;
-            display: flex;
-            opacity: .75;
-            padding: 1.25rem;
-            background: #00000070;
-            
-            p {
-                color: #ffffff;
-                text-transform: capitalize;
-                display: flex;
-
-                &:not(:last-child) {
-                    margin-right: 2rem;
-                }
-            }
-
-            img {
-                width: 12px;
-                margin-right: 1rem;
-            }
-            
-        }
     }
 
     canvas {
@@ -99,7 +71,33 @@ main > div {
             border-color: vars.$theme-primary;
         }
     }
+}
+
+#editor-status-bar {
+    pointer-events: none;
+    z-index: 2;
+    position: absolute;
+    top: .5rem;
+    display: flex;
+    padding: 1.25rem;
+    background: rgba(20, 20, 20, 0.4);
+    border-radius: vars.$panel-border-radius;
     
+    p {
+        color: #ffffff;
+        text-transform: capitalize;
+        display: flex;
+        font-size: vars.$text-small;
+
+        &:not(:last-child) {
+            margin-right: 3rem;
+        }
+    }
+
+    img {
+        width: 9px;
+        margin-right: 1rem;
+    }
 }
 
 #preview-view {

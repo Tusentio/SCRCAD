@@ -254,7 +254,7 @@
                             </li>
                         </ul>
                         <div class="canvas-wrapper">
-                            <div>
+                            <div id="editor-status-bar">
                                 <p>
                                     <img :src="'media/' + app.viewport2D.view.plane + '-plane.svg'">
                                     <span>{{app.viewport2D.view.plane}}</span>
@@ -266,6 +266,14 @@
                                 <p>
                                     <img src="media/layer-editor.svg">
                                     <span>0 Voxels</span>
+                                </p>
+                                <p>
+                                    <img src="media/layer-editor.svg">
+                                    <span>0 Selected</span>
+                                </p>
+                                <p>
+                                    <img src="media/layer-editor.svg">
+                                    <span>3x3</span>
                                 </p>
                             </div>
                             <canvas id="editor-canvas" width=500 height=500></canvas>
