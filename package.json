@@ -1,34 +1,34 @@
 {
-  "name": "scrcad",
-  "version": "0.0.1",
-  "description": "Voxel Editor",
-  "main": "app.js",
-  "scripts": {
-    "start": "electron .",
-    "build": "electron-packager . SCRCAD --platform=win32 --arch=ia32",
-    "style": "sass ui/style/main.scss ui/style/main.css --watch",
-    "install": "cd ./modules/voxel-util && npm install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Tusentio/SCRCAD.git"
-  },
-  "author": "Sundqvist Norlén K., Söderlund E.",
-  "license": "UNLICENSED",
-  "bugs": {
-    "url": "https://github.com/Tusentio/SCRCAD/issues"
-  },
-  "homepage": "https://github.com/Tusentio/SCRCAD#readme",
-  "dependencies": {
-    "electron": "^10.1.3",
-    "mouse-wheel": "^1.2.0",
-    "msgpack5": "^4.2.1",
-    "ndarray": "^1.0.19",
-    "three": "^0.120.1",
-    "vue": "^2.6.12"
-  },
-  "devDependencies": {
-    "electron-packager": "^15.1.0",
-    "sass": "^1.27.0"
-  }
+    "name": "scrcad",
+    "version": "0.0.1",
+    "description": "Voxel Editor",
+    "main": "app.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-packager . SCRCAD --platform=win32 --arch=ia32",
+        "style": "sass ui/style/main.scss ui/style/main.css --watch",
+        "install": "cd ./wasm_pack/voxel-util && npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Tusentio/SCRCAD.git"
+    },
+    "author": "Sundqvist Norlén K., Söderlund E.",
+    "license": "UNLICENSED",
+    "bugs": {
+        "url": "https://github.com/Tusentio/SCRCAD/issues"
+    },
+    "homepage": "https://github.com/Tusentio/SCRCAD#readme",
+    "dependencies": {
+        "mouse-wheel": "^1.2.0",
+        "msgpack5": "^4.2.1",
+        "ndarray": "^1.0.19",
+        "three": "^0.120.1",
+        "vue": "^2.6.12"
+    },
+    "devDependencies": {
+        "electron": "^10.1.3",
+        "electron-packager": "^15.1.0",
+        "sass": "^1.27.0"
+    }
 }

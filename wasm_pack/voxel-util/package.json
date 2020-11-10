@@ -1,0 +1,14 @@
+{
+    "name": "@tusent.io/voxel-util",
+    "version": "0.1.0",
+    "description": "",
+    "main": "lib/index.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "build": "wasm-pack build ./rust --release --out-name index --out-dir ../pkg --target nodejs"
+    },
+    "author": "Keve1227 <killenlillen02@gmail.com>",
+    "license": "UNLICENSED"
+}

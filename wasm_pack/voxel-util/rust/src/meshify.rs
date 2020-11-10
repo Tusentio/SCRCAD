@@ -1,8 +1,9 @@
 use crate::cube;
-use crate::neon::prelude::*;
 use crate::point::*;
 
-#[derive(Debug, Clone)]
+use serde::*;
+
+#[derive(Debug, Clone, Serialize)]
 pub struct VertexGroup {
     start: usize,
     count: usize,
@@ -17,65 +18,12 @@ impl VertexGroup {
             material_index: 0,
         }
     }
-
-    pub fn to_js_object<'a>(&self, cx: &mut FunctionContext<'a>) -> JsResult<'a, JsObject> {
-        let object = JsObject::new(cx);
-
-        let start = cx.number(self.start as u32);
-        object.set(cx, "start", start)?;
-
-        let count = cx.number(self.count as u32);
-        object.set(cx, "count", count)?;
-
-        let material_index = cx.number(self.material_index as u32);
-        object.set(cx, "materialIndex", material_index)?;
-
-        JsResult::Ok(object)
-    }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct Mesh {
     vertices: Vec<Point<u32>>,
     vertex_groups: Vec<VertexGroup>,
-}
-
-impl Mesh {
-    pub fn to_js_object<'a>(&self, cx: &mut FunctionContext<'a>) -> JsResult<'a, JsObject> {
-        let object = JsObject::new(cx);
-
-        let vertices = {
-            let js_array = JsArray::new(cx, self.vertices.len() as u32 * 3);
-
-            for (i, &obj) in self.vertices.iter().enumerate() {
-                let x = cx.number(obj.x);
-                js_array.set(cx, i as u32 * 3 + 0, x)?;
-
-                let y = cx.number(obj.y);
-                js_array.set(cx, i as u32 * 3 + 1, y)?;
-
-                let z = cx.number(obj.z);
-                js_array.set(cx, i as u32 * 3 + 2, z)?;
-            }
-
-            js_array
-        };
-        object.set(cx, "vertices", vertices)?;
-
-        let vertex_groups = {
-            let js_array = JsArray::new(cx, self.vertex_groups.len() as u32);
-
-            for (i, obj) in self.vertex_groups.iter().enumerate() {
-                let vertex_group = obj.to_js_object(cx)?;
-                js_array.set(cx, i as u32 * 3 + 0, vertex_group)?;
-            }
-
-            js_array
-        };
-        object.set(cx, "vertexGroups", vertex_groups)?;
-
-        JsResult::Ok(object)
-    }
 }
 
 #[derive(Debug, Clone)]
@@ -90,7 +38,7 @@ impl Meshifier {
         }
     }
 
-    pub fn meshify(&self, voxels: &Vec<usize>, palette: &Vec<u32>, size: &Size) -> Mesh {
+    pub fn meshify(&self, voxels: &Vec<usize>, palette: &Vec<u32>, size: &Point<usize>) -> Mesh {
         let mut indexed_voxels: Vec<(usize, usize)> = voxels
             .iter()
             .map(|&color_index| color_index)
@@ -130,9 +78,9 @@ impl Meshifier {
 
                     for (side_index, neighbor_offset) in cube::NEIGHBOR_OFFSETS.iter().enumerate() {
                         let neighbor_position = point!(
-                            (position.x as u32).wrapping_add(neighbor_offset.x as u32) as usize,
-                            (position.y as u32).wrapping_add(neighbor_offset.y as u32) as usize,
-                            (position.z as u32).wrapping_add(neighbor_offset.z as u32) as usize
+                            (position.x as i64 + neighbor_offset.x as i64) as usize,
+                            (position.y as i64 + neighbor_offset.y as i64) as usize,
+                            (position.z as i64 + neighbor_offset.z as i64) as usize
                         );
 
                         let neighbor_position_index = if neighbor_position.in_bounds(&size) {

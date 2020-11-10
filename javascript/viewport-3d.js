@@ -116,16 +116,16 @@ module.exports = (app) => ({
         // Don't allow more than one uncompleted animation frame request at once
         this._anim =
             this._anim ||
-            requestAnimationFrame(() => {
-                this.render();
+            requestAnimationFrame(async () => {
+                await this.render();
                 this._anim = undefined;
             });
     },
-    render() {
+    async render() {
         if (this._refreshMesh) {
             if (this.modelMesh) this.scene.remove(this.modelMesh);
 
-            this.modelMesh = app.model.meshify();
+            this.modelMesh = await app.model.meshify();
             this.setRotation();
 
             this.scene.add(this.modelMesh);

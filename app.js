@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron");
-app.allowRendererProcessReuse = false;
+app.allowRendererProcessReuse = true;
 
 app.whenReady().then(() => {
     let window = new BrowserWindow({
@@ -11,6 +11,7 @@ app.whenReady().then(() => {
         frame: false,
         webPreferences: {
             nodeIntegration: true,
+            nodeIntegrationInWorker: true,
             enableRemoteModule: true,
         },
     });

@@ -4,7 +4,7 @@ const THREE = require("three");
 const EventEmitter = require("events");
 const util = require("util");
 const fs = require("fs");
-const voxelUtil = require("../modules/voxel-util");
+const voxelUtil = require("../wasm_pack/voxel-util");
 
 class Model extends EventEmitter {
     constructor(width = 1, height = 1, depth = 1, voxels = null) {
@@ -156,21 +156,34 @@ class Model extends EventEmitter {
         return { voxels, palette };
     }
 
-    meshify() {
+    async meshify() {
         let { voxels, palette } = this.getColorData();
 
         let geometry = new THREE.BufferGeometry();
-        let meshData = voxelUtil.meshify(voxels, palette, this.width, this.height, this.depth);
+        let meshData = await voxelUtil.meshify(
+            voxels,
+            palette,
+            this.width,
+            this.height,
+            this.depth
+        );
 
-        for (let vertexGroup of meshData.vertexGroups) {
-            geometry.addGroup(vertexGroup.start, vertexGroup.count, vertexGroup.materialIndex);
+        for (let vertexGroup of meshData["vertex_groups"]) {
+            geometry.addGroup(
+                vertexGroup["start"],
+                vertexGroup["count"],
+                vertexGroup["material_index"]
+            );
         }
 
-        console.log(meshData);
+        let vertexData = meshData["vertices"].reduce(
+            (data, vertex) => (data.push(vertex.x, vertex.y, vertex.z), data),
+            []
+        );
 
         geometry.setAttribute(
             "position",
-            new THREE.BufferAttribute(new Float32Array(meshData.vertices), 3)
+            new THREE.BufferAttribute(new Float32Array(vertexData), 3)
         );
         geometry.computeVertexNormals();
         geometry.center();
