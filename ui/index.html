@@ -333,13 +333,24 @@
                                     </div>
                                     <ul class="plugin-params">
                                         <li>
-                                            <p>Placeholder</p>
+                                            <p>String Param</p>
+                                            <input data-param-type="string" spellcheck="false" type="text">
                                         </li>
                                         <li>
-                                            <p>Placeholder</p>
+                                            <p>Action Param</p>
+                                            <button data-param-type="action">External Script</button>
                                         </li>
                                         <li>
-                                            <p>Placeholder</p>
+                                            <p>Boolean Param</p>
+                                            <button data-param-type="boolean">✔</button>
+                                        </li>
+                                        <li>
+                                            <p>Color Param</p>
+                                            <button data-param-type="color" style="background: #a409d3;">#a409d3</button>
+                                        </li>
+                                        <li>
+                                            <p>Number Param</p>
+                                            <input data-param-type="number" type="number">
                                         </li>
                                     </ul>
                                 </li>
@@ -351,7 +362,7 @@
                             <p><img src="media/layer.svg">Layers</p>
                         </div>
                         <ul>
-                            <li v-for="layer in app.viewport2D.layerCount" :class="{ 'layer-selected': app.viewport2D.activeLayer == layer - 1 }">
+                            <li v-for="layer in app.viewport2D.layerCount" :class="{'layer-selected': app.viewport2D.activeLayer == layer - 1}">
                                 <div v-if="app.viewport2D.activeLayer == layer - 1">
                                     <button @click="app.viewport2D.insertLayer(layer)">
                                         <img src="media/plus.svg">

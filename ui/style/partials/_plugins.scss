@@ -104,6 +104,7 @@
         }
 
         img {
+            cursor: pointer;
             width: 13px;
             height: 13px;
             margin-right: .5rem;
@@ -115,11 +116,21 @@
     
     li {
         padding: .5rem 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        & > * {
+            flex: 1;
+        }
     }
 
     p {
         color: vars.$text-gray;
         font-size: vars.$text-small;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
 }
