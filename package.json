@@ -6,7 +6,8 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-packager . SCRCAD --platform=win32 --arch=ia32",
-    "style": "sass ui/style/main.scss ui/style/main.css --watch"
+    "style": "sass ui/style/main.scss ui/style/main.css --watch",
+    "install": "cd ./modules/voxel-util && npm install"
   },
   "repository": {
     "type": "git",

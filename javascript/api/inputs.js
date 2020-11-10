@@ -85,18 +85,6 @@ class Input extends EventEmitter {
     validate() {
         this.$.error = null;
     }
-
-    renderElement(pluginInputLocation) {
-        let input = new HTMLInputElement();
-        input.setAttribute("v-model", `${pluginInputLocation}.$.value`);
-        input.id = this.#id;
-
-        let label = new HTMLLabelElement();
-        label.setAttribute("for", this.id);
-        label.textContent = this.#label;
-
-        return [label, input];
-    }
 }
 
 class InputColor extends Input {

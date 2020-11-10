@@ -4,7 +4,7 @@ const THREE = require("three");
 const EventEmitter = require("events");
 const util = require("util");
 const fs = require("fs");
-const cube = require("./cube.js");
+const voxelUtil = require("../modules/voxel-util");
 
 class Model extends EventEmitter {
     constructor(width = 1, height = 1, depth = 1, voxels = null) {
@@ -133,8 +133,8 @@ class Model extends EventEmitter {
     }
 
     getColorData() {
-        let lastColorIndex = -1;
-        let colorIndexLookup = { 0x00000000: -1 };
+        let lastColorIndex = 0;
+        let colorIndexLookup = { 0x00000000: 0 };
 
         let voxels = this._voxels.data.map((voxel) => {
             let color = voxel.color;
@@ -149,81 +149,33 @@ class Model extends EventEmitter {
             return colorIndex;
         });
 
-        delete colorIndexLookup[0x00000000];
-        let palette = new Int32Array(
-            Object.keys(colorIndexLookup)
-                .sort((a, b) => colorIndexLookup[a] - colorIndexLookup[b])
-                .map((color) => parseInt(color))
-        );
+        let palette = Object.keys(colorIndexLookup)
+            .sort((a, b) => colorIndexLookup[a] - colorIndexLookup[b])
+            .map((color) => parseInt(color));
 
         return { voxels, palette };
     }
 
     meshify() {
         let { voxels, palette } = this.getColorData();
-        voxels = voxels
-            .map((colorIndex, position) => [position, colorIndex])
-            .sort(([, a], [, b]) => a - b)
-            .filter(([, colorIndex]) => colorIndex !== -1);
 
         let geometry = new THREE.BufferGeometry();
-        {
-            let verts = [];
-            let group = {};
+        let meshData = voxelUtil.meshify(voxels, palette, this.width, this.height, this.depth);
 
-            for (let [position, colorIndex] of voxels) {
-                let currentColor = palette[colorIndex];
-                let currentAlpha = currentColor & 0xff;
-                if (currentAlpha === 0) continue;
-
-                if (group.materialIndex !== colorIndex) {
-                    if (group.count > 0)
-                        geometry.addGroup(group.index, group.count, group.materialIndex);
-
-                    group = { index: verts.length / 3, count: 0, materialIndex: colorIndex };
-                }
-
-                let [x, y, z] = [
-                    (position / this.depth / this.height) | 0,
-                    ((position / this.depth) | 0) % this.height,
-                    position % this.depth,
-                ];
-                let currentPosition = [x, y, z];
-
-                let shapeIndex = 0;
-                for (let sideIndex in cube.neighbor_order) {
-                    let offs = cube.neighbor_order[sideIndex];
-                    let [nx, ny, nz] = [x + offs[0], y + offs[1], z + offs[2]];
-
-                    let neighborColor = this.getVoxelAt(nx, ny, nz)?.value.color || 0x00000000;
-                    let neighborAlpha = neighborColor & 0xff;
-                    let sideOccluded = neighborAlpha >= currentAlpha;
-
-                    shapeIndex |= (sideOccluded | 0) << sideIndex;
-                }
-
-                if (shapeIndex === 0b111111) continue;
-
-                let shape = [...cube.shapes[shapeIndex]];
-                shape.forEach((position, i) => {
-                    shape[i] = position + currentPosition[i % 3];
-                });
-
-                group.count += shape.length / 3;
-                verts.push(...shape);
-            }
-
-            if (group.count > 0) {
-                geometry.addGroup(group.index, group.count, group.materialIndex);
-            }
-
-            verts = new Float32Array(verts);
-            geometry.setAttribute("position", new THREE.BufferAttribute(verts, 3));
-            geometry.computeVertexNormals();
-            geometry.center();
+        for (let vertexGroup of meshData.vertexGroups) {
+            geometry.addGroup(vertexGroup.start, vertexGroup.count, vertexGroup.materialIndex);
         }
 
-        let materials = [...palette].map(
+        console.log(meshData);
+
+        geometry.setAttribute(
+            "position",
+            new THREE.BufferAttribute(new Float32Array(meshData.vertices), 3)
+        );
+        geometry.computeVertexNormals();
+        geometry.center();
+
+        let materials = palette.map(
             (color) =>
                 new THREE.MeshLambertMaterial({
                     color: color >>> 8,
