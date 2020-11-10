@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require("electron");
-app.allowRendererProcessReuse = true;
+app.allowRendererProcessReuse = false;
 
 app.whenReady().then(() => {
     let window = new BrowserWindow({
