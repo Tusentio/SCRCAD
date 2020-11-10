@@ -9,7 +9,7 @@ module.exports = (app) => ({
             panels: {
                 editor: true,
                 preview: false,
-                plugins: false,
+                plugins: true,
                 layers: true
             }
         },

@@ -1,0 +1,58 @@
+@use "variables" as vars;
+
+%base-styles {
+    background: linear-gradient( #303030, #2b2b2b);
+    padding: .2rem 0;
+    border: none;
+    color: vars.$text-gray;
+    text-align: center;
+    border-radius: vars.$panel-border-radius;
+    border: .1rem solid vars.$theme-secondary;
+    font-size: vars.$text-small;
+
+    &:hover {
+        background: rgb(20, 20, 20);
+    }
+
+    &:active {
+        background: rgb(10, 10, 10);
+    }
+
+    &:focus {
+        border-color: vars.$theme-primary;
+    }
+}
+
+/* String Input */
+[data-param-type="string"] {
+    @extend %base-styles;
+    cursor: text;
+    background: #585858;
+}
+
+/* Action / Button */
+[data-param-type="action"] {
+    @extend %base-styles;
+}
+
+/* Boolean input */
+[data-param-type="boolean"] {
+    @extend %base-styles;
+}
+
+/* Color input */
+[data-param-type="color"] {
+    @extend %base-styles;
+    text-transform: uppercase;
+}
+
+/* Number input */
+[data-param-type="number"] {
+    @extend %base-styles;
+    text-transform: uppercase;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
