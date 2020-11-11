@@ -398,7 +398,7 @@
                                 </div>
                                 <p @click="app.viewport2D.selectLayer(layer)">
                                     <img src="media/layer.svg">
-                                    Layer #{{layer}}
+                                    Layer #{{layer + 1}}
                                 </p>
                                 <div v-if="app.viewport2D.activeLayer == layer">
                                     <button @click="app.viewport2D.insertLayer(layer)">
