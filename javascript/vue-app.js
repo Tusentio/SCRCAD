@@ -4,14 +4,14 @@ module.exports = (app) => ({
     instance: null,
     options: {
         el: "#vue-wrapper",
-        data: { 
+        data: {
             app,
             panels: {
                 editor: true,
                 preview: false,
                 plugins: true,
-                layers: false
-            }
+                layers: true,
+            },
         },
         computed: {},
         methods: {
@@ -44,7 +44,13 @@ module.exports = (app) => ({
             togglePnlLayers() {
                 this.panels.layers = !this.panels.layers;
                 app.dispatchResize();
-            }
+            },
+            range(a, b) {
+                let count = Math.abs(a - b);
+                let sign = Math.sign(b - a);
+                let offset = Math.min(sign, 0);
+                return new Array(count).fill().map((_, i) => a + i * sign + offset);
+            },
         },
     },
     init(Vue) {
