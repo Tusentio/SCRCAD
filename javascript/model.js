@@ -41,17 +41,26 @@ class Model extends EventEmitter {
     }
 
     getVoxelAt(x, y, z) {
-        if (!this._bounded(x, y, z)) return;
+        if (!this._bounded(x, y, z)) return undefined;
 
-        let model = this;
-        return {
-            get value() {
-                return { ...model._voxels.get(x, y, z) };
+        return new Proxy(this._voxels.get(x, y, z), {
+            get(voxel, p) {
+                return voxel[p];
             },
-            set value(properties) {
-                model.setVoxelAt(x, y, z, properties);
+            set(voxel, p, value) {
+                if (p.__proto__ === String.prototype) {
+                    voxel[p] = value;
+                } else if (Array.isArray(p)) {
+                    for (let [i, name] of Object.entries(p)) {
+                        voxel[name] = value[i];
+                    }
+                } else {
+                    return false;
+                }
+
+                return true;
             },
-        };
+        });
     }
 
     setVoxelAt(x, y, z, properties) {
@@ -134,15 +143,14 @@ class Model extends EventEmitter {
 
     getColorData() {
         let lastColorIndex = 0;
-        let colorIndexLookup = { 0x00000000: 0 };
+        let colorIndexLookup = {};
 
         let voxels = this._voxels.data.map((voxel) => {
             let color = voxel.color;
-            let alpha = color & 0xff;
 
-            if (alpha === 0x00) return colorIndexLookup[0x00000000];
             if (colorIndexLookup[color] === undefined) {
-                colorIndexLookup[color] = ++lastColorIndex;
+                colorIndexLookup[color] = lastColorIndex;
+                lastColorIndex++;
             }
 
             let colorIndex = colorIndexLookup[color];
@@ -158,6 +166,8 @@ class Model extends EventEmitter {
 
     async meshify() {
         let { voxels, palette } = this.getColorData();
+
+        console.log(this.width, this.height, this.depth);
 
         let geometry = new THREE.BufferGeometry();
         let meshData = await voxelUtil.meshify(
@@ -288,20 +298,19 @@ class Plane {
     }
 
     getVoxelAt(x, y, z) {
-        return this._model.getVoxelAt(...this.planeToModelSpace(x, y, z));
+        let [mx, my, mz] = this.planeToModelSpace(x, y, z);
+        return this._model.getVoxelAt(mx, my, mz);
     }
 
     setVoxelAt(x, y, z, properties) {
-        this._model.setVoxelAt(...this.planeToModelSpace(x, y, z), properties);
+        let [mx, my, mz] = this.planeToModelSpace(x, y, z);
+        this._model.setVoxelAt(mx, my, mz, properties);
     }
 
     forEachInZLayer(z, callbackfn) {
-        const _model = this._model;
-
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                let [mx, my, mz] = this.planeToModelSpace(x, y, z);
-                callbackfn(this._model.getVoxelAt(mx, my, mz), x, y, z);
+                callbackfn(this.getVoxelAt(x, y, z), x, y, z);
             }
         }
     }
@@ -369,12 +378,17 @@ class Plane {
         let tempLayer = ndarray(new Array(this.width * this.height), [this.width, this.height]);
 
         this.forEachInZLayer(i, (vc, x, y) => {
-            tempLayer.set(x, y, { ...vc.value });
-            vc.value = this.getVoxelAt(x, y, j).value;
+            tempLayer.set(x, y, { color: vc.color, selected: vc.selected });
+
+            let voxel = this.getVoxelAt(x, y, j);
+            vc.color = voxel.color;
+            vc.selected = voxel.selected;
         });
 
         this.forEachInZLayer(j, (vc, x, y) => {
-            vc.value = tempLayer.get(x, y);
+            let voxel = tempLayer.get(x, y);
+            vc.color = voxel.color;
+            vc.selected = voxel.selected;
         });
     }
 
@@ -382,17 +396,13 @@ class Plane {
         this.insertLayer(z + 1);
 
         this.forEachInZLayer(z + 1, (vc, x, y) => {
-            vc.value = {
-                color: this.getVoxelAt(x, y, z).value.color,
-            };
+            vc.color = this.getVoxelAt(x, y, z).color;
         });
     }
 
     clearLayer(z) {
         this.forEachInZLayer(z, (vc) => {
-            vc.value = {
-                color: 0x00000000,
-            };
+            vc.color = 0x00000000;
         });
     }
 }

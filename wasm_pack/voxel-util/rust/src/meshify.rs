@@ -125,19 +125,3 @@ impl Meshifier {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn meshify() {
-        let meshifier = super::Meshifier::new();
-
-        let mesh = meshifier.meshify(
-            &vec![0, 1, 2, 3, 4, 0, 1, 2, 3],
-            &vec![0x00000000, 0x000000ff, 0x111111ff, 0x222222ff, 0x333333ff],
-            &point!(1, 3, 3),
-        );
-
-        println!("{:?}", mesh);
-    }
-}
