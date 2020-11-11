@@ -3,7 +3,7 @@
 #layers ul {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    overflow: auto;
 
     div {
         display: flex;
@@ -32,6 +32,10 @@
 #layers li {
     border-left: 2px solid transparent;
     opacity: .75;
+
+    &:first-child {
+        margin-top: auto;
+    }
 }
 
 #layers button {
