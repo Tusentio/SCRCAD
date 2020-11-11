@@ -6,7 +6,6 @@ module.exports = (app) => ({
     zoomScrollFactor: 1.2,
     minZoom: 5,
     modelPlane: null,
-    layerCount: 0,
     activeLayer: 0,
     grid: true,
     view: {
@@ -167,6 +166,15 @@ module.exports = (app) => ({
             this.context.strokeRect(0, y * this.view.zoom, this.canvas.width, this.view.zoom);
         }
     },
+    get layerWidth() {
+        return this.modelPlane?.width || 0;
+    },
+    get layerHeight() {
+        return this.modelPlane?.height || 0;
+    },
+    get layerCount() {
+        return this.modelPlane?.depth || 0;
+    },
     setView(view) {
         Object.assign(this.view, view);
         let { zoom, plane } = this.view;
@@ -174,7 +182,6 @@ module.exports = (app) => ({
         this.modelPlane = app.model.getPlane(plane);
         this.canvas.width = (this.modelPlane.width + 2) * zoom;
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
-        this.layerCount = this.modelPlane.depth;
 
         this.view.layer[plane] = Math.min(
             Math.max(this.view.layer[this.view.plane], 0),
