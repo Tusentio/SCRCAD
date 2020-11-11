@@ -27,10 +27,10 @@ impl Point<usize> {
     }
 
     pub fn from_index(i: usize, size: &Self) -> Self {
-        point!(i / size.z / size.y, i / size.z % size.y, i % size.z)
+        point!(i / size.z / size.y, (i / size.z) % size.y, i % size.z)
     }
 
     pub fn to_index(&self, size: &Self) -> usize {
-        self.x * size.z * size.y + self.y * size.z + self.z
+        (self.x * size.z * size.y) + (self.y * size.z) + self.z
     }
 }

@@ -8,19 +8,6 @@ use wasm_bindgen::prelude::*;
 static mut MESHIFIER: Option<meshify::Meshifier> = None;
 
 #[wasm_bindgen]
-extern "C" {
-    pub fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet(name: &str) {
-    #[allow(unused_unsafe)]
-    unsafe {
-        alert(&format!("Hello, {}!", name));
-    }
-}
-
-#[wasm_bindgen]
 pub fn meshify(
     voxels: Vec<usize>,
     palette: Vec<u32>,
@@ -38,7 +25,7 @@ pub fn meshify(
         }
     };
 
-    let size = meshifier.meshify(&voxels, &palette, &point!(width, depth, height));
+    let size = meshifier.meshify(&voxels, &palette, &point!(width, height, depth));
 
     JsValue::from_serde(&size).unwrap()
 }
