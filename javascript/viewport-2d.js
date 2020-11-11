@@ -140,7 +140,7 @@ module.exports = (app) => ({
             ];
 
             let tempColorBuffer = Buffer.alloc(4);
-            tempColorBuffer.writeUInt32BE(voxel.value.color);
+            tempColorBuffer.writeUInt32BE(voxel.color);
             this.context.fillStyle = `#${tempColorBuffer.toString("hex")}`;
 
             let _strokeStyle = this.context.strokeStyle;
@@ -151,7 +151,7 @@ module.exports = (app) => ({
 
             this.context.strokeStyle = _strokeStyle;
 
-            if (voxel.value.selected) this.context.strokeRect(...voxelTransform);
+            if (voxel.selected) this.context.strokeRect(...voxelTransform);
         });
 
         if (!this.grid) return;
