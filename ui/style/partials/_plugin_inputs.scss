@@ -50,8 +50,7 @@
 [data-param-type="number"] {
     @extend %base-styles;
     text-transform: uppercase;
-    &::-webkit-outer-spin-button,
-    &::-webkit-inner-spin-button {
+    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
         -webkit-appearance: none;
         margin: 0;
     }

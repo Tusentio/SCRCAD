@@ -323,36 +323,68 @@
                                 <img src="media/search.svg">
                                 <input type="text" placeholder="Search..." spellcheck="false">
                             </div>
-                            <ul>
+                            <ul class="category-master-list">
                                 <li>
-                                    <div class="plugin-header">
-                                        <button>
-                                            <img src="media/plugin-arrow.svg">
-                                        </button>
-                                        <p><img src="media/plugin-placeholder.png">Bitmap</p>
-                                    </div>
-                                    <ul class="plugin-params">
+                                    <button class="category-header">
+                                        <img src="media/plugin-arrow.svg">
+                                        Plugin Category
+                                    </button>
+                                    <ul class="category-child-list">
                                         <li>
-                                            <p>String Param</p>
-                                            <input data-param-type="string" spellcheck="false" type="text">
-                                        </li>
-                                        <li>
-                                            <p>Action Param</p>
-                                            <button data-param-type="action">External Script</button>
-                                        </li>
-                                        <li>
-                                            <p>Boolean Param</p>
-                                            <button data-param-type="boolean">✔</button>
-                                        </li>
-                                        <li>
-                                            <p>Color Param</p>
-                                            <button data-param-type="color" style="background: #a409d3;">#a409d3</button>
-                                        </li>
-                                        <li>
-                                            <p>Number Param</p>
-                                            <input data-param-type="number" type="number">
+                                            <div class="plugin-header">
+                                                <button>
+                                                    <img src="media/plugin-arrow.svg">
+                                                </button>
+                                                <p><img src="media/plugin-placeholder.png">Plugin</p>
+                                            </div>
+                                            <ul class="plugin-params">
+                                                <li>
+                                                    <p>String Param</p>
+                                                    <input data-param-type="string" spellcheck="false" type="text">
+                                                </li>
+                                                <li>
+                                                    <p>Action Param</p>
+                                                    <button data-param-type="action">External Script</button>
+                                                </li>
+                                                <li>
+                                                    <p>Boolean Param</p>
+                                                    <button data-param-type="boolean">✔</button>
+                                                </li>
+                                                <li>
+                                                    <p>Color Param</p>
+                                                    <button data-param-type="color" style="background: #a409d3;">#a409d3</button>
+                                                </li>
+                                                <li>
+                                                    <p>Number Param</p>
+                                                    <input data-param-type="number" type="number">
+                                                </li>
+                                            </ul>
                                         </li>
                                     </ul>
+                                </li>
+                                <li class="list-collapsed">
+                                    <button class="category-header">
+                                        <img src="media/plugin-arrow.svg">
+                                        Effects
+                                    </button>
+                                </li>
+                                <li class="list-collapsed">
+                                    <button class="category-header">
+                                        <img src="media/plugin-arrow.svg">
+                                        Styling
+                                    </button>
+                                </li>
+                                <li class="list-collapsed">
+                                    <button class="category-header">
+                                        <img src="media/plugin-arrow.svg">
+                                        Text
+                                    </button>
+                                </li>
+                                <li class="list-collapsed">
+                                    <button class="category-header">
+                                        <img src="media/plugin-arrow.svg">
+                                        Bitmap
+                                    </button>
                                 </li>
                             </ul>
                         </div>
