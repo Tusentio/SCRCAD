@@ -25,7 +25,6 @@ pub fn meshify(
         }
     };
 
-    let size = meshifier.meshify(&voxels, &palette, &point!(width, height, depth));
-
-    JsValue::from_serde(&size).unwrap()
+    let mesh = meshifier.meshify(&voxels, &palette, &point!(width, height, depth));
+    JsValue::from_serde(&mesh).unwrap()
 }

@@ -12,6 +12,7 @@ module.exports = (app) => ({
                 plugins: true,
                 layers: true,
             },
+            grid: true,
         },
         computed: {},
         methods: {
@@ -28,6 +29,10 @@ module.exports = (app) => ({
                 } else {
                     browserWindow.maximize();
                 }
+            },
+            toggleGrid() {
+                this.grid = !this.grid;
+                app.dispatchResize();
             },
             togglePnlEditor() {
                 this.panels.editor = !this.panels.editor;
