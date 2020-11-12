@@ -1,0 +1,62 @@
+@use "variables" as vars;
+
+#dialogs {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    pointer-events: none;
+}
+
+#dialogs > div {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    pointer-events: all;
+    background: rgb(15, 15, 15);
+    border-radius: vars.$panel-border-radius;
+    border: 1px solid vars.$theme-primary;
+    padding: 1rem;
+    width: 40rem;
+    height: 20rem;
+    margin: 1rem;
+}
+
+#dialogs > div > header {
+    p {
+        color: vars.$text-gray;
+    }
+}
+
+#dialogs > div > footer {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+        cursor: pointer;
+        border: none;
+        padding: .2rem 1rem;
+        min-width: 6rem;
+        color: #ffffff;
+        background: rgb(45, 45, 45);
+        border-radius: vars.$panel-border-radius;
+        margin-left: .5rem;
+        transition: opacity .2s;
+
+        &:last-child {
+            background: vars.$theme-primary;
+        }
+
+        &:hover {
+            opacity: .8;
+        }
+
+        &:active {
+            opacity: .5;
+        }
+    }
+}
