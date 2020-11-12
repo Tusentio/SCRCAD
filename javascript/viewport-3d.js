@@ -10,6 +10,7 @@ module.exports = (app) => ({
     zoomScrollFactor: 1.2,
     minZoom: 5,
     rotationSpeed: 1,
+    plane: null,
     view: {
         width: 0,
         height: 0,
@@ -44,8 +45,8 @@ module.exports = (app) => ({
         this.setView({
             width: this.canvas.parentElement.clientWidth,
             height: this.canvas.parentElement.clientHeight,
-            zoom: 100,
         });
+        this.setPlane("home");
 
         window.addEventListener("resize", () => {
             this.setView({
@@ -56,7 +57,7 @@ module.exports = (app) => ({
 
         app.model.on("change", () => {
             this._refreshMesh = true;
-            this.setView({});
+            this.invalidate();
         });
 
         mouseWheel(this.canvas, (_, dy) => {
@@ -123,12 +124,8 @@ module.exports = (app) => ({
     },
     async render() {
         if (this._refreshMesh) {
-            if (this.modelMesh) this.scene.remove(this.modelMesh);
-
-            this.modelMesh = await app.model.meshify();
-            this.setRotation();
-
-            this.scene.add(this.modelMesh);
+            await this.reloadMesh();
+            this.updateMeshTransforms();
             this._refreshMesh = false;
         }
 
@@ -164,6 +161,26 @@ module.exports = (app) => ({
 
         this.invalidate();
     },
+    setPlane(plane) {
+        switch (plane) {
+            case "home":
+                this.resetView();
+                break;
+            case "top":
+                this.setRotation(Math.PI / 2, 0);
+                break;
+            case "left":
+                this.setRotation(0, 0);
+                break;
+            case "right":
+                this.setRotation(0, -Math.PI / 2);
+                break;
+            default:
+                return;
+        }
+
+        this.plane = plane;
+    },
     resetView() {
         this.setRotation(0, 0);
 
@@ -174,17 +191,33 @@ module.exports = (app) => ({
         });
     },
     setRotation(x = this.view.rotationX, y = this.view.rotationY) {
-        this.view.rotationX = x;
-        this.view.rotationY = y;
+        this.view.rotationX = (Math.PI * 2 + (x % (Math.PI * 2))) % (Math.PI * 2);
+        this.view.rotationY = (Math.PI * 2 + (y % (Math.PI * 2))) % (Math.PI * 2);
+        this.plane = null;
 
-        if (this.modelMesh) {
-            this.modelMesh.setRotationFromEuler(new THREE.Euler(x, y, 0, "ZXY"));
-            this.invalidate();
-        }
+        this.updateMeshTransforms();
+    },
+    async reloadMesh() {
+        if (this.modelMesh) this.scene.remove(this.modelMesh);
+        this.modelMesh = await app.model.meshify();
+        this.scene.add(this.modelMesh);
+
+        this.invalidate();
+    },
+    updateMeshTransforms() {
+        this.modelMesh?.setRotationFromEuler(
+            new THREE.Euler(this.view.rotationX, this.view.rotationY, 0, "ZXY")
+        );
+
+        this.invalidate();
     },
     zoom(amount) {
         this.setView({
             zoom: Math.max(this.view.zoom * this.zoomScrollFactor ** amount, this.minZoom),
         });
+
+        if (this.plane === "home") {
+            this.plane = null;
+        }
     },
 });

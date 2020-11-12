@@ -292,16 +292,16 @@
                         <ul class="tool-list">
                             <li>
                                 <ul>
-                                    <li data-tooltip="Home View" @click="app.viewport3D.resetView()">
+                                    <li data-tooltip="Home View" :class="{'tool-list-selected': app.viewport3D.plane == 'home'}" @click="app.viewport3D.setPlane('home')">
                                         <img src="media/home-view.svg">
                                     </li>
-                                    <li data-tooltip="Top View">
+                                    <li data-tooltip="Top View" :class="{'tool-list-selected': app.viewport3D.plane == 'top'}" @click="app.viewport3D.setPlane('top')">
                                         <img src="media/top-view.svg">
                                     </li>
-                                    <li data-tooltip="Left View">
+                                    <li data-tooltip="Left View" :class="{'tool-list-selected': app.viewport3D.plane == 'left'}" @click="app.viewport3D.setPlane('left')">
                                         <img src="media/left-view.svg">
                                     </li>
-                                    <li data-tooltip="Right View">
+                                    <li data-tooltip="Right View" :class="{'tool-list-selected': app.viewport3D.plane == 'right'}" @click="app.viewport3D.setPlane('right')">
                                         <img src="media/right-view.svg">
                                     </li>
                                 </ul>

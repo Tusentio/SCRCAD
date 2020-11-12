@@ -145,8 +145,6 @@ class Model extends EventEmitter {
     async meshify() {
         let { voxels, palette } = this.getColorData();
 
-        console.log(this.width, this.height, this.depth);
-
         let geometry = new THREE.BufferGeometry();
         let meshData = await voxelUtil.meshify(
             voxels,
