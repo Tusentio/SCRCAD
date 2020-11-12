@@ -400,7 +400,7 @@
                             <p><img src="media/layer.svg">Layers</p>
                         </div>
                         <ul>
-                            <li v-for="layer in range(app.viewport2D.layerCount, 0)" :class="{'layer-selected': app.viewport2D.activeLayer == layer}">
+                            <li v-for="layer in layers" :class="{'layer-selected': app.viewport2D.activeLayer == layer}">
                                 <div v-if="app.viewport2D.activeLayer == layer">
                                     <button @click="app.viewport2D.insertLayer(layer + 1)">
                                         <img src="media/plus.svg">

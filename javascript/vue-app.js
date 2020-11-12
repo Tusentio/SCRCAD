@@ -14,7 +14,16 @@ module.exports = (app) => ({
             },
             grid: true,
         },
-        computed: {},
+        computed: {
+            layers() {
+                switch (app.viewport2D.view.plane) {
+                    case "top":
+                        return this.range(0, app.viewport2D.layerCount);
+                    default:
+                        return this.range(app.viewport2D.layerCount, 0);
+                }
+            },
+        },
         methods: {
             close() {
                 electron.remote.BrowserWindow.getFocusedWindow().close();
