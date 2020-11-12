@@ -41,7 +41,7 @@ module.exports = (app) => ({
             },
             toggleGrid() {
                 this.grid = !this.grid;
-                app.dispatchResize();
+                app.viewport2D.invalidate();
             },
             togglePnlEditor() {
                 this.panels.editor = !this.panels.editor;

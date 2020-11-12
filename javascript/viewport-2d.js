@@ -7,7 +7,6 @@ module.exports = (app) => ({
     minZoom: 5,
     modelPlane: null,
     activeLayer: 0,
-    grid: true,
     view: {
         zoom: 0,
         plane: null,
