@@ -84,7 +84,7 @@ module.exports = (app) => ({
             let tileX = Math.floor(posX / this.view.zoom) - 1;
             let tileY = Math.floor(posY / this.view.zoom) - 1;
 
-            this.modelPlane.setVoxelAt(tileX, tileY, this.activeLayer, {
+            this.modelPlane.set(tileX, tileY, this.activeLayer, {
                 selected: true,
                 color: 0xffffffff,
             });
@@ -103,6 +103,8 @@ module.exports = (app) => ({
         this.setView({ zoom: 100 });
     },
     invalidate() {
+        if (!app.vue.instance.panels.editor) return;
+
         // Don't allow more than one uncompleted animation frame request at once
         this._anim =
             this._anim ||
@@ -130,30 +132,34 @@ module.exports = (app) => ({
 
         this.context.strokeStyle = gradient;
 
-        this.modelPlane.forEachInZLayer(this.activeLayer, (voxel, x, y) => {
-            let voxelTransform = [
-                (x + 1) * this.view.zoom + this.context.lineWidth / 2,
-                (y + 1) * this.view.zoom + this.context.lineWidth / 2,
-                this.view.zoom - this.context.lineWidth,
-                this.view.zoom - this.context.lineWidth,
-            ];
+        for (let x = 0; x < this.layerWidth; x++) {
+            for (let y = 0; y < this.layerHeight; y++) {
+                let voxel = this.modelPlane.get(x, y, this.activeLayer);
 
-            let tempColorBuffer = Buffer.alloc(4);
-            tempColorBuffer.writeUInt32BE(voxel.color);
-            this.context.fillStyle = `#${tempColorBuffer.toString("hex")}`;
+                let voxelTransform = [
+                    (x + 1) * this.view.zoom + this.context.lineWidth / 2,
+                    (y + 1) * this.view.zoom + this.context.lineWidth / 2,
+                    this.view.zoom - this.context.lineWidth,
+                    this.view.zoom - this.context.lineWidth,
+                ];
 
-            let _strokeStyle = this.context.strokeStyle;
-            this.context.strokeStyle = this.context.fillStyle;
+                let tempColorBuffer = Buffer.alloc(4);
+                tempColorBuffer.writeUInt32BE(voxel.color);
+                this.context.fillStyle = `#${tempColorBuffer.toString("hex")}`;
 
-            this.context.strokeRect(...voxelTransform);
-            this.context.fillRect(...voxelTransform);
+                let _strokeStyle = this.context.strokeStyle;
+                this.context.strokeStyle = this.context.fillStyle;
 
-            this.context.strokeStyle = _strokeStyle;
+                this.context.strokeRect(...voxelTransform);
+                this.context.fillRect(...voxelTransform);
 
-            if (voxel.selected) this.context.strokeRect(...voxelTransform);
-        });
+                this.context.strokeStyle = _strokeStyle;
 
-        if (!this.grid) return;
+                if (voxel.selected) this.context.strokeRect(...voxelTransform);
+            }
+        }
+
+        if (!app.vue.instance.grid) return;
 
         this.context.lineWidth = 1;
         this.context.strokeStyle = "rgba(80, 80, 80, 1)";
@@ -232,15 +238,6 @@ module.exports = (app) => ({
                 this.selectLayer(i);
                 break;
         }
-    },
-    toggleGrid() {
-        this.grid = !this.grid;
-        this.invalidate();
-    },
-    clearLayer(index) {
-        index = Math.min(Math.max(index, 0), this.layerCount - 1);
-        this.modelPlane.clearLayer(index);
-        this.invalidate();
     },
     zoom(amount) {
         this.setView({

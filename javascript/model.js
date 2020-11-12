@@ -36,50 +36,46 @@ class Model extends EventEmitter {
         return this._voxels.shape[2];
     }
 
-    _bounded(x, y, z) {
-        return x >= 0 && x < this.width && y >= 0 && y < this.height && z >= 0 && z < this.depth;
+    get(x, y, z) {
+        this.assertPointInModel(x, y, z);
+        return { ...this._voxels.get(x, y, z) };
     }
 
-    getVoxelAt(x, y, z) {
-        if (!this._bounded(x, y, z)) return undefined;
-
-        return new Proxy(this._voxels.get(x, y, z), {
-            get(voxel, p) {
-                return voxel[p];
-            },
-            set(voxel, p, value) {
-                if (p.__proto__ === String.prototype) {
-                    voxel[p] = value;
-                } else if (Array.isArray(p)) {
-                    for (let [i, name] of Object.entries(p)) {
-                        voxel[name] = value[i];
-                    }
-                } else {
-                    return false;
-                }
-
-                return true;
-            },
-        });
-    }
-
-    setVoxelAt(x, y, z, properties) {
-        if (this._bounded(x, y, z)) {
+    set(x, y, z, properties) {
+        if (this.pointInModel(x, y, z)) {
             let voxel = this._voxels.get(x, y, z);
             let oldColor = voxel.color;
 
-            Object.assign(this._voxels.get(x, y, z), properties);
+            Object.assign(voxel, properties);
 
             if (this.emitChange && oldColor !== properties.color) {
                 this.emit("change");
             }
         } else if ("color" in properties) {
-            this._expandToInclude(x, y, z);
-            this.setVoxelAt(...this.constrainPositionToBounds(x, y, z), properties);
+            this.#expandToInclude(x, y, z);
+            this.set(...this.constrainPositionToBounds(x, y, z), properties);
         }
     }
 
-    _expandToInclude(x, y, z) {
+    pointInModel(x, y, z) {
+        return x >= 0 && x < this.width && y >= 0 && y < this.height && z >= 0 && z < this.depth;
+    }
+
+    assertPointInModel(x, y, z) {
+        if (!this.pointInModel(x, y, z)) {
+            throw new Error(`Point (${x}, ${y}, ${z}) is outside the model`);
+        }
+    }
+
+    constrainPositionToBounds(x, y, z) {
+        return [
+            Math.max(0, Math.min(this.width - 1, x)),
+            Math.max(0, Math.min(this.height - 1, y)),
+            Math.max(0, Math.min(this.depth - 1, z)),
+        ];
+    }
+
+    #expandToInclude(x, y, z) {
         // Calculate offset
         let xOffs = -Math.min(0, x);
         let yOffs = -Math.min(0, y);
@@ -114,24 +110,6 @@ class Model extends EventEmitter {
             for (let py = 0; py < oh; py++) {
                 for (let pz = 0; pz < od; pz++) {
                     this._voxels.set(px + xOffs, py + yOffs, pz + zOffs, oVoxels.get(px, py, pz));
-                }
-            }
-        }
-    }
-
-    constrainPositionToBounds(x, y, z) {
-        return [
-            Math.max(0, Math.min(this.width - 1, x)),
-            Math.max(0, Math.min(this.height - 1, y)),
-            Math.max(0, Math.min(this.depth - 1, z)),
-        ];
-    }
-
-    forEach(callbackfn) {
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
-                for (let z = 0; z < this.depth; z++) {
-                    callbackfn(this.getVoxelAt(x, y, z), x, y, z);
                 }
             }
         }
@@ -297,22 +275,12 @@ class Plane {
         return this._shape()[2];
     }
 
-    getVoxelAt(x, y, z) {
-        let [mx, my, mz] = this.planeToModelSpace(x, y, z);
-        return this._model.getVoxelAt(mx, my, mz);
+    get(x, y, z) {
+        return this._model.get(...this.planeToModelSpace(x, y, z));
     }
 
-    setVoxelAt(x, y, z, properties) {
-        let [mx, my, mz] = this.planeToModelSpace(x, y, z);
-        this._model.setVoxelAt(mx, my, mz, properties);
-    }
-
-    forEachInZLayer(z, callbackfn) {
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
-                callbackfn(this.getVoxelAt(x, y, z), x, y, z);
-            }
-        }
+    set(x, y, z, properties) {
+        this._model.set(...this.planeToModelSpace(x, y, z), properties);
     }
 
     insertLayer(z) {
@@ -374,36 +342,30 @@ class Plane {
         this._model.emit("change");
     }
 
-    swapLayers(i, j) {
-        let tempLayer = ndarray(new Array(this.width * this.height), [this.width, this.height]);
-
-        this.forEachInZLayer(i, (vc, x, y) => {
-            tempLayer.set(x, y, { color: vc.color, selected: vc.selected });
-
-            let voxel = this.getVoxelAt(x, y, j);
-            vc.color = voxel.color;
-            vc.selected = voxel.selected;
-        });
-
-        this.forEachInZLayer(j, (vc, x, y) => {
-            let voxel = tempLayer.get(x, y);
-            vc.color = voxel.color;
-            vc.selected = voxel.selected;
-        });
+    swapLayers(z0, z1) {
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                let temp = this.get(x, y, z0);
+                this.set(x, y, z0, this.get(x, y, z1));
+                this.set(x, y, z1, temp);
+            }
+        }
     }
 
-    duplicateLayer(z) {
+    duplicateLayer(z, ignore = ["selected"]) {
         this.insertLayer(z + 1);
 
-        this.forEachInZLayer(z + 1, (vc, x, y) => {
-            vc.color = this.getVoxelAt(x, y, z).color;
-        });
-    }
+        for (let x = 0; x < this.width; x++) {
+            for (let y = 0; y < this.height; y++) {
+                let voxel = this.get(x, y, z);
 
-    clearLayer(z) {
-        this.forEachInZLayer(z, (vc) => {
-            vc.color = 0x00000000;
-        });
+                for (let prop of ignore) {
+                    delete voxel[prop];
+                }
+
+                this.set(x, y, z + 1, voxel);
+            }
+        }
     }
 }
 
