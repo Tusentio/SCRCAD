@@ -7,7 +7,7 @@ const fs = require("fs");
 const voxelUtil = require("../wasm_pack/voxel-util");
 
 class Model extends EventEmitter {
-    constructor(width = 1, height = 1, depth = 1, voxels = null) {
+    constructor(name = "Untitled", width = 1, height = 1, depth = 1, voxels = null) {
         super();
 
         if (voxels === null) {
@@ -20,6 +20,7 @@ class Model extends EventEmitter {
             }
         }
 
+        this.name = name;
         this._voxels = ndarray(voxels, [width, height, depth]);
         this.emitChange = true;
     }
@@ -196,6 +197,7 @@ class Model extends EventEmitter {
 
         let modelFileObject = {
             SCRCAD: "1.0",
+            NAME: this.name,
             X: this.width,
             Y: this.height,
             Z: this.depth,
@@ -211,7 +213,7 @@ class Model extends EventEmitter {
         let modelFileBuffer = await util.promisify(fs.readFile)(path);
         let modelFileObject = msgpack.decode(modelFileBuffer);
 
-        let { X: width, Y: height, Z: depth } = modelFileObject;
+        let { NAME: name, X: width, Y: height, Z: depth } = modelFileObject;
 
         let paletteBuffer = modelFileObject["PAL"];
         let palette = debufferize(paletteBuffer, 4);
@@ -225,7 +227,7 @@ class Model extends EventEmitter {
             selected: false,
         }));
 
-        return new Model(width, height, depth, voxels);
+        return new Model(name, width, height, depth, voxels);
     }
 }
 

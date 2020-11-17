@@ -6,7 +6,6 @@ module.exports = (app) => ({
         el: "#vue-wrapper",
         data: {
             app,
-            modelName: "Untitled",
             panels: {
                 editor: true,
                 preview: false,

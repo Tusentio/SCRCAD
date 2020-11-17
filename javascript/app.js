@@ -6,7 +6,7 @@ const app = {
     viewport2D: null,
     viewport3D: null,
     init(Vue) {
-        this.model = new Model();
+        this.model = new Model("Untitled");
 
         this.vue = require("./vue-app.js")(this);
         this.viewport2D = require("./viewport-2d.js")(this);
@@ -22,7 +22,7 @@ const app = {
     },
     dispatchResize() {
         requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
-    }
+    },
 };
 
 module.exports = app;
