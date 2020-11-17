@@ -24,6 +24,10 @@ module.exports = (app) => ({
             this.zoom(dy < 0 ? 1 : -1);
         });
 
+        window.addEventListener("resize", () => {
+            this.invalidate();
+        });
+
         {
             let drag = null;
 
