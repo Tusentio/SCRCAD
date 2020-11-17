@@ -119,11 +119,17 @@ main > div {
     .canvas-wrapper {
         grid-row: 2 / 3;
         grid-column: 2 / 3;
-        position: relative;
-    }
 
-    canvas {
-        position: absolute;
+        input[type="text"] {
+            top: 0;
+            right: 0;
+            background: rgb(54, 54, 54);
+            position: absolute;
+            padding: .6rem 1rem;
+
+            border: none;
+            color: #ffffff;
+        }
     }
 }
 
@@ -155,6 +161,7 @@ main > aside {
         grid-row: 2 / 3;
         overflow: auto;
     }
+
 }
 
 #layers, #plugins {
@@ -173,8 +180,13 @@ main > aside {
     grid-row: 2 / 3;
     grid-column: 2 / 3;
     overflow: hidden;
+    position: relative;
     
     background-color: rgb(8,8,8);
     background-image: url("../media/transparent_tile.png");
     background-repeat: repeat;
+
+    canvas {
+        position: absolute;
+    }
 }
