@@ -1,0 +1,15 @@
+{
+  "name": "voxel-util",
+  "collaborators": [
+    "Keve1227 <killenlillen02@gmail.com>"
+  ],
+  "version": "0.1.0",
+  "files": [
+    "index_bg.wasm",
+    "index.js",
+    "index_bg.js",
+    "index.d.ts"
+  ],
+  "main": "index.js",
+  "types": "index.d.ts"
+}
