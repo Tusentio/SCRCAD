@@ -188,13 +188,11 @@ class Model extends EventEmitter {
     }
 
     async save(path) {
-        let { voxels: voxelData, palette: paletteData } = this.getColorData();
-        let paletteBuffer = bufferize(new Uint32Array(paletteData));
+        let { voxels, palette } = this.getColorData();
 
-        let paletteSize = Object.keys(palette).length;
-        let bytesPerColorIndex = Math.ceil(Math.log2(paletteSize) / Math.log2(0x100)) || 1;
-
-        let voxelBuffer = bufferize(voxelData, bytesPerColorIndex);
+        let paletteBuffer = bufferize(new Uint32Array(palette));
+        let bytesPerColorIndex = Math.ceil(Math.log2(palette.length) / Math.log2(0x100)) || 1;
+        let voxelBuffer = bufferize(voxels, bytesPerColorIndex);
 
         let modelFileObject = {
             SCRCAD: "1.0",
@@ -217,9 +215,7 @@ class Model extends EventEmitter {
 
         let paletteBuffer = modelFileObject["PAL"];
         let palette = debufferize(paletteBuffer, 4);
-
-        let paletteSize = palette.length;
-        let bytesPerColorIndex = Math.ceil(Math.log2(paletteSize) / Math.log2(0x100)) || 1;
+        let bytesPerColorIndex = Math.ceil(Math.log2(palette.length) / Math.log2(0x100)) || 1;
 
         let voxelBuffer = modelFileObject["VOX"];
         let voxelData = debufferize(voxelBuffer, bytesPerColorIndex);
