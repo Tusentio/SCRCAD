@@ -286,7 +286,7 @@ class Plane {
         const model = this.#model;
 
         // Get old width, height, depth, and voxels
-        let oVoxels = model._voxels;
+        let oVoxels = model.voxels;
 
         let dSize;
         {
@@ -299,7 +299,7 @@ class Plane {
         let nw = model.width + dSize[0];
         let nh = model.height + dSize[1];
         let nd = model.depth + dSize[2];
-        model._voxels = ndarray(new Array(), [nw, nh, nd]);
+        model.voxels = ndarray(new Array(), [nw, nh, nd]);
 
         // Copy/transfer and insert
         for (let pz = 0; pz < this.depth; pz++) {
@@ -309,7 +309,7 @@ class Plane {
                         for (let py = 0; py < this.height; py++) {
                             let [mx, my, mz] = this.planeToModelSpace(px, py, pz);
 
-                            model._voxels.set(mx, my, mz, oVoxels.get(mx, my, mz));
+                            model.voxels.set(mx, my, mz, oVoxels.get(mx, my, mz));
                         }
                     }
                     break;
@@ -318,7 +318,7 @@ class Plane {
                         for (let py = 0; py < this.height; py++) {
                             let [mx, my, mz] = this.planeToModelSpace(px, py, pz);
 
-                            model._voxels.set(mx, my, mz, {
+                            model.voxels.set(mx, my, mz, {
                                 color: 0x00000000,
                                 selected: false,
                             });
@@ -331,7 +331,7 @@ class Plane {
                             let [mx, my, mz] = this.planeToModelSpace(px, py, pz);
                             let [ox, oy, oz] = this.planeToModelSpace(px, py, pz + 1);
 
-                            model._voxels.set(mx, my, mz, oVoxels.get(ox, oy, oz));
+                            model.voxels.set(mx, my, mz, oVoxels.get(ox, oy, oz));
                         }
                     }
                     break;
