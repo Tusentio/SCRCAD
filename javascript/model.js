@@ -21,30 +21,30 @@ class Model extends EventEmitter {
         }
 
         this.name = name;
-        this._voxels = ndarray(voxels, [width, height, depth]);
+        this.voxels = ndarray(voxels, [width, height, depth]);
         this.emitChange = true;
     }
 
     get width() {
-        return this._voxels.shape[0];
+        return this.voxels.shape[0];
     }
 
     get height() {
-        return this._voxels.shape[1];
+        return this.voxels.shape[1];
     }
 
     get depth() {
-        return this._voxels.shape[2];
+        return this.voxels.shape[2];
     }
 
     get(x, y, z) {
         this.assertPointInModel(x, y, z);
-        return { ...this._voxels.get(x, y, z) };
+        return { ...this.voxels.get(x, y, z) };
     }
 
     set(x, y, z, properties) {
         if (this.pointInModel(x, y, z)) {
-            let voxel = this._voxels.get(x, y, z);
+            let voxel = this.voxels.get(x, y, z);
             let oldColor = voxel.color;
 
             Object.assign(voxel, properties);
@@ -86,19 +86,19 @@ class Model extends EventEmitter {
         let ow = this.width;
         let oh = this.height;
         let od = this.depth;
-        let oVoxels = this._voxels;
+        let oVoxels = this.voxels;
 
         // Calculate and set new width, height, depth, and voxels
         let nw = Math.max(ow, ow + xOffs, x + 1);
         let nh = Math.max(oh, oh + yOffs, y + 1);
         let nd = Math.max(od, od + zOffs, z + 1);
-        this._voxels = ndarray(new Array(), [nw, nh, nd]);
+        this.voxels = ndarray(new Array(), [nw, nh, nd]);
 
         // Assign new voxels to the new voxel array
         for (let px = 0; px < nw; px++) {
             for (let py = 0; py < nh; py++) {
                 for (let pz = 0; pz < nd; pz++) {
-                    this._voxels.set(px, py, pz, {
+                    this.voxels.set(px, py, pz, {
                         color: 0x00000000,
                         selected: false,
                     });
@@ -110,7 +110,7 @@ class Model extends EventEmitter {
         for (let px = 0; px < ow; px++) {
             for (let py = 0; py < oh; py++) {
                 for (let pz = 0; pz < od; pz++) {
-                    this._voxels.set(px + xOffs, py + yOffs, pz + zOffs, oVoxels.get(px, py, pz));
+                    this.voxels.set(px + xOffs, py + yOffs, pz + zOffs, oVoxels.get(px, py, pz));
                 }
             }
         }
@@ -124,7 +124,7 @@ class Model extends EventEmitter {
         let lastColorIndex = 0;
         let colorIndexLookup = {};
 
-        let voxels = this._voxels.data.map((voxel) => {
+        let voxels = this.voxels.data.map((voxel) => {
             let color = voxel.color;
 
             if (colorIndexLookup[color] === undefined) {
@@ -232,6 +232,9 @@ class Model extends EventEmitter {
 }
 
 class Plane {
+    #model;
+    #shape;
+
     constructor(model, plane) {
         const { shape, planeToModelSpace } = {
             right: {
@@ -254,33 +257,33 @@ class Plane {
             },
         }[plane];
 
-        this._model = model;
-        this._shape = shape;
+        this.#model = model;
+        this.#shape = shape;
         this.planeToModelSpace = planeToModelSpace;
     }
 
     get width() {
-        return this._shape()[0];
+        return this.#shape()[0];
     }
 
     get height() {
-        return this._shape()[1];
+        return this.#shape()[1];
     }
 
     get depth() {
-        return this._shape()[2];
+        return this.#shape()[2];
     }
 
     get(x, y, z) {
-        return this._model.get(...this.planeToModelSpace(x, y, z));
+        return this.#model.get(...this.planeToModelSpace(x, y, z));
     }
 
     set(x, y, z, properties) {
-        this._model.set(...this.planeToModelSpace(x, y, z), properties);
+        this.#model.set(...this.planeToModelSpace(x, y, z), properties);
     }
 
     insertLayer(z) {
-        const model = this._model;
+        const model = this.#model;
 
         // Get old width, height, depth, and voxels
         let oVoxels = model._voxels;
@@ -335,7 +338,7 @@ class Plane {
             }
         }
 
-        this._model.emit("change");
+        this.#model.emit("change");
     }
 
     swapLayers(z0, z1) {

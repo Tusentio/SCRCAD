@@ -52,11 +52,11 @@
                     <li>
                         <p>View</p>
                         <ul>
-                            <li @click="app.viewport2D.zoom(1)"><p>Editor Zoom In</p></li>
-                            <li @click="app.viewport2D.zoom(-1)"><p>Editor Zoom Out</p></li>
-                            <li @click="toggleGrid"><p>Editor Grid<span v-if="grid"> ✓</span></p></li>
-                            <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor">✓</span></p></li>
-                            <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview">✓</span></p></li>
+                            <li @click="panels.editor.zoom(1)"><p>Editor Zoom In</p></li>
+                            <li @click="panels.editor.zoom(-1)"><p>Editor Zoom Out</p></li>
+                            <li @click="panels.editor.toggleGrid()"><p>Editor Grid<span v-if="panels.editor.grid"> ✓</span></p></li>
+                            <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor.enabled">✓</span></p></li>
+                            <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview.enabled">✓</span></p></li>
                             <li @click="togglePnlPlugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
                             <li @click="togglePnlLayers"><p>Layers <span v-if="panels.layers">✓</span></p></li>
                         </ul>
@@ -122,19 +122,19 @@
                     <li>
                         <p>View</p>
                         <ul>
-                            <li :class="{active: panels.editor}" @click="togglePnlEditor">
+                            <li :class="{active: panels.editor.enabled}" @click="togglePnlEditor">
                                 <img src="media/layer-editor.svg">
                                 <p>Editor</p>
                             </li>
-                            <li :class="{active: panels.preview}" @click="togglePnlPreview">
+                            <li :class="{active: panels.preview.enabled}" @click="togglePnlPreview">
                                 <img src="media/3d-cube.svg">
                                 <p>3D Preview</p>
                             </li>
-                            <li :class="{active: panels.plugins}" @click="togglePnlPlugins">
+                            <li :class="{active: panels.plugins.enabled}" @click="togglePnlPlugins">
                                 <img src="media/plugin.svg">
                                 <p>Plugins</p>
                             </li>
-                            <li :class="{active: panels.layers}" @click="togglePnlLayers">
+                            <li :class="{active: panels.layers.enabled}" @click="togglePnlLayers">
                                 <img src="media/layer.svg">
                                 <p>Layers</p>
                             </li>
@@ -143,15 +143,15 @@
                     <li>
                         <p>Editor</p>
                         <ul>
-                            <li :class="{active: grid}" @click="toggleGrid">
+                            <li :class="{active: panels.editor.grid}" @click="panels.editor.toggleGrid()">
                                 <img src="media/layer-editor.svg">
                                 <p>Show Grid</p>
                             </li>
-                            <li @click="app.viewport2D.zoom(1)">
+                            <li @click="panels.editor.zoom(1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom In</p>
                             </li>
-                            <li @click="app.viewport2D.zoom(-1)">
+                            <li @click="panels.editor.zoom(-1)">
                                 <img src="media/layer-editor.svg">
                                 <p>Zoom Out</p>
                             </li>
@@ -169,7 +169,7 @@
                     <li>
                         <p>Layer</p>
                         <ul>
-                            <li @click="app.viewport2D.duplicateLayer(app.viewport2D.activeLayer)">
+                            <li @click="panels.editor.duplicateLayer(panels.editor.activeLayer)">
                                 <img src="media/layer.svg">
                                 <p>Duplicate</p>
                             </li>
@@ -228,27 +228,27 @@
                     </li>
                 </ul>
                 <div id="viewports">
-                    <div v-show="panels.editor" id="editor-view">
+                    <div v-show="panels.editor.enabled" id="editor-view">
                         <div class="panel-header">
                             <p><img src="media/layer-editor.svg">Layer Editor</p>
                         </div>
                         <ul class="tool-list">
                             <li>
                                 <ul>
-                                    <li @click="app.viewport2D.resetPosition()" data-tooltip="Home View">
+                                    <li @click="panels.editor.resetPosition()" data-tooltip="Home View">
                                         <img src="media/home-view.svg">
                                     </li>
                                 </ul>
                             </li>
                             <li>
                                 <ul>
-                                    <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'top'}" @click="app.viewport2D.setView({plane: 'top'})" data-tooltip="Top Plane">
+                                    <li :class="{'tool-list-selected': panels.editor.view.plane == 'top'}" @click="panels.editor.setView({plane: 'top'})" data-tooltip="Top Plane">
                                         <img src="media/top-plane.svg">
                                     </li>
-                                    <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'front'}" @click="app.viewport2D.setView({plane: 'front'})" data-tooltip="Front Plane">
+                                    <li :class="{'tool-list-selected': panels.editor.view.plane == 'front'}" @click="panels.editor.setView({plane: 'front'})" data-tooltip="Front Plane">
                                         <img src="media/front-plane.svg">
                                     </li>
-                                    <li :class="{'tool-list-selected': app.viewport2D.view.plane == 'right'}" @click="app.viewport2D.setView({plane: 'right'})" data-tooltip="Right Plane">
+                                    <li :class="{'tool-list-selected': panels.editor.view.plane == 'right'}" @click="panels.editor.setView({plane: 'right'})" data-tooltip="Right Plane">
                                         <img src="media/right-plane.svg">
                                     </li>
                                 </ul>
@@ -270,8 +270,8 @@
                         <div class="canvas-wrapper">
                             <div id="editor-status-bar">
                                 <p>
-                                    <img :src="'media/' + app.viewport2D.view.plane + '-plane.svg'">
-                                    <span>{{app.viewport2D.view.plane}}</span>
+                                    <img :src="'media/' + panels.editor.view.plane + '-plane.svg'">
+                                    <span>{{panels.editor.view.plane}}</span>
                                 </p>
                                 <p>
                                     <img src="media/selection.svg">
@@ -279,29 +279,29 @@
                                 </p>
                                 <p>
                                     <img src="media/layer-editor.svg">
-                                    <span>{{app.viewport2D.layerWidth}}x{{app.viewport2D.layerHeight}}</span>
+                                    <span>{{panels.editor.layerWidth}}x{{panels.editor.layerHeight}}</span>
                                 </p>
                             </div>
                             <canvas id="editor-canvas" width=500 height=500></canvas>
                         </div>
                     </div>
-                    <div v-show="panels.preview" id="preview-view">
+                    <div v-show="panels.preview.enabled" id="preview-view">
                         <div class="panel-header">
                             <p><img src="media/3d-cube.svg">3D Preview</p>
                         </div>
                         <ul class="tool-list">
                             <li>
                                 <ul>
-                                    <li data-tooltip="Home View" :class="{'tool-list-selected': app.viewport3D.plane == 'home'}" @click="app.viewport3D.setPlane('home')">
+                                    <li data-tooltip="Home View" :class="{'tool-list-selected': panels.preview.plane == 'home'}" @click="panels.preview.setPlane('home')">
                                         <img src="media/home-view.svg">
                                     </li>
-                                    <li data-tooltip="Top View" :class="{'tool-list-selected': app.viewport3D.plane == 'top'}" @click="app.viewport3D.setPlane('top')">
+                                    <li data-tooltip="Top View" :class="{'tool-list-selected': panels.preview.plane == 'top'}" @click="panels.preview.setPlane('top')">
                                         <img src="media/top-view.svg">
                                     </li>
-                                    <li data-tooltip="Left View" :class="{'tool-list-selected': app.viewport3D.plane == 'left'}" @click="app.viewport3D.setPlane('left')">
+                                    <li data-tooltip="Left View" :class="{'tool-list-selected': panels.preview.plane == 'left'}" @click="panels.preview.setPlane('left')">
                                         <img src="media/left-view.svg">
                                     </li>
-                                    <li data-tooltip="Right View" :class="{'tool-list-selected': app.viewport3D.plane == 'right'}" @click="app.viewport3D.setPlane('right')">
+                                    <li data-tooltip="Right View" :class="{'tool-list-selected': panels.preview.plane == 'right'}" @click="panels.preview.setPlane('right')">
                                         <img src="media/right-view.svg">
                                     </li>
                                 </ul>
@@ -321,7 +321,7 @@
                     </div>
                 </div>
                 <aside>
-                    <div v-show="panels.plugins" id="plugins">
+                    <div v-show="panels.plugins.enabled" id="plugins">
                         <div class="panel-header">
                             <p><img src="media/plugin.svg">Plugins</p>
                         </div>
@@ -396,31 +396,31 @@
                             </ul>
                         </div>
                     </div>
-                    <div v-show="panels.layers" id="layers">
+                    <div v-show="panels.layers.enabled" id="layers">
                         <div class="panel-header">
                             <p><img src="media/layer.svg">Layers</p>
                         </div>
                         <ul>
-                            <li v-for="layer in layers" :class="{'layer-selected': app.viewport2D.activeLayer == layer}">
-                                <div v-if="app.viewport2D.activeLayer == layer">
-                                    <button @click="app.viewport2D.insertLayer(layer + 1)">
+                            <li v-for="layer in layers" :class="{'layer-selected': panels.editor.activeLayer == layer}">
+                                <div v-if="panels.editor.activeLayer == layer">
+                                    <button @click="panels.editor.insertLayer(layer + 1)">
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
-                                    <button @click="app.viewport2D.swapLayers(layer, layer + 1)">
+                                    <button @click="panels.editor.swapLayers(layer, layer + 1)">
                                         <img src="media/up.svg">
                                     </button>
                                 </div>
-                                <p @click="app.viewport2D.selectLayer(layer)">
+                                <p @click="panels.editor.selectLayer(layer)">
                                     <img src="media/layer.svg">
                                     Layer #{{layer + 1}}
                                 </p>
-                                <div v-if="app.viewport2D.activeLayer == layer">
-                                    <button @click="app.viewport2D.insertLayer(layer)">
+                                <div v-if="panels.editor.activeLayer == layer">
+                                    <button @click="panels.editor.insertLayer(layer)">
                                         <img src="media/plus.svg">
                                         Insert new layer
                                     </button>
-                                    <button @click="app.viewport2D.swapLayers(layer - 1, layer)">
+                                    <button @click="panels.editor.swapLayers(layer - 1, layer)">
                                         <img src="media/down.svg">
                                     </button>
                                 </div>

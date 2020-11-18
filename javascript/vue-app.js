@@ -1,22 +1,21 @@
 const electron = require("electron");
+const Viewport2D = require("./viewport-2d.js");
+const Viewport3D = require("./viewport-3d.js");
 
-module.exports = (app) => ({
-    instance: null,
-    options: {
+class VueApp {
+    #options = {
         el: "#vue-wrapper",
         data: {
-            app,
             panels: {
-                editor: true,
-                preview: false,
-                plugins: true,
-                layers: true,
+                editor: new Viewport2D(),
+                preview: new Viewport3D(),
+                plugins: { enabled: true },
+                layers: { enabled: true },
             },
-            grid: true,
         },
         computed: {
             layers() {
-                return this.range(app.viewport2D.layerCount, 0);
+                return this.range(this.panels.editor.layerCount || 0, 0);
             },
         },
         methods: {
@@ -34,25 +33,28 @@ module.exports = (app) => ({
                     browserWindow.maximize();
                 }
             },
-            toggleGrid() {
-                this.grid = !this.grid;
-                app.viewport2D.invalidate();
-            },
             togglePnlEditor() {
-                this.panels.editor = !this.panels.editor;
-                app.dispatchResize();
+                this.panels.editor.enabled = !this.panels.editor.enabled;
+                this.dispatchResize();
             },
             togglePnlPreview() {
-                this.panels.preview = !this.panels.preview;
-                app.dispatchResize();
+                this.panels.preview.enabled = !this.panels.preview.enabled;
+                this.dispatchResize();
             },
             togglePnlPlugins() {
-                this.panels.plugins = !this.panels.plugins;
-                app.dispatchResize();
+                this.panels.plugins.enabled = !this.panels.plugins.enabled;
+                this.dispatchResize();
             },
             togglePnlLayers() {
-                this.panels.layers = !this.panels.layers;
-                app.dispatchResize();
+                this.panels.layers.enabled = !this.panels.layers.enabled;
+                this.dispatchResize();
+            },
+            invalidateViewports() {
+                this.viewport3D.invalidate();
+                this.viewport2D.invalidate();
+            },
+            dispatchResize() {
+                requestAnimationFrame(() => window.dispatchEvent(new Event("resize")));
             },
             range(a, b) {
                 let count = Math.abs(a - b);
@@ -61,8 +63,15 @@ module.exports = (app) => ({
                 return new Array(count).fill().map((_, i) => a + i * sign + offset);
             },
         },
-    },
-    init(Vue) {
-        this.instance = new Vue(this.options);
-    },
-});
+    };
+
+    constructor(Vue, client) {
+        let instance = new Vue(this.#options);
+        instance.panels.editor.init(client);
+        instance.panels.preview.init(client);
+
+        return instance;
+    }
+}
+
+module.exports = VueApp;

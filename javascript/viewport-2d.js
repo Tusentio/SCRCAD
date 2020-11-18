@@ -1,13 +1,16 @@
 const mouseWheel = require("mouse-wheel");
 
-module.exports = (app) => ({
-    canvas: null,
-    context: null,
-    zoomScrollFactor: 1.2,
-    minZoom: 5,
-    modelPlane: null,
-    activeLayer: 0,
-    view: {
+class Viewport2D {
+    #client;
+    modelPlane;
+    canvas;
+    context;
+    zoomScrollFactor = 1.2;
+    enabled = true;
+    grid = true;
+    minZoom = 5;
+    activeLayer = 0;
+    view = {
         zoom: 0,
         plane: null,
         layer: {
@@ -15,8 +18,11 @@ module.exports = (app) => ({
             right: 0,
             front: 0,
         },
-    },
-    init() {
+    };
+
+    init(client) {
+        this.#client = client;
+
         this.canvas = document.getElementById("editor-canvas");
         this.context = this.canvas.getContext("2d");
 
@@ -99,14 +105,16 @@ module.exports = (app) => ({
             zoom: 100,
             plane: "front",
         });
-    },
+    }
+
     resetPosition() {
         this.canvas.style.left = "0px";
         this.canvas.style.top = "0px";
         this.setView({ zoom: 100 });
-    },
+    }
+
     invalidate() {
-        if (!app.vue.instance.panels.editor) return;
+        if (!this.enabled) return;
 
         // Don't allow more than one uncompleted animation frame request at once
         this._anim =
@@ -115,7 +123,8 @@ module.exports = (app) => ({
                 this._anim = undefined;
                 this.render();
             });
-    },
+    }
+
     render() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -162,33 +171,37 @@ module.exports = (app) => ({
             }
         }
 
-        if (!app.vue.instance.grid) return;
+        if (this.grid) {
+            this.context.lineWidth = 1;
+            this.context.strokeStyle = "rgba(80, 80, 80, 1)";
 
-        this.context.lineWidth = 1;
-        this.context.strokeStyle = "rgba(80, 80, 80, 1)";
+            for (let x = 0; x < gridWidth; x++) {
+                this.context.strokeRect(x * this.view.zoom, 0, this.view.zoom, this.canvas.height);
+            }
 
-        for (let x = 0; x < gridWidth; x++) {
-            this.context.strokeRect(x * this.view.zoom, 0, this.view.zoom, this.canvas.height);
+            for (let y = 0; y < gridHeight; y++) {
+                this.context.strokeRect(0, y * this.view.zoom, this.canvas.width, this.view.zoom);
+            }
         }
+    }
 
-        for (let y = 0; y < gridHeight; y++) {
-            this.context.strokeRect(0, y * this.view.zoom, this.canvas.width, this.view.zoom);
-        }
-    },
     get layerWidth() {
         return this.modelPlane?.width || 0;
-    },
+    }
+
     get layerHeight() {
         return this.modelPlane?.height || 0;
-    },
+    }
+
     get layerCount() {
         return this.modelPlane?.depth || 0;
-    },
+    }
+
     setView(view) {
         Object.assign(this.view, view);
         let { zoom, plane } = this.view;
 
-        this.modelPlane = app.model.getPlane(plane);
+        this.modelPlane = this.#client.model.getPlane(plane);
         this.canvas.width = (this.modelPlane.width + 2) * zoom;
         this.canvas.height = (this.modelPlane.height + 2) * zoom;
 
@@ -199,13 +212,15 @@ module.exports = (app) => ({
         this.activeLayer = this.view.layer[plane];
 
         this.invalidate();
-    },
+    }
+
     selectLayer(index) {
         index = Math.min(Math.max(index, 0), this.layerCount - 1);
         this.activeLayer = this.view.layer[this.view.plane] = index;
 
         this.invalidate();
-    },
+    }
+
     duplicateLayer(index) {
         index = Math.min(Math.max(index, 0), this.layerCount - 1);
         this.modelPlane.duplicateLayer(index);
@@ -215,7 +230,8 @@ module.exports = (app) => ({
         if (index < this.activeLayer) {
             this.selectLayer(this.activeLayer + 1);
         }
-    },
+    }
+
     insertLayer(index) {
         index = Math.min(Math.max(index, 0), this.layerCount);
         this.modelPlane.insertLayer(index);
@@ -225,7 +241,8 @@ module.exports = (app) => ({
         if (index > this.activeLayer) {
             this.selectLayer(this.activeLayer + 1);
         }
-    },
+    }
+
     swapLayers(i, j) {
         i = Math.min(Math.max(i, 0), this.layerCount - 1);
         j = Math.min(Math.max(j, 0), this.layerCount - 1);
@@ -241,10 +258,18 @@ module.exports = (app) => ({
                 this.selectLayer(i);
                 break;
         }
-    },
+    }
+
     zoom(amount) {
         this.setView({
             zoom: Math.max(this.view.zoom * this.zoomScrollFactor ** amount, this.minZoom),
         });
-    },
-});
+    }
+
+    toggleGrid() {
+        this.grid = !this.grid;
+        this.invalidate();
+    }
+}
+
+module.exports = Viewport2D;

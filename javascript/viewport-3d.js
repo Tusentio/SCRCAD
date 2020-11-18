@@ -1,17 +1,19 @@
 const THREE = require("three");
 const mouseWheel = require("mouse-wheel");
 
-module.exports = (app) => ({
-    canvas: null,
-    renderer: null,
-    scene: null,
-    camera: null,
-    modelMesh: null,
-    zoomScrollFactor: 1.2,
-    minZoom: 5,
-    rotationSpeed: 1,
-    plane: null,
-    view: {
+class Viewport3D {
+    #renderer;
+    #scene;
+    #camera;
+    #modelMesh;
+    #client;
+    enabled = true;
+    canvas;
+    zoomScrollFactor = 1.2;
+    minZoom = 5;
+    rotationSpeed = 1;
+    plane;
+    view = {
         width: 0,
         height: 0,
         zoom: 0,
@@ -19,28 +21,31 @@ module.exports = (app) => ({
         yOffset: 0,
         rotationX: 0,
         rotationY: 0,
-    },
-    init() {
-        this.canvas = document.getElementById("preview-canvas");
-        this.scene = new THREE.Scene();
+    };
 
-        this.camera = new THREE.OrthographicCamera(0, 0, 0, 0, 0);
-        this.scene.add(this.camera);
+    init(client) {
+        this.#client = client;
+
+        this.canvas = document.getElementById("preview-canvas");
+        this.#scene = new THREE.Scene();
+
+        this.#camera = new THREE.OrthographicCamera(0, 0, 0, 0, 0);
+        this.#scene.add(this.#camera);
 
         let ambient = new THREE.AmbientLight(0xffffff, 0.5);
-        this.scene.add(ambient);
+        this.#scene.add(ambient);
 
         let light = new THREE.DirectionalLight(0xffffff, 0.5);
         light.position.set(-10, 10, 10);
         light.target.position.set(0, 0, 0);
-        this.scene.add(light);
-        this.scene.add(light.target);
+        this.#scene.add(light);
+        this.#scene.add(light.target);
 
-        this.renderer = new THREE.WebGLRenderer({
+        this.#renderer = new THREE.WebGLRenderer({
             canvas: this.canvas,
             alpha: true,
         });
-        this.renderer.setClearColor(0, 0);
+        this.#renderer.setClearColor(0, 0);
 
         this.setView({
             width: this.canvas.parentElement.clientWidth,
@@ -55,7 +60,7 @@ module.exports = (app) => ({
             });
         });
 
-        app.model.on("change", () => {
+        this.#client.model.on("change", () => {
             this._refreshMesh = true;
             this.invalidate();
         });
@@ -110,9 +115,10 @@ module.exports = (app) => ({
                 }
             });
         }
-    },
+    }
+
     invalidate() {
-        if (!app.vue.instance.panels.preview) return;
+        if (!this.enabled) return;
 
         // Don't allow more than one uncompleted animation frame request at once
         this._anim =
@@ -121,7 +127,8 @@ module.exports = (app) => ({
                 await this.render();
                 this._anim = undefined;
             });
-    },
+    }
+
     async render() {
         if (this._refreshMesh) {
             await this.reloadMesh();
@@ -129,8 +136,9 @@ module.exports = (app) => ({
             this._refreshMesh = false;
         }
 
-        this.renderer.render(this.scene, this.camera);
-    },
+        this.#renderer.render(this.#scene, this.#camera);
+    }
+
     setView(view) {
         Object.assign(this.view, view);
         let { width, height, zoom, xOffset, yOffset } = this.view;
@@ -138,29 +146,30 @@ module.exports = (app) => ({
         // Calculate camera viewing planes based on zoom and aspect ratio
         let aspectRatio = width / height;
         if (width > height) {
-            this.camera.right = (height * aspectRatio) / 2 / zoom;
-            this.camera.top = height / 2 / zoom;
+            this.#camera.right = (height * aspectRatio) / 2 / zoom;
+            this.#camera.top = height / 2 / zoom;
         } else {
-            this.camera.right = width / 2 / zoom;
-            this.camera.top = width / aspectRatio / 2 / zoom;
+            this.#camera.right = width / 2 / zoom;
+            this.#camera.top = width / aspectRatio / 2 / zoom;
         }
-        this.camera.left = -this.camera.right;
-        this.camera.bottom = -this.camera.top;
+        this.#camera.left = -this.#camera.right;
+        this.#camera.bottom = -this.#camera.top;
 
         // Apply position offsets
-        this.camera.left += xOffset;
-        this.camera.right += xOffset;
-        this.camera.top += yOffset;
-        this.camera.bottom += yOffset;
+        this.#camera.left += xOffset;
+        this.#camera.right += xOffset;
+        this.#camera.top += yOffset;
+        this.#camera.bottom += yOffset;
 
         // Have (z: 0) always be in the center of the camera's viewing box
-        this.camera.position.z = this.camera.far / 2;
+        this.#camera.position.z = this.#camera.far / 2;
 
-        this.camera.updateProjectionMatrix();
-        this.renderer.setSize(width, height, false);
+        this.#camera.updateProjectionMatrix();
+        this.#renderer.setSize(width, height, false);
 
         this.invalidate();
-    },
+    }
+
     setPlane(plane) {
         switch (plane) {
             case "home":
@@ -180,7 +189,8 @@ module.exports = (app) => ({
         }
 
         this.plane = plane;
-    },
+    }
+
     resetView() {
         this.setRotation(0, 0);
 
@@ -189,28 +199,32 @@ module.exports = (app) => ({
             yOffset: 0,
             zoom: 100,
         });
-    },
+    }
+
     setRotation(x = this.view.rotationX, y = this.view.rotationY) {
         this.view.rotationX = (Math.PI * 2 + (x % (Math.PI * 2))) % (Math.PI * 2);
         this.view.rotationY = (Math.PI * 2 + (y % (Math.PI * 2))) % (Math.PI * 2);
         this.plane = null;
 
         this.updateMeshTransforms();
-    },
+    }
+
     async reloadMesh() {
-        if (this.modelMesh) this.scene.remove(this.modelMesh);
-        this.modelMesh = await app.model.meshify();
-        this.scene.add(this.modelMesh);
+        if (this.#modelMesh) this.#scene.remove(this.#modelMesh);
+        this.#modelMesh = await this.#client.model.meshify();
+        this.#scene.add(this.#modelMesh);
 
         this.invalidate();
-    },
+    }
+
     updateMeshTransforms() {
-        this.modelMesh?.setRotationFromEuler(
+        this.#modelMesh?.setRotationFromEuler(
             new THREE.Euler(this.view.rotationX, this.view.rotationY, 0, "ZXY")
         );
 
         this.invalidate();
-    },
+    }
+
     zoom(amount) {
         this.setView({
             zoom: Math.max(this.view.zoom * this.zoomScrollFactor ** amount, this.minZoom),
@@ -219,5 +233,7 @@ module.exports = (app) => ({
         if (this.plane === "home") {
             this.plane = null;
         }
-    },
-});
+    }
+}
+
+module.exports = Viewport3D;
