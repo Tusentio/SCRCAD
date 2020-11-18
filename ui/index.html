@@ -254,15 +254,9 @@
                                 </ul>
                             </li>
                             <li>
-                                <ul>
-                                    <li data-tooltip="Selection Tool Placeholder">
-                                        <img src="media/selection.svg">
-                                    </li>
-                                    <li class="tool-list-selected" data-tooltip="Selection Tool Placeholder">
-                                        <img src="media/selection.svg">
-                                    </li>
-                                    <li data-tooltip="Selection Tool Placeholder">
-                                        <img src="media/selection.svg">
+                                <ul v-for="plugin in plugins">
+                                    <li v-for="tool in plugin.tools" :class="{'tool-list-selected': tool == panels.editor.tool}" @click="panels.editor.tool = tool" :data-tooltip="tool.tooltip" >
+                                        <img :src="tool.icon">
                                     </li>
                                 </ul>
                             </li>

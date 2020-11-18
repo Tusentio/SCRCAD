@@ -10,6 +10,7 @@ class Viewport2D {
     grid = true;
     minZoom = 5;
     activeLayer = 0;
+    tool = null;
     view = {
         zoom: 0,
         plane: null,
@@ -73,33 +74,91 @@ class Viewport2D {
             });
         }
 
-        this.canvas.addEventListener("click", (e) => {
-            let canvasStyle = getComputedStyle(this.canvas);
-            let posX =
-                e.clientX -
-                this.canvas.offsetLeft -
-                this.canvas.parentNode.offsetLeft -
-                parseInt(canvasStyle.getPropertyValue("border-left-width"));
-            let posY =
-                e.clientY -
-                this.canvas.offsetTop -
-                this.canvas.parentNode.offsetTop -
-                parseInt(canvasStyle.getPropertyValue("border-top-width"));
+        {
+            const tilePos = (clientX, clientY) => {
+                let canvasStyle = getComputedStyle(this.canvas);
 
-            if (posX < 0 || posY < 0 || posX >= this.canvas.width || posY >= this.canvas.height) {
-                return;
-            }
+                let posX =
+                    clientX -
+                    this.canvas.offsetLeft -
+                    this.canvas.parentNode.offsetLeft -
+                    parseInt(canvasStyle.getPropertyValue("border-left-width"));
+                let posY =
+                    clientY -
+                    this.canvas.offsetTop -
+                    this.canvas.parentNode.offsetTop -
+                    parseInt(canvasStyle.getPropertyValue("border-top-width"));
 
-            let tileX = Math.floor(posX / this.view.zoom) - 1;
-            let tileY = Math.floor(posY / this.view.zoom) - 1;
+                let tileX = posX / this.view.zoom - 1;
+                let tileY = posY / this.view.zoom - 1;
 
-            this.modelPlane.set(tileX, tileY, this.activeLayer, {
-                selected: true,
-                color: 0xffffffff,
+                return [tileX, tileY];
+            };
+
+            let drag = null;
+
+            this.canvas.addEventListener("mousedown", (e) => {
+                let [x, y] = tilePos(e.clientX, e.clientY);
+                drag = {
+                    button: e.button,
+                    x,
+                    y,
+                };
+
+                if (this.tool && drag.button === 0) {
+                    this.tool.emit("mouseDown", {
+                        view: this.modelPlane,
+                        x: Math.floor(drag.x),
+                        y: Math.floor(drag.y),
+                        z: this.activeLayer,
+                        sx: drag.x % 1,
+                        sy: drag.y % 1,
+                    });
+
+                    this.setView();
+                }
             });
 
-            this.setView({});
-        });
+            window.addEventListener("mouseup", (e) => {
+                if (e.button !== drag?.button) return;
+
+                if (this.tool && drag.button === 0) {
+                    this.tool.emit("mouseUp", {
+                        view: this.modelPlane,
+                        x: Math.floor(drag.x),
+                        y: Math.floor(drag.y),
+                        z: this.activeLayer,
+                        sx: drag.x % 1,
+                        sy: drag.y % 1,
+                    });
+
+                    this.setView();
+                }
+
+                drag = null;
+            });
+
+            window.addEventListener("mousemove", (e) => {
+                if (!drag) return;
+
+                let [x, y] = tilePos(e.clientX, e.clientY);
+                drag.x = x;
+                drag.y = y;
+
+                if (this.tool && drag.button === 0) {
+                    this.tool.emit("mouseDrag", {
+                        view: this.modelPlane,
+                        x: Math.floor(drag.x),
+                        y: Math.floor(drag.y),
+                        z: this.activeLayer,
+                        sx: drag.x % 1,
+                        sy: drag.y % 1,
+                    });
+
+                    this.setView();
+                }
+            });
+        }
 
         this.setView({
             zoom: 100,
@@ -197,7 +256,7 @@ class Viewport2D {
         return this.modelPlane?.depth || 0;
     }
 
-    setView(view) {
+    setView(view = {}) {
         Object.assign(this.view, view);
         let { zoom, plane } = this.view;
 
