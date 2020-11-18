@@ -1,6 +1,8 @@
 const electron = require("electron");
+const fs = require("fs");
 const Viewport2D = require("./viewport-2d.js");
 const Viewport3D = require("./viewport-3d.js");
+const { import: importPlugin } = require("./plugins/import.js");
 
 class VueApp {
     #options = {
@@ -12,6 +14,7 @@ class VueApp {
                 plugins: { enabled: true },
                 layers: { enabled: true },
             },
+            plugins: [],
         },
         computed: {
             layers() {
@@ -62,6 +65,21 @@ class VueApp {
                 let offset = Math.min(sign, 0);
                 return new Array(count).fill().map((_, i) => a + i * sign + offset);
             },
+        },
+        created() {
+            (async () => {
+                let pluginNames = (await fs.promises.readdir("./plugins", { withFileTypes: true }))
+                    .filter((dirent) => dirent.isDirectory())
+                    .map((dirent) => dirent.name);
+
+                for (let name of pluginNames) {
+                    try {
+                        this.plugins.push(await importPlugin(`./plugins/${name}`));
+                    } catch (err) {
+                        console.error(err);
+                    }
+                }
+            })();
         },
     };
 

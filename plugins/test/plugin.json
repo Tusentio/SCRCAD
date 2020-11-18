@@ -1,0 +1,32 @@
+{
+    "name": "Test Plugin",
+    "handler": "testPlugin",
+    "description": "An extensive testing plugin.",
+    "requires": [
+        {
+            "name": "scrcad-color",
+            "version": "1.0"
+        }
+    ],
+    "tools": [
+        {
+            "name": "Click",
+            "handler": "clickTool",
+            "tooltip": "A tool for clicking"
+        }
+    ],
+    "panels": [
+        {
+            "name": "Test Panel",
+            "handler": "testPanel",
+            "controls": [
+                {
+                    "name": "String Param",
+                    "handler": "testPanel_stringParam",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "buttons": []
+}
