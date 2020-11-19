@@ -20,6 +20,7 @@
     },
     "homepage": "https://github.com/Tusentio/SCRCAD#readme",
     "dependencies": {
+        "@tusent.io/json-database": "^1.1.0",
         "mouse-wheel": "^1.2.0",
         "msgpack5": "^4.2.1",
         "ndarray": "^1.0.19",
