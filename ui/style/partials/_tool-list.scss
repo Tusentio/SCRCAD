@@ -85,11 +85,32 @@
 
         &:hover {
             border-radius: 0;
+
+            &[data-description]:before {
+                opacity: 1;
+            }
         }
 
         &:active {
             opacity: .6;
-        }
-        
+        } 
+
     }
+}
+
+[data-description]:before {
+    content: attr(data-description);
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: vars.$panel-border-radius;
+    color: white;
+    padding: .5rem;
+    position: absolute;
+    left: 100%;
+    top: 100%;
+    margin: .5rem;
+    pointer-events: none;
+    color: vars.$text-gray;
+    width: 28rem;
+    opacity: 0;
+    transition: opacity .5s ease;
 }
