@@ -55,6 +55,7 @@
                             <li @click="panels.editor.zoom(1)"><p>Editor Zoom In</p></li>
                             <li @click="panels.editor.zoom(-1)"><p>Editor Zoom Out</p></li>
                             <li @click="panels.editor.toggleGrid()"><p>Editor Grid<span v-if="panels.editor.grid"> ✓</span></p></li>
+                            <li @click="panels.editor.toggleOnionSkin()"><p>Editor Onion Skin<span v-if="panels.editor.onionSkin"> ✓</span></p></li>
                             <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor.enabled">✓</span></p></li>
                             <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview.enabled">✓</span></p></li>
                             <li @click="togglePnlPlugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
@@ -146,6 +147,10 @@
                             <li :class="{active: panels.editor.grid}" @click="panels.editor.toggleGrid()">
                                 <img src="media/layer-editor.svg">
                                 <p>Show Grid</p>
+                            </li>
+                            <li :class="{active: panels.editor.onionSkin}" @click="panels.editor.toggleOnionSkin()">
+                                <img src="media/layer-editor.svg">
+                                <p>Show Onion Skin</p>
                             </li>
                             <li @click="panels.editor.zoom(1)">
                                 <img src="media/layer-editor.svg">

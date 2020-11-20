@@ -1,4 +1,5 @@
 const mouseWheel = require("mouse-wheel");
+const color = require("./color.js");
 
 class Viewport2D {
     #client;
@@ -8,6 +9,7 @@ class Viewport2D {
     zoomScrollFactor = 1.2;
     enabled = true;
     grid = true;
+    onionSkin = false;
     minZoom = 5;
     activeLayer = 0;
     tool = null;
@@ -192,41 +194,52 @@ class Viewport2D {
 
         this.context.lineWidth = 0.1 * this.view.zoom;
 
-        let gradient = this.context.createLinearGradient(
+        let selectionGradient = this.context.createLinearGradient(
             0,
             0,
             this.canvas.width,
             this.canvas.height
         );
-        gradient.addColorStop("0", "#0022ff");
-        gradient.addColorStop("1.0", "#00d9ff");
-
-        this.context.strokeStyle = gradient;
+        selectionGradient.addColorStop("0", "#0022ff");
+        selectionGradient.addColorStop("1.0", "#00d9ff");
 
         for (let x = 0; x < this.layerWidth; x++) {
             for (let y = 0; y < this.layerHeight; y++) {
-                let voxel = this.modelPlane.get(x, y, this.activeLayer);
+                const voxel = this.modelPlane.get(x, y, this.activeLayer);
 
-                let voxelTransform = [
+                const voxelTransform = [
                     (x + 1) * this.view.zoom + this.context.lineWidth / 2,
                     (y + 1) * this.view.zoom + this.context.lineWidth / 2,
                     this.view.zoom - this.context.lineWidth,
                     this.view.zoom - this.context.lineWidth,
                 ];
 
-                let tempColorBuffer = Buffer.alloc(4);
-                tempColorBuffer.writeUInt32BE(voxel.color);
-                this.context.fillStyle = `#${tempColorBuffer.toString("hex")}`;
+                if (this.onionSkin && this.modelPlane.depth > 1) {
+                    let backColor = color.toRGBA(
+                        this.modelPlane.get(x, y, this.activeLayer + 1)?.color || 0
+                    );
+                    let frontColor = color.toRGBA(
+                        this.modelPlane.get(x, y, this.activeLayer - 1)?.color || 0
+                    );
+                    let skinColor = color.mix(
+                        color.mult(backColor, [0.5, 0.25, 0.25, 0.5]),
+                        color.mult(frontColor, [0.25, 0.25, 0.5, 0.5])
+                    );
 
-                let _strokeStyle = this.context.strokeStyle;
-                this.context.strokeStyle = this.context.fillStyle;
+                    this.context.fillStyle = `#${color
+                        .toNumber(skinColor)
+                        .toString(16)
+                        .padStart(8, "0")}`;
+                    this.context.fillRect(...voxelTransform);
+                }
+
+                this.context.fillStyle = `#${voxel.color.toString(16).padStart(8, "0")}`;
+                this.context.strokeStyle = voxel.selected
+                    ? selectionGradient
+                    : this.context.fillStyle;
 
                 this.context.strokeRect(...voxelTransform);
                 this.context.fillRect(...voxelTransform);
-
-                this.context.strokeStyle = _strokeStyle;
-
-                if (voxel.selected) this.context.strokeRect(...voxelTransform);
             }
         }
 
@@ -327,6 +340,11 @@ class Viewport2D {
 
     toggleGrid() {
         this.grid = !this.grid;
+        this.invalidate();
+    }
+
+    toggleOnionSkin() {
+        this.onionSkin = !this.onionSkin;
         this.invalidate();
     }
 }
