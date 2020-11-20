@@ -38,7 +38,7 @@ class Model extends EventEmitter {
     }
 
     get(x, y, z) {
-        this.assertPointInModel(x, y, z);
+        if (!this.pointInModel(x, y, z)) return undefined;
         return { ...this.voxels.get(x, y, z) };
     }
 
@@ -60,12 +60,6 @@ class Model extends EventEmitter {
 
     pointInModel(x, y, z) {
         return x >= 0 && x < this.width && y >= 0 && y < this.height && z >= 0 && z < this.depth;
-    }
-
-    assertPointInModel(x, y, z) {
-        if (!this.pointInModel(x, y, z)) {
-            throw new Error(`Point (${x}, ${y}, ${z}) is outside the model`);
-        }
     }
 
     constrainPositionToBounds(x, y, z) {
