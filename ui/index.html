@@ -255,7 +255,7 @@
                             </li>
                             <li>
                                 <ul v-for="plugin in plugins">
-                                    <li v-for="tool in plugin.tools" :class="{'tool-list-selected': tool == panels.editor.tool}" @click="panels.editor.tool = tool" :data-tooltip="tool.tooltip" data-description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum iure tempora, saepe minus qui quae velit neque optio veniam voluptatum.">
+                                    <li v-for="tool in plugin.tools" :class="{'tool-list-selected': tool == panels.editor.tool}" @click="panels.editor.tool = tool" :data-tooltip="tool.name" :data-description="tool.tooltip">
                                         <img :src="tool.icon">
                                     </li>
                                 </ul>
