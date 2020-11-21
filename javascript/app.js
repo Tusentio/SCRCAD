@@ -30,7 +30,27 @@ const app = {
         this.model = new Model("Untitled");
         this.vue = new VueApp(Vue, this);
     },
-    async saveProject() {
+    async saveProject(overwrite = true) {
+        const projectsPath = await this.getProjectsPath();
+
+        let fileName = this.model.name;
+        if (!overwrite) {
+            for (
+                let i = 1;
+                await fs.promises.exists(path.resolve(projectsPath, `${fileName}.scrcad`));
+                i++
+            ) {
+                fileName = `${this.model.name}-${i}`;
+            }
+        }
+
+        await this.model.save(path.resolve(projectsPath, `${fileName}.scrcad`));
+    },
+    async loadProject(name) {
+        const projectsPath = await this.getProjectsPath();
+        return await Model.load(path.resolve(projectsPath, `${name}.scrcad`));
+    },
+    async getProjectsPath() {
         const projectsPath =
             this.tempStore.get("projects_path") ||
             this.tempStore.set("projects_path", path.resolve(os.homedir(), "SCRCAD", "Projects"));
@@ -39,16 +59,7 @@ const app = {
             await fs.promises.mkdir(projectsPath, { recursive: true });
         }
 
-        let fileName = this.model.name;
-        for (
-            let i = 1;
-            await fs.promises.exists(path.resolve(projectsPath, `${fileName}.scrcad`));
-            i++
-        ) {
-            fileName = `${this.model.name}-${i}`;
-        }
-
-        await this.model.save(path.resolve(projectsPath, `${fileName}.scrcad`));
+        return projectsPath;
     },
 };
 
