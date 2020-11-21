@@ -50,8 +50,10 @@
 [data-param-type="number"] {
     @extend %base-styles;
     text-transform: uppercase;
-    &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
+}
+
+/* Integer input */
+[data-param-type="integer"] {
+    @extend %base-styles;
+    text-transform: uppercase;
 }
