@@ -39,6 +39,11 @@
                 {
                     "name": "Boolean Param",
                     "type": "boolean"
+                },
+                {
+                    "name": "Color Param",
+                    "type": "color",
+                    "value": "#000"
                 }
             ]
         }

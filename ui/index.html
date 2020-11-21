@@ -344,9 +344,13 @@
                                             </div>
                                             <ul class="plugin-params">
                                                 <li v-for="input in panel.inputs">
-                                                    <p>{{input.name}}</p>
-                                                    <input v-if="input.inputType == 'submit'" :type="input.inputType" :data-param-type="input.styleType" @click="input.validate()" spellcheck="false">
-                                                    <input v-else :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
+                                                    <template v-if="input.inputType == 'button'">
+                                                        <input :value="input.name" :type="input.inputType" :data-param-type="input.styleType" @click="input.validate()">
+                                                    </template>
+                                                    <template v-else>
+                                                        <p>{{input.name}}</p>
+                                                        <input :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
+                                                    </template>
                                                     <p v-if="input.error != null">{{input.error}}</p>
                                                 </li>
                                             </ul>

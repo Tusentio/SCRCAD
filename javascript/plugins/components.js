@@ -42,7 +42,7 @@ class Input extends Component {
         super(info, handlers);
         this.#info = info;
 
-        this.value = typeof info.default == "undefined" ? value : info.default;
+        this.value = typeof info.value == "undefined" ? value : info.value;
         if (this.value != null) this.validate();
     }
 
@@ -80,7 +80,6 @@ class Input extends Component {
     }
 }
 
-const colorRegex = /^\s*#?([0-9A-F]{6}|[0-9A-F]{4}|[0-9A-]{3})\s*$/i;
 class InputColor extends Input {
     constructor(info, handlers) {
         super(info, handlers, "#000000");
@@ -88,9 +87,24 @@ class InputColor extends Input {
 
     validate() {
         super.validate();
-        if (!colorRegex.test(this.value)) {
-            this.error = "Invalid color value (try eg. #4285F4)";
+
+        if (!InputColor.isColor(this.value)) {
+            if (this.value[0] !== "#") {
+                this.value = "#" + this.value;
+
+                if (!InputColor.isColor(this.value)) {
+                    this.error = "Invalid color value (try eg. #4285F4)";
+                }
+            } else {
+                this.error = "Invalid color value (try eg. #4285F4)";
+            }
         }
+    }
+
+    static isColor(str) {
+        let style = new Option().style;
+        style.color = str;
+        return style.color.startsWith("rgb") && !style.color.startsWith("rgba");
     }
 }
 
@@ -138,7 +152,7 @@ class InputBoolean extends Input {
     }
 
     get inputType() {
-        return "submit";
+        return "button";
     }
 
     validate() {
@@ -158,7 +172,7 @@ class InputButton extends Input {
     }
 
     get inputType() {
-        return "submit";
+        return "button";
     }
 
     get icon() {
