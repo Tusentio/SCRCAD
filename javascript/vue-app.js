@@ -11,7 +11,7 @@ class VueOptions {
         panels: {
             editor: new Viewport2D(),
             preview: new Viewport3D(),
-            plugins: { enabled: true },
+            properties: { enabled: true },
             layers: { enabled: true },
         },
         plugins: [],
@@ -55,8 +55,8 @@ class VueOptions {
             this.panels.preview.enabled = !this.panels.preview.enabled;
             this.dispatchResize();
         },
-        togglePnlPlugins() {
-            this.panels.plugins.enabled = !this.panels.plugins.enabled;
+        togglePnlProperties() {
+            this.panels.properties.enabled = !this.panels.properties.enabled;
             this.dispatchResize();
         },
         togglePnlLayers() {

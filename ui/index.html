@@ -57,7 +57,7 @@
                             <li @click="panels.editor.toggleOnionSkin()"><p>Editor Onion Skin<span v-if="panels.editor.onionSkin"> ✓</span></p></li>
                             <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor.enabled">✓</span></p></li>
                             <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview.enabled">✓</span></p></li>
-                            <li @click="togglePnlPlugins"><p>Plugins <span v-if="panels.plugins">✓</span></p></li>
+                            <li @click="togglePnlProperties"><p>Properties <span v-if="panels.properties">✓</span></p></li>
                             <li @click="togglePnlLayers"><p>Layers <span v-if="panels.layers">✓</span></p></li>
                         </ul>
                     </li>
@@ -80,7 +80,7 @@
                         </ul>
                     </li>
                     <li>
-                        <p>Plugins</p>
+                        <p>Properties</p>
                         <ul>
                             <li><p>Reload</p></li>
                             <li><p>Open Folder</p></li>
@@ -130,9 +130,9 @@
                                 <img src="media/3d-cube.svg">
                                 <p>3D Preview</p>
                             </li>
-                            <li :class="{active: panels.plugins.enabled}" @click="togglePnlPlugins">
+                            <li :class="{active: panels.properties.enabled}" @click="togglePnlProperties">
                                 <img src="media/plugin.svg">
-                                <p>Plugins</p>
+                                <p>Properties</p>
                             </li>
                             <li :class="{active: panels.layers.enabled}" @click="togglePnlLayers">
                                 <img src="media/layer.svg">
@@ -205,7 +205,7 @@
                         </ul>
                     </li>
                     <li>
-                        <p>Plugins</p>
+                        <p>Properties</p>
                         <ul>
                             <li>
                                 <img src="media/plugin.svg">
@@ -319,9 +319,9 @@
                     </div>
                 </div>
                 <aside>
-                    <div v-show="panels.plugins.enabled" id="plugins">
+                    <div v-show="panels.properties.enabled" id="plugins">
                         <div class="panel-header">
-                            <p><img src="media/plugin.svg">Plugins</p>
+                            <p><img src="media/plugin.svg">Properties</p>
                         </div>
                         <div>
                             <div id="plugin-search-box">
