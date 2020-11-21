@@ -6,7 +6,6 @@
         <link rel="stylesheet" href="style/main.css">
         <title>UI</title>
 
-        <script src="../node_modules/vue/dist/vue.min.js"></script>
         <script>
             const app = require("../javascript/app.js");
         </script>
@@ -330,67 +329,29 @@
                                 <input type="text" placeholder="Search..." spellcheck="false">
                             </div>
                             <ul class="category-master-list">
-                                <li>
-                                    <button class="category-header">
+                                <li v-for="category in categories" :class="{'list-collapsed': !expandedCategories.includes(category)}">
+                                    <button class="category-header" @click="toggleCategory(category)">
                                         <img src="media/plugin-arrow.svg">
-                                        Plugin Category
+                                        {{category}}
                                     </button>
-                                    <ul class="category-child-list">
-                                        <li>
+                                    <ul v-for="plugin in plugins" class="category-child-list">
+                                        <li v-for="panel in plugin.panels.filter((panel) => panel.category === category)" :class="{'list-collapsed': !panel.expanded}">
                                             <div class="plugin-header">
-                                                <button>
+                                                <button @click="panel.toggleExpanded()">
                                                     <img src="media/plugin-arrow.svg">
                                                 </button>
-                                                <p><img src="media/plugin-placeholder.png">Plugin</p>
+                                                <p><img :src="panel.icon">{{panel.name}}</p>
                                             </div>
                                             <ul class="plugin-params">
-                                                <li>
-                                                    <p>String Param</p>
-                                                    <input data-param-type="string" spellcheck="false" type="text">
-                                                </li>
-                                                <li>
-                                                    <p>Action Param</p>
-                                                    <button data-param-type="action">External Script</button>
-                                                </li>
-                                                <li>
-                                                    <p>Boolean Param</p>
-                                                    <button data-param-type="boolean">✔</button>
-                                                </li>
-                                                <li>
-                                                    <p>Color Param</p>
-                                                    <button data-param-type="color" style="background: #a409d3;">#a409d3</button>
-                                                </li>
-                                                <li>
-                                                    <p>Number Param</p>
-                                                    <input data-param-type="number" type="number">
+                                                <li v-for="input in panel.inputs">
+                                                    <p>{{input.name}}</p>
+                                                    <input v-if="input.inputType == 'submit'" :type="input.inputType" :data-param-type="input.styleType" @click="input.validate()" spellcheck="false">
+                                                    <input v-else :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
+                                                    <p v-if="input.error != null">{{input.error}}</p>
                                                 </li>
                                             </ul>
                                         </li>
                                     </ul>
-                                </li>
-                                <li class="list-collapsed">
-                                    <button class="category-header">
-                                        <img src="media/plugin-arrow.svg">
-                                        Effects
-                                    </button>
-                                </li>
-                                <li class="list-collapsed">
-                                    <button class="category-header">
-                                        <img src="media/plugin-arrow.svg">
-                                        Styling
-                                    </button>
-                                </li>
-                                <li class="list-collapsed">
-                                    <button class="category-header">
-                                        <img src="media/plugin-arrow.svg">
-                                        Text
-                                    </button>
-                                </li>
-                                <li class="list-collapsed">
-                                    <button class="category-header">
-                                        <img src="media/plugin-arrow.svg">
-                                        Bitmap
-                                    </button>
                                 </li>
                             </ul>
                         </div>
@@ -430,7 +391,7 @@
             </main>
         </div>
         <script>
-            app.init(Vue);
+            app.init();
         </script>
     </body>
 </html>

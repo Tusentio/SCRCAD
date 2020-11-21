@@ -18,12 +18,27 @@
     "panels": [
         {
             "name": "Test Panel",
-            "handler": "testPanel",
-            "controls": [
+            "inputs": [
                 {
                     "name": "String Param",
-                    "handler": "testPanel_stringParam",
                     "type": "string"
+                },
+                {
+                    "name": "Click Me!",
+                    "handler": "clickMe",
+                    "type": "action"
+                },
+                {
+                    "name": "Number Param",
+                    "type": "number"
+                },
+                {
+                    "name": "Integer Param",
+                    "type": "integer"
+                },
+                {
+                    "name": "Boolean Param",
+                    "type": "boolean"
                 }
             ]
         }

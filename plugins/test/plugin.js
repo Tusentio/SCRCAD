@@ -16,10 +16,10 @@ module.exports = {
         testPlugin: {
             load(e) {},
         },
-        clickTool: new ClickToolHandler(),
-        testPanel: {
-            open(e) {},
-            close(e) {},
+        clickMe: {
+            validate() {
+                alert("Hello!");
+            },
         },
     },
 };
