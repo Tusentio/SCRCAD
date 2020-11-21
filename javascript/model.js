@@ -2,7 +2,6 @@ const msgpack = require("msgpack5")();
 const ndarray = require("ndarray");
 const THREE = require("three");
 const EventEmitter = require("events");
-const util = require("util");
 const fs = require("fs");
 const voxelUtil = require("../wasm_pack/voxel-util");
 
@@ -200,11 +199,11 @@ class Model extends EventEmitter {
         };
 
         let modelFileBuffer = msgpack.encode(modelFileObject);
-        await util.promisify(fs.writeFile)(path, modelFileBuffer);
+        await fs.promises.writeFile(path, modelFileBuffer, { flag: "w" });
     }
 
     static async load(path) {
-        let modelFileBuffer = await util.promisify(fs.readFile)(path);
+        let modelFileBuffer = await fs.promises.readFile(path, { flag: "r" });
         let modelFileObject = msgpack.decode(modelFileBuffer);
 
         let { NAME: name, X: width, Y: height, Z: depth } = modelFileObject;
