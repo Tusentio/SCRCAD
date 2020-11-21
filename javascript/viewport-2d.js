@@ -37,6 +37,10 @@ class Viewport2D {
             this.invalidate();
         });
 
+        this.#client.model.on("change", () => {
+            this.setView();
+        });
+
         {
             let drag = null;
 
@@ -116,8 +120,6 @@ class Viewport2D {
                         sx: drag.x % 1,
                         sy: drag.y % 1,
                     });
-
-                    this.setView();
                 }
             });
 
@@ -133,8 +135,6 @@ class Viewport2D {
                         sx: drag.x % 1,
                         sy: drag.y % 1,
                     });
-
-                    this.setView();
                 }
 
                 drag = null;
@@ -156,8 +156,6 @@ class Viewport2D {
                         sx: drag.x % 1,
                         sy: drag.y % 1,
                     });
-
-                    this.setView();
                 }
             });
         }
