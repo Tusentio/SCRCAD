@@ -18,7 +18,7 @@ const app = {
     model: null,
     vue: null,
     tempStore: null,
-    init(Vue) {
+    init() {
         const scrcadTempPath = path.resolve(os.tmpdir(), "SCRCAD");
         if (!fs.existsSync(scrcadTempPath)) {
             fs.mkdirSync(scrcadTempPath, { recursive: true });
@@ -28,7 +28,7 @@ const app = {
         this.tempStore = new Store(tempStorePath);
 
         this.model = new Model("Untitled");
-        this.vue = new VueApp(Vue, this);
+        this.vue = new VueApp(this);
     },
     async saveProject(overwrite = true) {
         const projectsPath = await this.getProjectsPath();
