@@ -48,7 +48,7 @@ const app = {
     },
     async loadProject(name) {
         const projectsPath = await this.getProjectsPath();
-        return await Model.load(path.resolve(projectsPath, `${name}.scrcad`));
+        this.model = await Model.load(path.resolve(projectsPath, `${name}.scrcad`));
     },
     async getProjectsPath() {
         const projectsPath =
