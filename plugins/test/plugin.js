@@ -16,6 +16,7 @@ module.exports = {
         testPlugin: {
             load(e) {},
         },
+        clickTool: new ClickToolHandler(),
         clickMe: {
             validate() {
                 alert("Hello!");
