@@ -121,14 +121,23 @@ main > div {
         grid-column: 2 / 3;
 
         input[type="text"] {
-            top: 0;
-            right: 0;
-            background: rgb(54, 54, 54);
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #191919;
             position: absolute;
-            padding: .6rem 1rem;
+            padding: .5rem 1rem;
+            width: 18rem;
+            color: vars.$text-gray;
+            text-align: center;
+            border-radius: vars.$panel-border-radius;
 
             border: none;
             color: #ffffff;
+
+            &:hover, &:active {
+                background: #161616; 
+            }
         }
     }
 }
