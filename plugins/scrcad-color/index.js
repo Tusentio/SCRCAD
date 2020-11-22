@@ -25,7 +25,7 @@ const tools_colorPicker = {
             panels_color_primaryColor.value =
                 "#" +
                 (voxel.color >>> 8).toString(16).padStart(6, "0") +
-                (voxel.color && 0xff !== 0xff
+                ((voxel.color & 0xff) !== 0xff
                     ? (voxel.color & 0xff).toString(16).padStart(2, "0")
                     : "");
         }
