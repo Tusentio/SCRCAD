@@ -9,8 +9,9 @@ class Component extends EventEmitter {
         super();
         this.#info = info;
 
-        const handler = handlers[info.handler];
-        if (handler == null || typeof handler != "object") return;
+        const handlerPrototype = handlers[info.handler];
+        if (handlerPrototype == null || typeof handlerPrototype != "object") return;
+        const handler = Object.create(handlerPrototype);
 
         const events = new Set();
         for (let h = handler; h !== Object.prototype; h = Object.getPrototypeOf(h)) {
@@ -26,6 +27,28 @@ class Component extends EventEmitter {
                 this.addListener(event, (...args) => listener.apply(handler, args));
             }
         }
+
+        process.nextTick(() => {
+            for (
+                let comp = this;
+                comp !== Component.prototype;
+                comp = Object.getPrototypeOf(comp)
+            ) {
+                for (const p of Object.keys(comp)) {
+                    if (p[0] === "_" || p[0] === "$") continue;
+
+                    Object.defineProperty(handler, p, {
+                        enumerable: true,
+                        get() {
+                            return comp[p];
+                        },
+                        set(value) {
+                            return (comp[p] = value);
+                        },
+                    });
+                }
+            }
+        });
     }
 
     get name() {
@@ -55,21 +78,12 @@ class Input extends Component {
     }
 
     validate() {
-        process.nextTick(async () => {
+        process.nextTick(() => {
             if (this.error == null) {
-                try {
-                    await util.promisify(this.emit).call(this, "validate", {
-                        value: this.value,
-                    });
-                } catch (err) {
-                    this.error = err;
-                }
+                this.emit("validate");
             }
 
-            this.emit("change", {
-                value: this.value,
-                error: this.error,
-            });
+            this.emit("change");
         });
 
         this.error = undefined;
@@ -121,7 +135,6 @@ class InputColor extends Input {
     static isColor(str) {
         let style = new Option().style;
         style.color = str;
-        console.log(style.color);
         return style.color.startsWith("rgb") && !style.color.startsWith("rgba");
     }
 }
@@ -214,7 +227,7 @@ const inputTypes = {
 class Panel extends Component {
     #info;
     #root;
-    inputs = [];
+    #inputs = [];
     expanded = false;
 
     constructor(info, handlers, root) {
@@ -223,8 +236,12 @@ class Panel extends Component {
         this.#root = root;
 
         this.#info.inputs.forEach((info) => {
-            this.inputs.push(Input.create(info, handlers));
+            this.#inputs.push(Input.create(info, handlers));
         });
+    }
+
+    get inputs() {
+        return this.#inputs;
     }
 
     get category() {
