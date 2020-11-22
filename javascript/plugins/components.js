@@ -43,7 +43,7 @@ class Input extends Component {
         this.#info = info;
 
         this.value = typeof info.value == "undefined" ? value : info.value;
-        if (this.value != null) this.validate();
+        if (this.inputType !== "button") this.validate();
     }
 
     get styleType() {
@@ -99,11 +99,29 @@ class InputColor extends Input {
                 this.error = "Invalid color value (try eg. #4285F4)";
             }
         }
+
+        if (this.error == null) {
+            let style = new Option().style;
+            style.color = this.value;
+
+            let [
+                ,
+                ...rgb
+            ] = /.*?([0-9]+(?:\.[0-9]+)?).*?([0-9]+(?:\.[0-9]+)?).*?([0-9]+(?:\.[0-9]+)?).*/.exec(
+                style.color
+            );
+            let color = rgb
+                .map(parseFloat)
+                .map((n) => n.toString(16).padStart(2, "0"))
+                .join("");
+            this.value = `#${color}`;
+        }
     }
 
     static isColor(str) {
         let style = new Option().style;
         style.color = str;
+        console.log(style.color);
         return style.color.startsWith("rgb") && !style.color.startsWith("rgba");
     }
 }
@@ -147,12 +165,19 @@ class InputInteger extends Input {
 }
 
 class InputBoolean extends Input {
+    #info;
+
     constructor(info, handlers) {
         super(info, handlers, false);
+        this.#info = info;
     }
 
     get inputType() {
         return "button";
+    }
+
+    get category() {
+        return this.#info.category || "Misc";
     }
 
     validate() {
@@ -163,24 +188,18 @@ class InputBoolean extends Input {
 
 class InputButton extends Input {
     #info;
-    #root;
 
     constructor(info, handlers, root) {
         super(info, handlers);
         this.#info = info;
-        this.#root = root;
     }
 
     get inputType() {
         return "button";
     }
 
-    get icon() {
-        return path.join(
-            ...(this.#info.icon == null
-                ? ["media", "selection.svg"]
-                : [this.#root, this.#info.icon])
-        );
+    get category() {
+        return this.#info.category || "Misc";
     }
 }
 
