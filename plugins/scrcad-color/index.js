@@ -1,5 +1,5 @@
 function parseColor(str) {
-    let [, ...hex] = str;
+    let [...hex] = str.slice(1).padEnd(8, "f");
     let color = hex.reduce((a, b) => (a << 4) | parseInt(b, 16), 0) >>> 0;
     return color;
 }
