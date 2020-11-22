@@ -57,8 +57,8 @@
                             <li @click="panels.editor.toggleOnionSkin()"><p>Editor Onion Skin<span v-if="panels.editor.onionSkin"> ✓</span></p></li>
                             <li @click="togglePnlEditor"><p>Editor <span v-if="panels.editor.enabled">✓</span></p></li>
                             <li @click="togglePnlPreview"><p>Preview <span v-if="panels.preview.enabled">✓</span></p></li>
-                            <li @click="togglePnlProperties"><p>Properties <span v-if="panels.properties">✓</span></p></li>
-                            <li @click="togglePnlLayers"><p>Layers <span v-if="panels.layers">✓</span></p></li>
+                            <li @click="togglePnlProperties"><p>Properties <span v-if="panels.properties.enabled">✓</span></p></li>
+                            <li @click="togglePnlLayers"><p>Layers <span v-if="panels.layers.enabled">✓</span></p></li>
                         </ul>
                     </li>
                     <li>
@@ -80,7 +80,18 @@
                         </ul>
                     </li>
                     <li>
-                        <p>Properties</p>
+                        <p>Tools</p>
+                        <ul>
+                            <template v-for="category in menuCategories">
+                                <li @click="category.expanded = !category.expanded"><p>{{category.expanded ? "▾" : "▸"}} {{category.name}}</p></li>
+                                <li v-if="category.expanded" v-for="control in category.controls" @click="control.validate()">
+                                    <p>{{control.name}} <span v-if="control.value === true">✓</span></p>
+                                </li>
+                            </template>
+                        </ul>
+                    </li>
+                    <li>
+                        <p>Plugins</p>
                         <ul>
                             <li><p>Reload</p></li>
                             <li><p>Open Folder</p></li>
@@ -258,10 +269,12 @@
                                 </ul>
                             </li>
                             <li>
-                                <ul v-for="plugin in plugins">
-                                    <li v-for="tool in plugin.tools" :class="{'tool-list-selected': tool == panels.editor.tool}" @click="panels.editor.tool = tool" :data-tooltip="tool.name" :data-description="tool.tooltip">
-                                        <img :src="tool.icon">
-                                    </li>
+                                <ul>
+                                    <template v-for="plugin in plugins">
+                                        <li v-for="tool in plugin.tools" :class="{'tool-list-selected': tool == panels.editor.tool}" @click="panels.editor.tool = tool" :data-tooltip="tool.name" :data-description="tool.tooltip">
+                                            <img :src="tool.icon">
+                                        </li>
+                                    </template>
                                 </ul>
                             </li>
                         </ul>
@@ -329,13 +342,13 @@
                                 <input type="text" placeholder="Search..." spellcheck="false">
                             </div>
                             <ul class="category-master-list">
-                                <li v-for="category in categories" :class="{'list-collapsed': !expandedCategories.includes(category)}">
-                                    <button class="category-header" @click="toggleCategory(category)">
+                                <li v-for="category in propertyCategories" :class="{'list-collapsed': !category.expanded}">
+                                    <button class="category-header" @click="category.expanded = !category.expanded">
                                         <img src="media/plugin-arrow.svg">
-                                        {{category}}
+                                        {{category.name}}
                                     </button>
-                                    <ul v-for="plugin in plugins" class="category-child-list">
-                                        <li v-for="panel in plugin.panels.filter((panel) => panel.category === category)" :class="{'list-collapsed': !panel.expanded}">
+                                    <ul class="category-child-list">
+                                        <li v-for="panel in category.panels" :class="{'list-collapsed': !panel.expanded}">
                                             <div class="plugin-header">
                                                 <button @click="panel.toggleExpanded()">
                                                     <img src="media/plugin-arrow.svg">
@@ -349,7 +362,8 @@
                                                     </template>
                                                     <template v-else>
                                                         <p>{{input.name}}</p>
-                                                        <input :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
+                                                        <input v-if="input.styleType == 'color'" :style="{'background-color': input.value}" :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
+                                                        <input v-else :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
                                                     </template>
                                                     <p v-if="input.error != null">{{input.error}}</p>
                                                 </li>

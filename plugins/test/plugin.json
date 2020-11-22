@@ -43,10 +43,20 @@
                 {
                     "name": "Color Param",
                     "type": "color",
-                    "value": "#000"
+                    "value": "#FFF"
                 }
             ]
         }
     ],
-    "buttons": []
+    "menu": [
+        {
+            "name": "Test Button",
+            "handler": "clickMe",
+            "type": "action"
+        },
+        {
+            "name": "Test Boolean",
+            "type": "boolean"
+        }
+    ]
 }

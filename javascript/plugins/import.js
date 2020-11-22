@@ -1,12 +1,13 @@
 const fs = require("fs");
 const $path = require("path");
-const { Component, Panel, Tool } = require("./components.js");
+const { Component, Input, Panel, Tool } = require("./components.js");
 
 class Plugin extends Component {
     #id;
     #info;
     panels = [];
     tools = [];
+    menu = [];
 
     constructor(info, script, id, root) {
         super(info, script);
@@ -20,6 +21,10 @@ class Plugin extends Component {
         info.tools?.forEach((info) => {
             this.tools.push(new Tool(info, script.handlers, root));
         });
+
+        info.menu?.forEach((info) => {
+            this.menu.push(Input.create(info, script.handlers));
+        });
     }
 
     get id() {
@@ -31,7 +36,7 @@ class Plugin extends Component {
     }
 }
 
-async function _import(path) {
+async function loadPlugin(path) {
     const root = $path.resolve(path);
 
     try {
@@ -47,6 +52,71 @@ async function _import(path) {
     }
 }
 
+async function loadPlugins(path) {
+    let pluginNames = (await fs.promises.readdir(path, { withFileTypes: true }))
+        .filter((dirent) => dirent.isDirectory())
+        .map((dirent) => dirent.name);
+
+    let plugins = [];
+    for (let name of pluginNames) {
+        try {
+            plugins.push(await loadPlugin($path.join(path, name)));
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    let propertyCategories = [];
+    let propertyCategoryIndex = new Map();
+
+    let menuCategories = [];
+    let menuCategoryIndex = new Map();
+
+    for (const plugin of plugins) {
+        for (const panel of plugin.panels) {
+            const category = panel.category;
+            if (!propertyCategoryIndex.has(category)) {
+                let propertyCategory = {
+                    name: category,
+                    expanded: false,
+                    panels: [],
+                };
+
+                propertyCategoryIndex.set(category, propertyCategory);
+                propertyCategories.push(propertyCategory);
+            }
+
+            propertyCategoryIndex.get(category).panels.push(panel);
+        }
+
+        for (const control of plugin.menu) {
+            const category = control.category;
+            if (!menuCategoryIndex.has(category)) {
+                let menuCategory = {
+                    name: category,
+                    expanded: false,
+                    controls: [],
+                };
+
+                menuCategoryIndex.set(category, menuCategory);
+                menuCategories.push(menuCategory);
+            }
+
+            menuCategoryIndex.get(category).controls.push(control);
+        }
+    }
+
+    propertyCategories = propertyCategories.sort((a, b) => a.localeCompare(b));
+    menuCategories = menuCategories.sort((a, b) => a.localeCompare(b));
+
+    return {
+        plugins,
+        propertyCategories,
+        menuCategories,
+    };
+}
+
 module.exports = {
-    import: _import,
+    loadPlugin,
+    loadPlugins,
 };

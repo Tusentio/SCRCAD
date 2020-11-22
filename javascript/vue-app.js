@@ -3,7 +3,7 @@ const fs = require("fs");
 const Vue = require("vue/dist/vue.common.dev");
 const Viewport2D = require("./viewport-2d.js");
 const Viewport3D = require("./viewport-3d.js");
-const { import: importPlugin } = require("./plugins/import.js");
+const plugin = require("./plugins/import.js");
 
 class VueOptions {
     el = "#vue-wrapper";
@@ -15,21 +15,12 @@ class VueOptions {
             layers: { enabled: true },
         },
         plugins: [],
-        expandedCategories: [],
+        propertyCategories: [],
+        menuCategories: [],
     };
     computed = {
         layers() {
             return this.range(this.panels.editor.layerCount || 0, 0);
-        },
-        categories() {
-            const categories = new Set();
-            for (const plugin of this.plugins) {
-                for (const panel of plugin.panels) {
-                    categories.add(panel.category);
-                }
-            }
-
-            return [...categories.values()].sort();
         },
     };
     methods = {
@@ -63,15 +54,6 @@ class VueOptions {
             this.panels.layers.enabled = !this.panels.layers.enabled;
             this.dispatchResize();
         },
-        toggleCategory(category) {
-            if (this.expandedCategories.includes(category)) {
-                this.expandedCategories.splice(
-                    this.expandedCategories.findIndex((c) => c === category)
-                );
-            } else {
-                this.expandedCategories.push(category);
-            }
-        },
         invalidateViewports() {
             this.viewport3D.invalidate();
             this.viewport2D.invalidate();
@@ -88,20 +70,9 @@ class VueOptions {
     };
 
     constructor(client) {
-        this.created = () => {
-            (async () => {
-                let pluginNames = (await fs.promises.readdir("./plugins", { withFileTypes: true }))
-                    .filter((dirent) => dirent.isDirectory())
-                    .map((dirent) => dirent.name);
-
-                for (let name of pluginNames) {
-                    try {
-                        this.data.plugins.push(await importPlugin(`./plugins/${name}`));
-                    } catch (err) {
-                        console.error(err);
-                    }
-                }
-            })();
+        this.created = async () => {
+            let loadResult = await plugin.loadPlugins("./plugins");
+            Object.assign(this.data, loadResult);
         };
 
         this.mounted = () => {
