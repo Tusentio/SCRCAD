@@ -1,6 +1,6 @@
 function parseColor(str) {
     let [, ...hex] = str;
-    let color = ((hex.reduce((a, b) => (a << 4) | parseInt(b, 16), 0) << 8) | 0xff) >>> 0;
+    let color = hex.reduce((a, b) => (a << 4) | parseInt(b, 16), 0) >>> 0;
     return color;
 }
 
