@@ -1,5 +1,4 @@
 const { EventEmitter } = require("events");
-const util = require("util");
 const path = require("path");
 
 class Component extends EventEmitter {
@@ -227,7 +226,7 @@ const inputTypes = {
 class Panel extends Component {
     #info;
     #root;
-    #inputs = [];
+    _inputs = [];
     expanded = false;
 
     constructor(info, handlers, root) {
@@ -236,12 +235,12 @@ class Panel extends Component {
         this.#root = root;
 
         this.#info.inputs.forEach((info) => {
-            this.#inputs.push(Input.create(info, handlers));
+            this._inputs.push(Input.create(info, handlers));
         });
     }
 
     get inputs() {
-        return this.#inputs;
+        return this._inputs;
     }
 
     get category() {
