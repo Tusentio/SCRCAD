@@ -43,7 +43,8 @@
                 {
                     "name": "Color Param",
                     "type": "color",
-                    "value": "#FFF"
+                    "value": "#FFF",
+                    "handler": "color"
                 }
             ]
         }
