@@ -1,18 +1,35 @@
+const { EventEmitter } = require("events");
 const fs = require("fs");
 const $path = require("path");
 const { Component, Input, Panel, Tool } = require("./components.js");
 
+function parseVersion(str = "") {
+    return str
+        .split(".")
+        .map(BigInt)
+        .reverse()
+        .reduce((a, b) => (a << 128n) | (b & ((1n << 128n) - 1n)), 0n);
+}
+
 class Plugin extends Component {
     #id;
+    #version;
+    #versionHash;
     #info;
-    panels = [];
-    tools = [];
-    menu = [];
+    #exports;
+    _panels = [];
+    _tools = [];
+    _menu = [];
 
-    constructor(info, script, id, root) {
-        super(info, script);
-        this.#id = id;
+    $imports = {};
+
+    constructor(info, pkg, script, root) {
+        super(info, script.handlers);
+        this.#id = pkg.name;
+        this.#version = pkg.version;
+        this.#versionHash = parseVersion(pkg.version);
         this.#info = info;
+        this.#exports = script.exports || {};
 
         info.panels?.forEach((info) => {
             this.panels.push(new Panel(info, script.handlers, root));
@@ -27,12 +44,43 @@ class Plugin extends Component {
         });
     }
 
+    get dependencies() {
+        let deps =
+            this.#info.dependencies?.map((dependency) => ({
+                as: dependency.name,
+                versionHash: parseVersion(dependency.version),
+                ...dependency,
+            })) || [];
+
+        return deps;
+    }
+
     get id() {
         return this.#id;
     }
 
-    get description() {
-        return this.#info.description || "";
+    get version() {
+        return this.#version;
+    }
+
+    get versionHash() {
+        return this.#versionHash;
+    }
+
+    get exports() {
+        return this.#exports;
+    }
+
+    get panels() {
+        return this._panels;
+    }
+
+    get tools() {
+        return this._tools;
+    }
+
+    get menu() {
+        return this._menu;
     }
 }
 
@@ -41,12 +89,14 @@ async function loadPlugin(path) {
 
     try {
         const packageInfo = JSON.parse(
-            await fs.promises.readFile($path.join(root, "package.json"))
+            await fs.promises.readFile($path.join(root, "package.json"), { flag: "r" })
         );
-        const pluginInfo = JSON.parse(await fs.promises.readFile($path.join(root, "plugin.json")));
+        const pluginInfo = JSON.parse(
+            await fs.promises.readFile($path.join(root, "plugin.json"), { flag: "r" })
+        );
         const script = require($path.join(root, packageInfo.main));
 
-        return new Plugin(pluginInfo, script, packageInfo.name, root);
+        return new Plugin(pluginInfo, packageInfo, script, root);
     } catch (err) {
         throw new Error(`Loading plugin in '${root}': ${err.stack || err.message}`);
     }
@@ -73,6 +123,21 @@ async function loadPlugins(path) {
     let menuCategoryIndex = new Map();
 
     for (const plugin of plugins) {
+        for (const dep of plugin.dependencies) {
+            let dependee = plugins.find((other) => {
+                let idsMatch = other.id === dep.id;
+                let versionsMatch = other.versionHash % dep.versionHash === 0n;
+                return idsMatch && versionsMatch;
+            });
+
+            if (dependee == null)
+                throw new Error(
+                    `Could not find plugin '${dep.id}@${dep.version}' required by '${plugin.id}@${plugin.version}' (${plugin.name})`
+                );
+            plugin.$imports[dep.as] = dependee.exports;
+        }
+        plugin.emit("load");
+
         for (const panel of plugin.panels) {
             const category = panel.category;
             if (!propertyCategoryIndex.has(category)) {

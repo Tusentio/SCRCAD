@@ -3,14 +3,15 @@ const path = require("path");
 
 class Component extends EventEmitter {
     #info;
+    #handler;
 
     constructor(info, handlers) {
         super();
         this.#info = info;
 
-        const handlerPrototype = handlers[info.handler];
-        if (handlerPrototype == null || typeof handlerPrototype != "object") return;
-        const handler = Object.create(handlerPrototype);
+        const handler = handlers[info.handler];
+        if (handler == null || typeof handler != "object") return;
+        this.#handler = handler;
 
         const events = new Set();
         for (let h = handler; h !== Object.prototype; h = Object.getPrototypeOf(h)) {
@@ -33,18 +34,26 @@ class Component extends EventEmitter {
                 comp !== Component.prototype;
                 comp = Object.getPrototypeOf(comp)
             ) {
-                for (const p of Object.keys(comp)) {
-                    if (p[0] === "_" || p[0] === "$") continue;
+                for (let key of Object.keys(comp)) {
+                    if (key[0] === "_") continue;
+                    let name = key;
 
-                    Object.defineProperty(handler, p, {
+                    const descriptor = {
                         enumerable: true,
                         get() {
-                            return comp[p];
+                            return comp[key];
                         },
-                        set(value) {
-                            return (comp[p] = value);
-                        },
-                    });
+                    };
+
+                    if (key[0] !== "$") {
+                        descriptor.set = (value) => {
+                            return (comp[key] = value);
+                        };
+                    } else {
+                        name = key.slice(1);
+                    }
+
+                    Object.defineProperty(handler, name, descriptor);
                 }
             }
         });
@@ -53,10 +62,15 @@ class Component extends EventEmitter {
     get name() {
         return this.#info.name || "";
     }
+
+    get handler() {
+        return this.#handler;
+    }
 }
 
 class Input extends Component {
     #info;
+
     value;
     error;
 
@@ -117,15 +131,9 @@ class InputColor extends Input {
             let style = new Option().style;
             style.color = this.value;
 
-            let [
-                ,
-                ...rgb
-            ] = /.*?([0-9]+(?:\.[0-9]+)?).*?([0-9]+(?:\.[0-9]+)?).*?([0-9]+(?:\.[0-9]+)?).*/.exec(
-                style.color
-            );
-            let color = rgb
-                .map(parseFloat)
-                .map((n) => n.toString(16).padStart(2, "0"))
+            let rgba = /\((.*?)\)/.exec(style.color)[1].split(",").map(parseFloat);
+            let color = rgba
+                .map((n) => (n < 1 ? (n * 256) | 0 : n).toString(16).padStart(2, "0"))
                 .join("");
             this.value = `#${color}`;
         }
@@ -134,7 +142,7 @@ class InputColor extends Input {
     static isColor(str) {
         let style = new Option().style;
         style.color = str;
-        return style.color.startsWith("rgb") && !style.color.startsWith("rgba");
+        return style.color.startsWith("rgb");
     }
 }
 
@@ -227,6 +235,7 @@ class Panel extends Component {
     #info;
     #root;
     _inputs = [];
+
     expanded = false;
 
     constructor(info, handlers, root) {

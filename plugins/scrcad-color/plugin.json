@@ -1,0 +1,38 @@
+{
+    "name": "Color",
+    "description": "Built-in SCRCAD color management plugin.",
+    "tools": [
+        {
+            "name": "Color Picker",
+            "tooltip": "Click on a voxel to sample its color",
+            "icon": "./media/color_picker.svg",
+            "handler": "tools_colorPicker"
+        }
+    ],
+    "panels": [
+        {
+            "name": "Colors",
+            "icon": "./media/palette.svg",
+            "category": "Color",
+            "inputs": [
+                {
+                    "name": "Primary Color",
+                    "handler": "panels_color_primaryColor",
+                    "type": "color",
+                    "value": "#FFF"
+                },
+                {
+                    "name": "Secondary Color",
+                    "handler": "panels_color_secondaryColor",
+                    "type": "color",
+                    "value": "#000"
+                },
+                {
+                    "name": "Switch",
+                    "handler": "panels_color_switch",
+                    "type": "action"
+                }
+            ]
+        }
+    ]
+}

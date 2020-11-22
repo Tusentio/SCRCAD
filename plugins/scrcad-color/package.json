@@ -1,7 +1,7 @@
 {
-    "name": "test",
+    "name": "@tusent.io/scrcad-color",
     "version": "1.0.0",
     "main": "index.js",
     "author": "Keve1227 <killenlillen02@gmail.com>",
-    "license": "MIT"
+    "license": "UNLICENSED"
 }

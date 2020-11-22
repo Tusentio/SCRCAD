@@ -1,63 +1,19 @@
 {
     "name": "Test Plugin",
-    "handler": "testPlugin",
     "description": "An extensive testing plugin.",
-    "requires": [
+    "handler": "plugin",
+    "dependencies": [
         {
-            "name": "scrcad-color",
-            "version": "1.0"
+            "id": "@tusent.io/scrcad-color",
+            "version": "1.0",
+            "as": "color"
         }
     ],
     "tools": [
         {
-            "name": "Click",
-            "handler": "clickTool",
-            "tooltip": "A tool for clicking"
-        }
-    ],
-    "panels": [
-        {
-            "name": "Test Panel",
-            "inputs": [
-                {
-                    "name": "String Param",
-                    "type": "string"
-                },
-                {
-                    "name": "Click Me!",
-                    "handler": "clickMe",
-                    "type": "action"
-                },
-                {
-                    "name": "Number Param",
-                    "type": "number"
-                },
-                {
-                    "name": "Integer Param",
-                    "type": "integer"
-                },
-                {
-                    "name": "Boolean Param",
-                    "type": "boolean"
-                },
-                {
-                    "name": "Color Param",
-                    "type": "color",
-                    "value": "#FFF",
-                    "handler": "color"
-                }
-            ]
-        }
-    ],
-    "menu": [
-        {
-            "name": "Test Button",
-            "handler": "clickMe",
-            "type": "action"
-        },
-        {
-            "name": "Test Boolean",
-            "type": "boolean"
+            "name": "Pencil",
+            "tooltip": "Click on a voxel to set its color",
+            "handler": "tools_pencil"
         }
     ]
 }
