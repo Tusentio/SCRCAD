@@ -51,9 +51,12 @@ class Model extends EventEmitter {
             if (this.emitChange && oldColor !== properties.color) {
                 this.emit("change");
             }
-        } else if ("color" in properties) {
-            this.#expandToInclude(x, y, z);
-            this.set(...this.constrainPositionToBounds(x, y, z), properties);
+        } else if ("color" in properties && (properties.color & 0xff) > 0) {
+            let alpha = properties.color & 0xff;
+            if (alpha > 0) {
+                this.#expandToInclude(x, y, z);
+                this.set(...this.constrainPositionToBounds(x, y, z), properties);
+            }
         }
     }
 
