@@ -44,6 +44,13 @@
 [data-param-type="color"] {
     @extend %base-styles;
     text-transform: uppercase;
+
+    color: transparent;
+
+    &:hover, &:active {
+        background: inherit !important;
+        color: vars.$text-gray;
+    }
 }
 
 /* Number input */
