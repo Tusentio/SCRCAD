@@ -362,7 +362,7 @@
                                                     </template>
                                                     <template v-else>
                                                         <p>{{input.name}}</p>
-                                                        <input v-if="input.styleType == 'color'" :style="{'background-color': input.value}" :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
+                                                        <input v-if="input.styleType == 'color'" :style="{'background': input.value}" :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
                                                         <input v-else :type="input.inputType" v-model="input.value" :data-param-type="input.styleType" @change="input.validate()" spellcheck="false">
                                                     </template>
                                                     <p v-if="input.error != null">{{input.error}}</p>

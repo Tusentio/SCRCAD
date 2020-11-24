@@ -111,6 +111,7 @@
     pointer-events: none;
     color: vars.$text-gray;
     width: 28rem;
+    min-height: 10rem;
     opacity: 0;
     transition: opacity .5s ease;
 }
