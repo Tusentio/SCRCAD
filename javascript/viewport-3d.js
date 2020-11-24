@@ -66,7 +66,7 @@ class Viewport3D {
         });
 
         mouseWheel(this.canvas, (_, dy) => {
-            let amount = dy / 100;
+            let amount = -dy / 100;
             this.zoom(Math.min(Math.max(amount, -1), 1));
         });
 
