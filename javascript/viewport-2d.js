@@ -10,7 +10,7 @@ class Viewport2D {
     enabled = true;
     grid = true;
     onionSkin = false;
-    minZoom = 5;
+    minZoom = 1;
     activeLayer = 0;
     tool = null;
     view = {
@@ -30,7 +30,8 @@ class Viewport2D {
         this.context = this.canvas.getContext("2d");
 
         mouseWheel(this.canvas.parentNode, (_, dy) => {
-            this.zoom(dy < 0 ? 1 : -1);
+            let amount = dy / 100;
+            this.zoom(Math.min(Math.max(amount, -1), 1));
         });
 
         window.addEventListener("resize", () => {

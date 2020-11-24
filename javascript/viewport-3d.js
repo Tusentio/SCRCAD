@@ -10,7 +10,7 @@ class Viewport3D {
     enabled = true;
     canvas;
     zoomScrollFactor = 1.2;
-    minZoom = 5;
+    minZoom = 1;
     rotationSpeed = 1;
     plane;
     view = {
@@ -66,7 +66,8 @@ class Viewport3D {
         });
 
         mouseWheel(this.canvas, (_, dy) => {
-            this.zoom(dy < 0 ? 1 : -1);
+            let amount = dy / 100;
+            this.zoom(Math.min(Math.max(amount, -1), 1));
         });
 
         {
