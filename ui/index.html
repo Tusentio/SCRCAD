@@ -12,7 +12,7 @@
     </head>
     <body>
         <div id="vue-wrapper">
-            <div id="dialogs">
+            <!--div id="dialogs">
                 <div id="save-dialog" style="display: none;">
                     <header>
                         <p>Save Project</p>
@@ -25,29 +25,29 @@
                         <button>OK</button>
                     </footer>
                 </div>
-            </div>
+            </div-->
             <header>
                 <div id="window-title">
                     <img src="media/scrcad-cube-logo.svg" alt="SCRCAD Icon">
                     <p>SCRCAD <span>Luna</span></p>
                 </div>
                 <ul>
-                    <li>
+                    <!--li>
                         <p>File</p>
                         <ul>
                             <li><p>New</p></li>
                             <li><p>Open</p></li>
                             <li @click="close"><p>Exit</p></li>
                         </ul>
-                    </li>
-                    <li>
+                    </li-->
+                    <!--li>
                         <p>Edit</p>
                         <ul>
                             <li><p>Undo</p></li>
                             <li><p>Redo</p></li>
                             <li><p>Settings</p></li>
                         </ul>
-                    </li>
+                    </li-->
                     <li>
                         <p>View</p>
                         <ul>
@@ -64,12 +64,12 @@
                     <li>
                         <p>Layer</p>
                         <ul>
-                            <li><p>Duplicate</p></li>
-                            <li><p>Delete</p></li>
-                            <li><p>Clear</p></li>
+                            <li @click="panels.editor.duplicateLayer(panels.editor.activeLayer)"><p>Duplicate</p></li>
+                            <!--li><p>Delete</p></li-->
+                            <!--li><p>Clear</p></li-->
                         </ul>
                     </li>
-                    <li>
+                    <!--li>
                         <p>Select</p>
                         <ul>
                             <li><p>All</p></li>
@@ -78,7 +78,7 @@
                             <li><p>Clear</p></li>
                             <li><p>Multi-Layer</p></li>
                         </ul>
-                    </li>
+                    </li-->
                     <li>
                         <p>Tools</p>
                         <ul>
@@ -90,20 +90,20 @@
                             </template>
                         </ul>
                     </li>
-                    <li>
+                    <!--li>
                         <p>Plugins</p>
                         <ul>
                             <li><p>Reload</p></li>
                             <li><p>Open Folder</p></li>
                         </ul>
-                    </li>
-                    <li>
+                    </li-->
+                    <!--li>
                         <p>Help</p>
                         <ul>
                             <li><p>Guides</p></li>
                             <li><p>About</p></li>
                         </ul>
-                    </li>
+                    </li-->
                 </ul>
                 <div id="window-buttons">
                     <button @click="minimize"><img src="media/window_minimize.svg" alt="Minimize"></button>
@@ -113,7 +113,7 @@
             </header>
             <main>
                 <ul id="toolbar">
-                    <li>
+                    <!--li>
                         <p>General</p>
                         <ul>
                             <li>
@@ -129,7 +129,7 @@
                                 <p>Save</p>
                             </li>
                         </ul>
-                    </li>
+                    </li-->
                     <li>
                         <p>View</p>
                         <ul>
@@ -172,7 +172,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
+                    <!--li>
                         <p>Preview</p>
                         <ul>
                             <li>
@@ -180,7 +180,7 @@
                                 <p>Render</p>
                             </li>
                         </ul>
-                    </li>
+                    </li-->
                     <li>
                         <p>Layer</p>
                         <ul>
@@ -188,13 +188,13 @@
                                 <img src="media/layer.svg">
                                 <p>Duplicate</p>
                             </li>
-                            <li>
+                            <!--li>
                                 <img src="media/layer.svg">
                                 <p>Delete</p>
-                            </li>
+                            </li-->
                         </ul>
                     </li>
-                    <li>
+                    <!--li>
                         <p>Selection</p>
                         <ul>
                             <li>
@@ -214,8 +214,8 @@
                                 <p>Multi-Layer</p>
                             </li>
                         </ul>
-                    </li>
-                    <li>
+                    </li-->
+                    <!--li>
                         <p>Properties</p>
                         <ul>
                             <li>
@@ -227,8 +227,8 @@
                                 <p>Directory</p>
                             </li>
                         </ul>
-                    </li>
-                    <li>
+                    </li-->
+                    <!--li>
                         <p>Help</p>
                         <ul>
                             <li>
@@ -240,7 +240,7 @@
                                 <p>About</p>
                             </li>
                         </ul>
-                    </li>
+                    </li-->
                 </ul>
                 <div id="viewports">
                     <div v-show="panels.editor.enabled" id="editor-view">
@@ -327,7 +327,7 @@
                         </ul>
                         <div class="canvas-wrapper">
                             <canvas id="preview-canvas"></canvas>
-                            <input type="text" value="Untitled Model" placeholder="Model name..." spellcheck="false">
+                            <!--input type="text" value="Untitled Model" placeholder="Model name..." spellcheck="false"-->
                         </div>
                     </div>
                 </div>
@@ -337,10 +337,10 @@
                             <p><img src="media/plugin.svg">Properties</p>
                         </div>
                         <div>
-                            <div id="plugin-search-box">
+                            <!--div id="plugin-search-box">
                                 <img src="media/search.svg">
                                 <input type="text" placeholder="Search..." spellcheck="false">
-                            </div>
+                            </div-->
                             <ul class="category-master-list">
                                 <li v-for="category in propertyCategories" :class="{'list-collapsed': !category.expanded}">
                                     <button class="category-header" @click="category.expanded = !category.expanded">
